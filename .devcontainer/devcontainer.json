@@ -1,0 +1,28 @@
+{
+  "name": "Tour Planner App",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "target": "devel",
+    "context": ".."
+  },
+  "customizations": {
+    "jetbrains":{
+      "backend": "IntelliJ",
+      "plugins": [
+        "com.intellij.java",
+        "org.jetbrains.idea.maven",
+        "com.intellij.spring.boot"
+      ]
+    },
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack", //core java
+        "vmware.vscode-boot-dev-pack",  //spring boot
+        "streetsidesoftware.code-spell-checker",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ]
+    }
+
+  }
+}

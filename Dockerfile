@@ -1,4 +1,4 @@
-FROM maven:3.9.12-eclipse-temurin-25-noble AS devel
+FROM maven:3.9.12-eclipse-temurin-21-noble AS devel
 
 RUN apt update && apt install -y git
 

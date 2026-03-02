@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTRGES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ./init:/docker/entrypoint-initdb.d
+
+  app:
+    build:
+     context: ./backend
+     dockerfile: Dockerfile
+  ui:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile

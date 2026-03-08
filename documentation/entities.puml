@@ -1,0 +1,53 @@
+@startuml
+title Tour Planner - Entity Diagram
+
+package "Domain Model (Entities)" {
+
+class User {
+    int userId
+    string username
+    string email
+    string passwordHash
+}
+
+class Tour {
+    int tourId
+    string tourName
+    string description
+    float[] from-location
+    float[] to-location
+    float distance
+    bigint estimatedTime
+    string routeInformation
+    string imagePath
+}
+
+class TourLog {
+    int logId
+    date
+    string comment
+    shortint difficulty
+    bigint totalTime
+    float totalDistance
+    shortint rating
+}
+
+class TransportationType {
+    int transportationTypeId
+    string name
+}
+
+}
+
+' Repository -> Entities
+UserRepository --> User
+TourRepository --> Tour
+TourLogRepository --> TourLog
+TransportationTypeRepository --> TransportationType
+
+' Entity relationships
+User "1" --> "many" Tour
+Tour "1" --> "many" TourLog
+TransportationType "1" --> "many" Tour
+
+@enduml

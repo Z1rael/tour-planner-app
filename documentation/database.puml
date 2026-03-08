@@ -13,10 +13,8 @@ database "Database" {
         user_id         INTEGER FK -> users.user_id
         tour_name       VARCHAR[255]
         tour_description TEXT
-        from_location_lat   DECIMAL
-        from_location_long   DECIMAL
-        to_location_lat     DECIMAL
-        to_location_long     DECIMAL
+        from_location   POINT
+        to_location     POINT
         transportation_type_id INTEGER FK -> transportation_types.transportation_type_id
         tour_distance   DECIMAL
         route_information   TEXT

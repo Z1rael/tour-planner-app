@@ -1,0 +1,43 @@
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTRGES_DB: ${DB_NAME}
+      POSTGRES_PASSWORD: /run/secrets/db_password
+    secrets:
+      - db_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ./init:/docker/entrypoint-initdb.d
+
+  app:
+    build:
+     context: ./backend
+     dockerfile: Dockerfile
+     target: live
+    restart: unless-stopped
+    env_file:
+      - ./env/.env
+    depends_on:
+      - db
+      
+  ui:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: live
+    restart: unless-stopped
+    env_file:
+      - ./env/.env
+    ports:
+      - "8080:80"
+    depends_on:
+      - app
+
+secrets:
+  db_password:
+    file: ./secret/db_password.txt

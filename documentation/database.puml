@@ -1,0 +1,44 @@
+@startuml
+title Tour Planner App
+
+database "Database" {
+    class users {
+        user_id         SERIAL PK
+        username        VARCHAR[255]
+        email           VARCHAR[255] UNIQUE
+        password_hash   VARCHAR[255]
+    }
+    class tours {
+        tour_id         SERIAL PK
+        user_id         INTEGER FK -> users.user_id
+        tour_name       VARCHAR[255]
+        tour_description TEXT
+        from_location   POINT
+        to_location     POINT
+        transportation_type_id INTEGER FK -> transportation_types.transportation_type_id
+        tour_distance   DECIMAL
+        route_information   TEXT
+        image_path      TEXT
+        estimated_time  unsigned BIGINT
+    }
+    class tour_logs {
+        log_id  SERIAL PK
+        tour_id INTEGER FK -> tours.tour_id
+        date    TIMESTAMP
+        comment TEXT
+        difficulty  SMALLINT //1-5
+        total_time  unsigned BIGINT
+        total_distance  DECIMAL
+        rating  SMALLINT //1-5
+
+    }
+    class transportation_types {
+        transportation_type_id SERIAL PK
+        transportation_name    VARCHAR[255]
+    }
+    users ||--o{ tours
+    tours ||--o{ tour_logs
+    transportation_types ||--o{ tours
+}
+
+@enduml

@@ -1,3 +1,5 @@
+ARG NODE_VERSION=25-alpine
+ARG NGINX_VERSION=alpine3.23
 #
 # DevContainer stage
 #
@@ -7,36 +9,46 @@ RUN apt update && apt install -y git
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json package-lock.json* ./
 
-RUN npm install -g @angular/cli
+# Install dependencies using npm with caching to speed up subsequent builds
+RUN --mount=type=cache,target=/root/.npm npm install
 
 COPY . .
 
-# CMD ["ng", "serve"]
+EXPOSE 4200
 
+# Start the Angular dev server and bind it to all network interfaces
+CMD ["npm", "start", "--", "--host=0.0.0.0"]
 #
 # Build stage
 #
-FROM node:25-alpine AS builder
+FROM node:${NODE_VERSION} AS builder
 
 WORKDIR /app
 
-COPY package*.json ./
+# copy package files first
+COPY package.json *package-lock.json* ./
 
-RUN npm ci
+# install dependencies
+RUN --mount=type=cache,target=/root/.npm npm ci
 
+# copy the rest of the app code
 COPY . .
 
-RUN npm run build --configuration=production
+# build angular application
+RUN npm run build
 
 #
 # Release stage
 #
-#FROM nginx:alpine AS live
-#
-#COPY nginx.conf /etc/nginx/conf.d/default.conf
-#
-#COPY --from=builder /app/dist/tour-planner-ui/browser /usr/share/nginx/html
-#
-#ENTRYPOINT [ "nginx", "-g", "daemon off;" ]
+FROM nginxinc/nginx-unprivileged:${NGINX_VERSION} AS live
+
+# copy output from the build to default serving dir
+COPY --chown=nginx:nginx --from=builder /app/dist/*/browser /usr/share/nginx/html
+
+# use non root user
+USER nginx
+
+# default nginx container listens at 8080
+EXPOSE 8080

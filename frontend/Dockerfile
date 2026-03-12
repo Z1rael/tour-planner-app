@@ -3,23 +3,18 @@ ARG NGINX_VERSION=alpine3.23
 #
 # DevContainer stage
 #
-FROM node:25-slim AS devel
+FROM node:24-slim AS devel
 
 RUN apt update && apt install -y git
 
 WORKDIR /app
 
-COPY package.json package-lock.json* ./
+#COPY package.json package-lock.json* ./
 
-# Install dependencies using npm with caching to speed up subsequent builds
-RUN --mount=type=cache,target=/root/.npm npm install
+RUN npm install -g @angular/cli
 
 COPY . .
 
-EXPOSE 4200
-
-# Start the Angular dev server and bind it to all network interfaces
-CMD ["npm", "start", "--", "--host=0.0.0.0"]
 #
 # Build stage
 #

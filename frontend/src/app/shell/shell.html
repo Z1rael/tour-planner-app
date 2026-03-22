@@ -1,15 +1,31 @@
 <div class="container-fluid py-4">
   <div class="row g-3">
-    <div class="col-12 col-md-4 text-break">
-      weeweeweeweeweeweeweeweeweeweeweeweeweeweeweeweeweeweeweeweewee
+    
+    <div class="col-md-4">
+      @if (currentView === 'login') { <app-login /> }
+      @else if (currentView === 'register') { <app-register /> }
+      @else if (currentView === 'profile') { <app-tour-list /> }
+      @else if (currentView === 'tours') { <app-tour-details /> }
+      @else if (currentView === 'add-tour-log') {  }      
+      @else if (currentView === 'add-tour') {  }   
+
+    <div class="col-md-4">
+      @if (currentView === 'login') {  }
+      @else if (currentView === 'register') {  }
+      @else if (currentView === 'profile') { <app-log-list /> }
+      @else if (currentView === 'tours') { <map></map> }
+      @else if (currentView === 'add-tour-log') { <app-log-form /> }      
+      @else if (currentView === 'add-tour') { <app-tour-form /> }   
     </div>
 
-    <div class="col-12 col-md-4 text-break">
-      woowoowoowoowoowoowoowoowoowoowoowoowoowoowoowoowoowoowoowoowoowoo
+    <div class="col-md-4">
+      @if (currentView === 'login') { Welcome to the Tour Planner! Please log in or register to get started. }
+      @else if (currentView === 'register') { Welcome to the Registration Page! Please fill out the form to create an account. }
+      @else if (currentView === 'profile') { Welcome to your profile! Here you can view and manage your tours and logs. }
+      @else if (currentView === 'tours') { <app-log-list /> }
+      @else if (currentView === 'add-tour-log') {  }      
+      @else if (currentView === 'add-tour') {  }    
     </div>
 
-    <div class="col-12 col-md-4 text-break">
-      weewooweewooweewooweewooweewooweewooweewooweewooweewooweewooweewoo
-    </div>
   </div>
 </div>

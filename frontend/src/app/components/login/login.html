@@ -1,1 +1,11 @@
-<p>login works!</p>
+<form class="col-md-8 mx-auto px-3 bubble">
+    <div class="form-group mb-2">
+        <label for="email">Email address</label>
+        <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" [value]="email" required>
+    </div>
+    <div class="form-group mb-2">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" placeholder="Password" [value]="password" required>
+    </div>
+    <button type="submit" class="btn btn-primary" (click)="submit()">Register</button>
+</form>

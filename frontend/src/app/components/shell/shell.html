@@ -1,7 +1,7 @@
 <div class="container-fluid py-4">
   <div class="row g-3">
     
-    <div class="col-12 col-md-4">
+    <div class="col-12 col-md-4 my-auto">
       @if (currentView === 'login') { <app-login /> }
       @else if (currentView === 'register') { <app-register /> }
       @else if (currentView === 'profile') { <app-tour-list /> }
@@ -10,7 +10,7 @@
       @else if (currentView === 'add-tour') {  }   
     </div>
 
-    <div class="col-12 col-md-4">
+    <div class="col-12 col-md-4 my-auto">
       @if (currentView === 'login') {  }
       @else if (currentView === 'register') {  }
       @else if (currentView === 'profile') { <app-log-list /> }
@@ -19,10 +19,10 @@
       @else if (currentView === 'add-tour') { <app-tour-form /> }   
     </div>
 
-    <div class="col-12 col-md-4">
-      @if (currentView === 'login') { Welcome to the Tour Planner! Please log in or register to get started. }
-      @else if (currentView === 'register') { Welcome to the Registration Page! Please fill out the form to create an account. }
-      @else if (currentView === 'profile') { Welcome to your profile! Here you can view and manage your tours and logs. }
+    <div class="col-12 col-md-4 my-auto">
+      @if (currentView === 'login') { <h3>Welcome to the Tour Planner! Please log in or register to get started.</h3> }
+      @else if (currentView === 'register') { <h3>Welcome to the Registration Page! Please fill out the form to create an account.</h3> }
+      @else if (currentView === 'profile') { <h3>Welcome to your profile! Here you can view and manage your tours and logs.</h3> }
       @else if (currentView === 'tours') { <app-log-list /> }
       @else if (currentView === 'add-tour-log') {  }      
       @else if (currentView === 'add-tour') {  }    

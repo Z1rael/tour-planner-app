@@ -1,14 +1,14 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Navbar } from './navbar/navbar';
-import { Shell } from './shell/shell';
-import { Login } from './login/login';
-import { Register } from './register/register';
-import { TourList } from './tour-list/tour-list';
-import { Map } from './map/map';
-import { LogList } from './log-list/log-list';
-import { LogForm } from './log-form/log-form';
-import { TourForm } from './tour-form/tour-form';
+import { Navbar } from './components/navbar/navbar';
+import { Shell } from './components/shell/shell';
+import { Login } from './components/login/login';
+import { Register } from './components/register/register';
+import { TourList } from './components/tour-list/tour-list';
+import { Map } from './components/map/map';
+import { LogList } from './components/log-list/log-list';
+import { LogForm } from './components/log-form/log-form';
+import { TourForm } from './components/tour-form/tour-form';
 
 @Component({
   selector: 'app-root',

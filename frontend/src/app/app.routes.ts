@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { Shell } from './shell/shell';  
-import { Login } from './login/login';
-import { Register } from './register/register';
-import { TourList } from './tour-list/tour-list';
-import { Map } from './map/map';
-import { LogList } from './log-list/log-list';
-import { TourDetails } from './tour-details/tour-details';
+import { Shell } from './components/shell/shell';  
+import { Login } from './components/login/login';
+import { Register } from './components/register/register';
+import { TourList } from './components/tour-list/tour-list';
+import { Map } from './components/map/map';
+import { LogList } from './components/log-list/log-list';
+import { TourDetails } from './components/tour-details/tour-details';
 
 export const routes: Routes = [
     {path: '', component: Shell, data: { view: 'login' } },

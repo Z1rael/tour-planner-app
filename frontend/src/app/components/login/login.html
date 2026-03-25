@@ -1,11 +1,53 @@
-<form class="col-md-8 mx-auto px-3 bubble">
+<div class="col-sm-10 mx-auto px-3 bubble">
+  <form (submit)="onSubmit($event)">
     <div class="form-group mb-2">
-        <label for="email">Email address</label>
-        <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" [value]="email" required>
+      <label for="email">Email address</label>
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        placeholder="Enter email"
+        [formField]="loginForm.email"
+      />
+
+      @if (loginForm.email().touched() && loginForm.email().invalid()) {
+        <ul class="error-list">
+          @for (error of loginForm.email().errors(); track error) {
+            <li>{{ error.message }}</li>
+          }
+        </ul>
+      }
     </div>
+
     <div class="form-group mb-2">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" placeholder="Password" [value]="password" required>
+      <label for="password">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        placeholder="Password"
+        [formField]="loginForm.password"
+      />
+
+      @if (loginForm.password().touched() && loginForm.password().invalid()) {
+        <div class="error-list">
+          @for (error of loginForm.password().errors(); track error) {
+            <p>{{ error.message }}</p>
+          }
+        </div>
+      }
     </div>
-    <button type="submit" class="btn btn-primary" (click)="submit()">Register</button>
-</form>
+
+    <div class="form-check mb-2">
+      <input
+        type="checkbox"
+        class="form-check-input"
+        id="rememberMe"
+        [formField]="loginForm.rememberMe"
+      />
+      <label class="form-check-label" for="rememberMe">Remember Me</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Login</button>
+  </form>
+</div>

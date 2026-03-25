@@ -5,8 +5,11 @@
     "target": "devel",
     "context": ".."
   },
+  "runArgs": [
+    "--network=host"
+  ],
   "customizations": {
-    "jetbrains":{
+    "jetbrains": {
       "backend": "IntelliJ",
       "plugins": [
         "com.intellij.java",
@@ -17,12 +20,12 @@
     "vscode": {
       "extensions": [
         "vscjava.vscode-java-pack", //core java
-        "vmware.vscode-boot-dev-pack",  //spring boot
+        "vmware.vscode-boot-dev-pack", //spring boot
         "streetsidesoftware.code-spell-checker",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode"
       ]
     }
-
-  }
+  },
+  "remoteUser": "ubuntu"
 }

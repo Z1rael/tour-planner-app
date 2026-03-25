@@ -12,6 +12,9 @@ RUN mvn dependency:go-offline
 
 COPY src .
 
+USER ubuntu
+
+
 # (felix) not sure if we really need this, it just builds the current project and executes it
 #RUN mvn clean package
 

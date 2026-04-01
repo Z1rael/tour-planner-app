@@ -16,14 +16,11 @@ h1, h2, h3 {
   height: 100vh;
 }
 
-.row {
-  height: 100vh;
-}
-
 .bubble {
     background-color: blanchedalmond;
     padding-top: 3rem;
     padding-bottom: 3rem;
     border: .15rem solid brown;
     border-radius: 3rem;
+    height: 80vh;
 }

@@ -11,6 +11,7 @@ import { LogForm } from '../../features/logs/components/log-form/log-form';
 
 @Component({
   selector: 'app-shell',
+  standalone: true,
   imports: [LogList, Login, Register, TourList, Map, TourDetails, TourForm, LogForm],
   templateUrl: './shell.html',
   styleUrl: './shell.css',

@@ -71,6 +71,7 @@ export class TourFacade {
     });
   }
 
+  //TODO(felix): need to either change this or the display of our tours in this regard
   private toSearchableString(tour: Tour & { popularity: number; childFriendly: boolean }): string {
     return [
       tour.name,
@@ -86,8 +87,19 @@ export class TourFacade {
       .toLowerCase();
   }
 
+  //TODO(felix): is popularity really the number of tour logs? i don't think so
   private computePopularity(tour: Tour): number {
-    return tour.logs.length;
+    let popularity = 0;
+    let sum = 0;
+    let count = 0;
+    for (const log of tour.logs) {
+      sum += log.rating;
+      count++;
+    }
+    if (count > 0) {
+      popularity = sum / count;
+    }
+    return popularity;
   }
 
   private computeChildFriendly(tour: Tour): boolean {

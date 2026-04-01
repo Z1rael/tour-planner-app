@@ -1,1 +1,62 @@
-<p>tour-details works!</p>
+<section class="col-md-12 mx-auto px-3 bubble">
+  <div class="card tour-details">
+    <div class="card-header">
+      <h1>{{ selectedTour?.name }}</h1>
+    </div>
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-auto">
+          <label for="">From</label>
+          <input type="text" class="form-control" [value]="selectedTour?.from" [disabled]="true" />
+        </div>
+        <div class="col-auto">
+          <label for="">To</label>
+          <input type="text" class="form-control" [value]="selectedTour?.to" [disabled]="true" />
+        </div>
+      </div>
+      <div class="col-auto mb-3">
+        <label for="">Transportation Type</label>
+        <input
+          type="text"
+          class="form-control"
+          [value]="selectedTour?.transportType"
+          [disabled]="true"
+        />
+      </div>
+      <div class="row mb-3">
+        <div class="col-auto">
+          <label for="">Distance [km]</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="selectedTour?.distance"
+            [disabled]="true"
+          />
+        </div>
+        <div class="col-auto">
+          <label for="">Duration [min]</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="selectedTour?.estimatedTime"
+            [disabled]="true"
+          />
+        </div>
+      </div>
+      <div class="col-auto mb-3">
+        <label for="">Popularity</label>
+        <input type="text" class="form-control" [value]="popularity()" [disabled]="true" />
+      </div>
+      <div class="col-auto mb-3">
+        <label for="">Description</label>
+        <textarea
+          type="text"
+          class="form-control"
+          [value]="selectedTour?.description"
+          [disabled]="true"
+          rows="10"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+</section>

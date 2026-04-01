@@ -1,18 +1,18 @@
 import { Component, inject } from '@angular/core';
 import { TourFacade } from '../../facade/tour.facade';
 import { Tour } from '../../../../mock/data/tour-mock-data';
-import { FormsModule, NgModel } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tour-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [],
   templateUrl: './tour-list.html',
   styleUrl: './tour-list.css',
 })
 export class TourList {
-  protected readonly mediator = inject(TourFacade);
+  private router = inject(Router);
+  protected readonly tourMediator = inject(TourFacade);
 
   protected readonly transportIcons: Record<string, string> = {
     hike: '🥾',
@@ -22,14 +22,17 @@ export class TourList {
   };
 
   protected setQuery(str: string): void {
-    this.mediator.searchQuery.set(str);
+    this.tourMediator.searchQuery.set(str);
   }
 
   protected clearQuery(): void {
-    this.mediator.searchQuery.set('');
+    this.tourMediator.searchQuery.set('');
   }
 
   protected onSelect(tour: Tour): void {
-    this.mediator.select(tour.id);
+    this.tourMediator.select(tour.id);
+    this.router.navigate(['/tours']);
   }
+
+  //TODO(felix): if we want to do a profile view we prolly need to add certain functionality for this
 }

@@ -30,7 +30,7 @@ export class MockTourService extends TourService {
   createTour(tour: Tour): Observable<Tour> {
     return of(tour).pipe(
       delay(300),
-      tap(() => this._tours.update((ts) => [...ts, tour])),
+      tap(() => this._tours.update((ts) => [tour, ...ts])),
     );
   }
 

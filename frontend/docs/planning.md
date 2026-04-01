@@ -78,20 +78,69 @@ My current understanding of these things make me think that leaving the api serv
 
 So now we let the Facade handle all that state stuff and also the caching etc, etc it feels a bit like repetitive code at the beginning but i believe this is remedied by the fact that the components are enabled to be very slim with that design.
 
+### Creation
+
+I believe it could be beneficial to have something like a auto complete functionality for the start and destination. Here the ORS endpoint `/geocode/search` could be of help. though i am unsure how this all fits together i would rather fetch the coordinates in the backend but the more i think about it the more i believe it would fit in the frontend
+
+example object of the list it can return
+
+```json
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [9.212655, 48.804295]
+  },
+  "properties": {
+    "id": "polyline:6280486",
+    "gid": "openstreetmap:street:polyline:6280486",
+    "layer": "street",
+    "source": "openstreetmap",
+    "source_id": "polyline:6280486",
+    "name": "Zieglergasse",
+    "street": "Zieglergasse",
+    "confidence": 1,
+    "match_type": "exact",
+    "accuracy": "centroid",
+    "country": "Germany",
+    "country_gid": "whosonfirst:country:85633111",
+    "country_a": "DEU",
+    "region": "Baden-Württemberg",
+    "region_gid": "whosonfirst:region:85682567",
+    "region_a": "BW",
+    "macrocounty": "Stuttgart Government Region",
+    "macrocounty_gid": "whosonfirst:macrocounty:404227549",
+    "county": "Esslingen",
+    "county_gid": "whosonfirst:county:102063329",
+    "county_a": "ES",
+    "localadmin": "Leinfelden-Echterdingen",
+    "localadmin_gid": "whosonfirst:localadmin:1377687045",
+    "locality": "Stuttgart",
+    "locality_gid": "whosonfirst:locality:101905809",
+    "neighbourhood": "Berg",
+    "neighbourhood_gid": "whosonfirst:neighbourhood:85794875",
+    "continent": "Europe",
+    "continent_gid": "whosonfirst:continent:102191581",
+    "label": "Zieglergasse, Stuttgart, BW, Germany"
+  },
+  "bbox": [9.2123, 48.804005, 9.213223, 48.804342]
+}
+```
+
 ## Tour Logs
 
 As of now i am still unsure if it is a good design decision to split tour logs into 2 separate data representations as well. as obviously it would be a hassle to fetch all the data. But on the other hand i don't see a reason why this would be a issue. There will never be a situation that needs `all` tour logs as far as i believe at the moment. Rather it is always a snapshot of them whether it be the logs of a specific tour or user. Because of this i believe the drawbacks of loading the full information of tour logs will be negligible for this project and the reduction of complexity beneficial.
 
 ```typescript
-interface TouLog {
-    id: number;
-    tour_id: number;
-    comment: string;
-    timestamp: string // ISO datetime
-    difficulty: number // 1-5
-    total_distance: number;
-    total_time: number;
-    rating: number: // 1-5
+interface TourLog {
+  id: number;
+  tour_id: number;
+  comment: string;
+  timestamp: string; // ISO datetime
+  difficulty: number; // 1-5
+  total_distance: number;
+  total_time: number;
+  rating: number; // 1-5
 }
 ```
 

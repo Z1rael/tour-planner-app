@@ -2,9 +2,8 @@ import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { TourFacade } from '../../facade/tour.facade';
 import { form, FormField, required } from '@angular/forms/signals';
-import { Tour } from '../../../../mock/data/tour-mock-data';
+import { Tour } from '../../../../core/models/tour';
 import { TransportationType } from '../../../../core/models/transportation-type';
-import { stringify } from 'querystring';
 
 @Component({
   selector: 'app-tour-form',
@@ -16,17 +15,24 @@ import { stringify } from 'querystring';
 export class TourForm {
   private router = inject(Router);
   protected readonly tourMediator = inject(TourFacade);
+  readonly transportOptions = [
+    { value: TransportationType.CAR, label: 'Car' },
+    { value: TransportationType.BICYCLE_REGULAR, label: 'Bicycle' },
+    { value: TransportationType.BICYCLE_ROAD, label: 'Road Bike' },
+    { value: TransportationType.MOUNTAIN_BIKE, label: 'Mountain Bike' },
+    { value: TransportationType.WALK, label: 'Walk' },
+    { value: TransportationType.HIKE, label: 'Hike' },
+  ];
 
-  transType = ['hike', 'bike', 'running', 'vacation'];
-
-  readonly tourModel = signal<Tour>({
-    id: 'tour-',
+  readonly tourModel = signal<
+    Omit<Tour, 'id' | 'distance' | 'estimated_time' | 'route_information'>
+  >({
     name: '',
     from: '',
     to: '',
-    transportType: 'bike',
+    transport_type: TransportationType.CAR,
     description: '',
-    logs: [],
+    creator_id: 0,
   });
 
   readonly tourForm = form(this.tourModel, (schemaPath) => {
@@ -36,17 +42,13 @@ export class TourForm {
 
     required(schemaPath.to, { message: 'Tour destination is required' });
 
-    required(schemaPath.transportType, { message: 'Tour transportation type is required' });
+    required(schemaPath.transport_type, { message: 'Tour transportation type is required' });
   });
 
   onSubmit(): void {
     const tour = this.tourModel();
 
-    tour.id.concat(this.getRandomIntNumber().toString());
-
-    this.tourMediator.create(tour);
-
-    this.tourMediator.select(tour.id);
+    this.tourMediator.createTour(tour);
     this.router.navigate(['tours']);
   }
 
@@ -56,19 +58,12 @@ export class TourForm {
 
   clearForm(): void {
     this.tourModel.set({
-      id: 'tour-',
       name: '',
       from: '',
       to: '',
-      transportType: 'bike',
+      transport_type: TransportationType.CAR,
       description: '',
-      logs: [],
+      creator_id: 0,
     });
-  }
-
-  private getRandomIntNumber(): number {
-    const minCeiled = Math.ceil(6);
-    const maxFloored = Math.floor(500000);
-    return Math.floor(Math.random() * (maxFloored + minCeiled) + minCeiled);
   }
 }

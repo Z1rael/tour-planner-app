@@ -1,243 +1,263 @@
-//import { Tour, TourLog, TransportType, Difficulty } from './models';
+import { Tour } from '../../core/models/tour';
+import { TourLog } from '../../core/models/tour-log';
+import { TourSummary } from '../../core/models/tour-summary';
+import { TransportationType } from '../../core/models/transportation-type';
 
-// ------------------------------------------------------------------ models --
-// Inline minimal model definitions so the file is self-contained.
-// Replace with your actual model imports once defined.
-
-export type TransportType = 'hike' | 'bike' | 'running' | 'vacation';
-export type Difficulty = 1 | 2 | 3 | 4 | 5;
-
-export interface TourLog {
-  id: string;
-  tourId: string;
-  dateTime: string; // ISO-8601
-  comment: string;
-  difficulty: Difficulty;
-  totalDistance: number; // km
-  totalTime: number; // minutes
-  rating: 1 | 2 | 3 | 4 | 5;
-}
-
-export interface Tour {
-  id: string;
-  name: string;
-  description: string;
-  from: string;
-  to: string;
-  transportType: TransportType;
-  distance?: number; // km  – fetched from OpenRouteService
-  estimatedTime?: number; // minutes
-  logs: TourLog[];
-  // computed (derived in mediator, not stored):
-  // popularity:    number
-  // childFriendly: boolean
-}
-
-// ----------------------------------------------------------------- logs -----
-
-export const MOCK_LOGS: TourLog[] = [
-  // --- Prater Rundweg logs ---
+// ──────────────────────────────────────────────
+// Tours
+// ──────────────────────────────────────────────
+export const mockTours: Tour[] = [
   {
-    id: 'log-001',
-    tourId: 'tour-001',
-    dateTime: '2024-03-15T09:30:00Z',
-    comment: 'Perfect spring morning, paths were dry and quiet.',
-    difficulty: 1,
-    totalDistance: 7.2,
-    totalTime: 95,
-    rating: 5,
+    id: 1,
+    name: 'Vienna to Bratislava Cycling Route',
+    from: 'Vienna, Austria',
+    to: 'Bratislava, Slovakia',
+    transport_type: TransportationType.BICYCLE_ROAD,
+    description:
+      'A scenic road cycling route following the Danube cycle path from Vienna all the way to Bratislava. Mostly flat terrain with beautiful river views and a stop at Hainburg an der Donau.',
+    distance: 78.4,
+    estimated_time: 225,
+    route_information: '',
+    creator_id: 1,
   },
   {
-    id: 'log-002',
-    tourId: 'tour-001',
-    dateTime: '2024-05-02T07:15:00Z',
-    comment: 'A bit crowded near the Lusthaus but otherwise great.',
-    difficulty: 1,
-    totalDistance: 7.4,
-    totalTime: 100,
-    rating: 4,
+    id: 2,
+    name: 'Prater Forest Walk',
+    from: 'Praterstern, Vienna',
+    to: 'Lusthaus, Vienna',
+    transport_type: TransportationType.WALK,
+    description:
+      'A relaxing walk through the green Prater forest in Vienna, starting at Praterstern and ending at the historic Lusthaus pavilion. Perfect for a weekend afternoon.',
+    distance: 5.2,
+    estimated_time: 70,
+    route_information: '',
+    creator_id: 2,
   },
   {
-    id: 'log-003',
-    tourId: 'tour-001',
-    dateTime: '2024-07-20T06:45:00Z',
-    comment: 'Very hot, started early to avoid the heat.',
-    difficulty: 2,
-    totalDistance: 7.2,
-    totalTime: 88,
-    rating: 3,
-  },
-
-  // --- Kahlenberg Hike logs ---
-  {
-    id: 'log-004',
-    tourId: 'tour-002',
-    dateTime: '2024-04-10T08:00:00Z',
-    comment: 'Stunning views over Vienna at the top. Some muddy sections.',
-    difficulty: 3,
-    totalDistance: 14.1,
-    totalTime: 210,
-    rating: 5,
+    id: 3,
+    name: 'Schneeberg Summit Hike',
+    from: 'Puchberg am Schneeberg, Austria',
+    to: 'Klosterwappen, Austria',
+    transport_type: TransportationType.HIKE,
+    description:
+      "A challenging hike up Lower Austria's highest peak. The trail ascends steadily through alpine meadows and rocky terrain, rewarding hikers with panoramic views of the Alps.",
+    distance: 14.7,
+    estimated_time: 300,
+    route_information: '',
+    creator_id: 1,
   },
   {
-    id: 'log-005',
-    tourId: 'tour-002',
-    dateTime: '2024-09-14T09:00:00Z',
-    comment: 'Autumn colours were beautiful. Legs felt it the next day.',
-    difficulty: 3,
-    totalDistance: 14.3,
-    totalTime: 225,
-    rating: 5,
-  },
-
-  // --- Donauinsel Bike Tour logs ---
-  {
-    id: 'log-006',
-    tourId: 'tour-003',
-    dateTime: '2024-06-08T10:00:00Z',
-    comment: 'Great flat ride, brought the kids along.',
-    difficulty: 1,
-    totalDistance: 21.5,
-    totalTime: 80,
-    rating: 5,
+    id: 4,
+    name: 'Wienerwald MTB Loop',
+    from: 'Hütteldorf, Vienna',
+    to: 'Hütteldorf, Vienna',
+    transport_type: TransportationType.MOUNTAIN_BIKE,
+    description:
+      'A thrilling mountain bike loop through the Vienna Woods with technical singletrack sections, forest descents, and a few punchy climbs. Great for intermediate to advanced riders.',
+    distance: 32.1,
+    estimated_time: 150,
+    route_information: '',
+    creator_id: 3,
   },
   {
-    id: 'log-007',
-    tourId: 'tour-003',
-    dateTime: '2024-08-17T17:30:00Z',
-    comment: 'Evening ride, very relaxing atmosphere.',
-    difficulty: 1,
-    totalDistance: 22.0,
-    totalTime: 85,
-    rating: 4,
+    id: 5,
+    name: 'City Commute – Innere Stadt to Favoriten',
+    from: 'Stephansplatz, Vienna',
+    to: 'Favoritenstraße, Vienna',
+    transport_type: TransportationType.BICYCLE_REGULAR,
+    description:
+      'A practical urban bike commute cutting through the city center, along the Ringstraße and Naschmarkt area. Mostly on dedicated cycle lanes.',
+    distance: 4.8,
+    estimated_time: 20,
+    route_information: '',
+    creator_id: 2,
   },
   {
-    id: 'log-008',
-    tourId: 'tour-003',
-    dateTime: '2024-10-05T11:00:00Z',
-    comment: 'Windy, but manageable. Path in good condition.',
-    difficulty: 2,
-    totalDistance: 21.8,
-    totalTime: 90,
-    rating: 4,
-  },
-
-  // --- Ringstrasse Running logs ---
-  {
-    id: 'log-009',
-    tourId: 'tour-004',
-    dateTime: '2024-03-01T06:30:00Z',
-    comment: 'Classic city run. Cobblestones tough on the knees.',
-    difficulty: 2,
-    totalDistance: 5.6,
-    totalTime: 35,
-    rating: 4,
+    id: 6,
+    name: 'Graz Old Town Walking Tour',
+    from: 'Hauptbahnhof Graz, Austria',
+    to: 'Schlossberg, Graz, Austria',
+    transport_type: TransportationType.WALK,
+    description:
+      'Explore the UNESCO-listed Old Town of Graz on foot. The route passes the Hauptplatz, Landhaus courtyard, and climbs to the iconic Schlossberg clock tower.',
+    distance: 3.6,
+    estimated_time: 55,
+    route_information: '',
+    creator_id: 4,
   },
   {
-    id: 'log-010',
-    tourId: 'tour-004',
-    dateTime: '2024-04-22T07:00:00Z',
-    comment: 'Marathon training run, steady pace throughout.',
-    difficulty: 3,
-    totalDistance: 5.6,
-    totalTime: 33,
-    rating: 3,
+    id: 7,
+    name: 'Danube Island Long Ride',
+    from: 'Floridsdorf Bridge, Vienna',
+    to: 'Alberner Hafen, Vienna',
+    transport_type: TransportationType.BICYCLE_ROAD,
+    description:
+      'A long recreational ride along the full length of Donauinsel and further down the Danube cycle path toward Alberner Hafen. Flat and fast.',
+    distance: 41.3,
+    estimated_time: 110,
+    route_information: '',
+    creator_id: 3,
   },
-
-  // --- Wachau Radweg (no logs yet – tests unpopular tour case) ---
-
-  // --- Schneeberg Day Hike logs ---
   {
-    id: 'log-011',
-    tourId: 'tour-006',
-    dateTime: '2024-07-04T07:00:00Z',
-    comment: 'Challenging ascent, snow still present near the summit.',
-    difficulty: 5,
-    totalDistance: 18.0,
-    totalTime: 360,
-    rating: 5,
+    id: 8,
+    name: 'Rax Plateau Hike',
+    from: 'Reichenau an der Rax, Austria',
+    to: 'Karl-Ludwig-Haus, Austria',
+    transport_type: TransportationType.HIKE,
+    description:
+      'A demanding hike up to the Rax plateau via the Heukuppe trail. The plateau offers vast open terrain and spectacular views toward the Schneeberg massif.',
+    distance: 11.9,
+    estimated_time: 260,
+    route_information: '',
+    creator_id: 1,
   },
 ];
 
-// ----------------------------------------------------------------- tours ----
+// ──────────────────────────────────────────────
+// Tour Summaries
+// ──────────────────────────────────────────────
+export const mockTourSummaries: TourSummary[] = mockTours.map((tour) => ({
+  id: tour.id,
+  name: tour.name,
+  from: tour.from,
+  to: tour.to,
+  transport_type: tour.transport_type,
+  creator_id: tour.creator_id,
+}));
 
-export const MOCK_TOURS: Tour[] = [
+// ──────────────────────────────────────────────
+// Tour Logs
+// ──────────────────────────────────────────────
+export const mockTourLogs: TourLog[] = [
   {
-    id: 'tour-001',
-    name: 'Prater Rundweg',
-    description:
-      'A leisurely loop through the green Prater meadows and along the Hauptallee. ' +
-      'Ideal for beginners and families. Mostly flat gravel paths.',
-    from: 'Praterstern, Vienna',
-    to: 'Praterstern, Vienna',
-    transportType: 'running',
-    distance: 7.3,
-    estimatedTime: 90,
-    logs: MOCK_LOGS.filter((l) => l.tourId === 'tour-001'),
+    id: 1,
+    tour_id: 1,
+    comment:
+      'Perfect weather for the ride. The Danube path was well maintained and the crossing into Bratislava was straightforward.',
+    timestamp: '2025-04-12T09:15:00Z',
+    difficulty: 2,
+    total_distance: 79.1,
+    total_time: 238,
+    rating: 5,
   },
   {
-    id: 'tour-002',
-    name: 'Kahlenberg Hike',
-    description:
-      'Classic Vienna hike from Heiligenstadt up through the Viennese Woods to the ' +
-      'Kahlenberg summit (484 m). Rewarded with a panoramic view over the city and Danube.',
-    from: 'Heiligenstadt Station, Vienna',
-    to: 'Kahlenberg Summit, Vienna',
-    transportType: 'hike',
-    distance: 14.2,
-    estimatedTime: 210,
-    logs: MOCK_LOGS.filter((l) => l.tourId === 'tour-002'),
+    id: 2,
+    tour_id: 1,
+    comment: 'Headwind on the way back made it harder than expected. Still a great route overall.',
+    timestamp: '2025-06-20T08:00:00Z',
+    difficulty: 3,
+    total_distance: 78.6,
+    total_time: 255,
+    rating: 4,
   },
   {
-    id: 'tour-003',
-    name: 'Donauinsel Bike Tour',
-    description:
-      'Flat, traffic-free bike ride along the full length of the Donauinsel. ' +
-      'Perfect for all ages. Beach bars and picnic spots along the way.',
-    from: 'Floridsdorfer Brücke, Vienna',
-    to: 'Donauinsel Süd, Vienna',
-    transportType: 'bike',
-    distance: 21.5,
-    estimatedTime: 75,
-    logs: MOCK_LOGS.filter((l) => l.tourId === 'tour-003'),
+    id: 3,
+    tour_id: 2,
+    comment:
+      'Very peaceful walk, lovely autumn colours in the forest. Took a small detour near the meadows.',
+    timestamp: '2025-10-05T14:30:00Z',
+    difficulty: 1,
+    total_distance: 5.8,
+    total_time: 80,
+    rating: 4,
   },
   {
-    id: 'tour-004',
-    name: 'Ringstrasse Running Loop',
-    description:
-      'Urban running route around the iconic Ringstrasse, passing the Opera, ' +
-      'Parliament, Rathaus and Burgtheater. Best enjoyed early morning.',
-    from: 'Staatsoper, Vienna',
-    to: 'Staatsoper, Vienna',
-    transportType: 'running',
-    distance: 5.6,
-    estimatedTime: 35,
-    logs: MOCK_LOGS.filter((l) => l.tourId === 'tour-004'),
+    id: 4,
+    tour_id: 3,
+    comment:
+      'Tough ascent but the summit views were absolutely worth it. Recommend starting early to beat the afternoon clouds.',
+    timestamp: '2025-07-18T06:45:00Z',
+    difficulty: 4,
+    total_distance: 14.7,
+    total_time: 320,
+    rating: 5,
   },
   {
-    id: 'tour-005',
-    name: 'Wachau Radweg',
-    description:
-      'Multi-day bike vacation along the Danube through the UNESCO-listed Wachau valley. ' +
-      'Vineyards, medieval ruins and charming villages. No logs yet – newly added.',
-    from: 'Krems an der Donau',
-    to: 'Melk Abbey',
-    transportType: 'vacation',
-    distance: 38.0,
-    estimatedTime: 150,
-    logs: [], // intentionally empty – tests "unpopular" computed state
+    id: 5,
+    tour_id: 3,
+    comment:
+      'Went in late September – some ice patches on the upper section. Crampons would have helped.',
+    timestamp: '2025-09-27T07:10:00Z',
+    difficulty: 5,
+    total_distance: 14.9,
+    total_time: 355,
+    rating: 4,
   },
   {
-    id: 'tour-006',
-    name: 'Schneeberg Day Hike',
-    description:
-      'Demanding full-day hike to the highest peak in Lower Austria (2076 m). ' +
-      'Via the Damböckhaus route. Not suitable for children or inexperienced hikers.',
-    from: 'Puchberg am Schneeberg',
-    to: 'Schneeberg Summit',
-    transportType: 'hike',
-    distance: 18.0,
-    estimatedTime: 360,
-    logs: MOCK_LOGS.filter((l) => l.tourId === 'tour-006'),
+    id: 6,
+    tour_id: 4,
+    comment:
+      'Great singletrack but some sections were muddy after recent rain. The descent near Roter Berg is excellent.',
+    timestamp: '2025-05-03T10:20:00Z',
+    difficulty: 4,
+    total_distance: 33.4,
+    total_time: 165,
+    rating: 5,
+  },
+  {
+    id: 7,
+    tour_id: 5,
+    comment:
+      'Quick and easy commute. Cycle lane on Argentinierstraße was blocked for construction so had to detour briefly.',
+    timestamp: '2025-03-11T07:50:00Z',
+    difficulty: 1,
+    total_distance: 5.0,
+    total_time: 24,
+    rating: 3,
+  },
+  {
+    id: 8,
+    tour_id: 6,
+    comment:
+      'The Schlossberg stairs were steeper than expected but the views from the top are iconic. Great city walk.',
+    timestamp: '2025-08-14T11:00:00Z',
+    difficulty: 2,
+    total_distance: 3.7,
+    total_time: 60,
+    rating: 5,
+  },
+  {
+    id: 9,
+    tour_id: 7,
+    comment:
+      'Long but relaxing ride. The island section was busy on a Sunday – best to go on a weekday.',
+    timestamp: '2025-04-27T09:30:00Z',
+    difficulty: 2,
+    total_distance: 41.9,
+    total_time: 118,
+    rating: 4,
+  },
+  {
+    id: 10,
+    tour_id: 8,
+    comment:
+      'Stunning plateau, very exposed. The climb is relentless but the limestone karst landscape at the top is unlike anything else.',
+    timestamp: '2025-06-08T07:00:00Z',
+    difficulty: 4,
+    total_distance: 12.1,
+    total_time: 275,
+    rating: 5,
+  },
+  {
+    id: 11,
+    tour_id: 8,
+    comment:
+      'Went with two friends. One of us cramped up near the top – hydration is key on this one.',
+    timestamp: '2025-07-30T07:30:00Z',
+    difficulty: 4,
+    total_distance: 11.9,
+    total_time: 290,
+    rating: 4,
+  },
+  {
+    id: 12,
+    tour_id: 4,
+    comment:
+      'Dry conditions today, much faster than last time. The Wienerwald really has some hidden gems.',
+    timestamp: '2025-07-12T09:00:00Z',
+    difficulty: 3,
+    total_distance: 32.3,
+    total_time: 142,
+    rating: 5,
   },
 ];

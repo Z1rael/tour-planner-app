@@ -12,10 +12,10 @@
           type="text"
           class="form-select"
           id="tour-transportation-type"
-          [formField]="tourForm.transportType"
+          [formField]="tourForm.transport_type"
         >
-          @for (type of transType; track type) {
-            <option [value]="type">{{ type }}</option>
+          @for (type of transportOptions; track type.value) {
+            <option [value]="type.value">{{ type.label }}</option>
           }
         </select>
       </div>

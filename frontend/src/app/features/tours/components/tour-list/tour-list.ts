@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { TourFacade } from '../../facade/tour.facade';
-import { Tour } from '../../../../mock/data/tour-mock-data';
 import { Router } from '@angular/router';
+import { Tour } from '../../../../core/models/tour';
 
 @Component({
   selector: 'app-tour-list',
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 })
 export class TourList {
   private router = inject(Router);
-  protected readonly tourMediator = inject(TourFacade);
+  protected readonly tourFacade = inject(TourFacade);
 
   protected readonly transportIcons: Record<string, string> = {
     hike: '🥾',
@@ -22,15 +22,15 @@ export class TourList {
   };
 
   protected setQuery(str: string): void {
-    this.tourMediator.searchQuery.set(str);
+    this.tourFacade.setQuery(str);
   }
 
   protected clearQuery(): void {
-    this.tourMediator.searchQuery.set('');
+    this.tourFacade.clearQuery();
   }
 
-  protected onSelect(tour: Tour): void {
-    this.tourMediator.select(tour.id);
+  protected onSelect(id: number): void {
+    this.tourFacade.select(id);
     this.router.navigate(['/tours']);
   }
 

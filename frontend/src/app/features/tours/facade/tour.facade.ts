@@ -1,117 +1,156 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { catchError, finalize, Observable, of, switchMap, tap } from 'rxjs';
-import { TourService } from '../services/tour-service';
+import {
+  BehaviorSubject,
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  EMPTY,
+  finalize,
+  map,
+  Observable,
+  of,
+  startWith,
+  switchMap,
+} from 'rxjs';
 import { MockTourService } from '../../../mock/services/mock-tour-service';
-import { Tour, TourLog } from '../../../mock/data/tour-mock-data';
+import { TourSummary } from '../../../core/models/tour-summary';
+import { Tour } from '../../../core/models/tour';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TourFacade {
-  private readonly tourService = inject(MockTourService);
-  private readonly errorSignal = signal<string | null>(null);
-  private readonly loadingSignal = signal(false);
+  private readonly tourApi = inject(MockTourService);
+  private readonly refresh$ = new BehaviorSubject<void>(undefined);
 
-  readonly tours = toSignal(this.tourService.tours$, { initialValue: [] });
-  readonly selected = signal<Tour | null>(null);
+  // State
+  readonly error = signal<string | null>(null);
+  readonly loading = signal(false);
+  readonly selectedTourId = signal<number | null>(null);
+  readonly query = signal('');
 
-  readonly error = this.errorSignal.asReadonly();
-  readonly loading = this.loadingSignal.asReadonly();
+  refresh(): void {
+    this.refresh$.next();
+  }
 
-  readonly toursWithStats = computed(() =>
-    this.tours().map((tour) => ({
-      ...tour,
-      popularity: this.computePopularity(tour),
-      childFriendly: this.computeChildFriendly(tour),
-    })),
+  // Load Tour Summaries list
+  readonly tourSummaries$: Observable<TourSummary[]> = this.refresh$.pipe(
+    switchMap(() =>
+      this.tourApi.getTours().pipe(
+        catchError((err) => {
+          this.error.set(err.message);
+          return EMPTY;
+        }),
+        finalize(() => this.loading.set(false)),
+      ),
+    ),
   );
+  readonly tours = toSignal(this.tourSummaries$, { initialValue: [] });
 
-  readonly searchQuery = signal('');
+  // whole selected Tour tour circle or smth like that
+  readonly selectedTourId$ = toObservable(this.selectedTourId);
+  readonly selectedTour$ = this.selectedTourId$.pipe(
+    switchMap((id) => {
+      if (null === id) {
+        return of(null);
+      }
 
-  readonly searchResults = computed(() => {
-    const query = this.searchQuery().toLocaleLowerCase().trim();
-    if (!query) {
-      return this.toursWithStats();
-    }
+      return this.tourApi.getTourById(id).pipe(
+        catchError((err) => {
+          this.error.set(err.message);
+          return EMPTY;
+        }),
+      );
+    }),
+  );
+  readonly selectedTour = toSignal(this.selectedTour$, { initialValue: null });
 
-    return this.toursWithStats().filter((tour) => this.toSearchableString(tour).includes(query));
-  });
+  // query stuff
+  readonly query$ = toObservable(this.query);
+  readonly filteredTours$ = this.query$.pipe(
+    map((q) => q.trim()),
+    debounceTime(300),
+    distinctUntilChanged(),
+    switchMap((q) => {
+      if (0 === q.length) {
+        this.loading.set(false);
+        this.error.set(null);
+        return [];
+      }
 
-  select(id: string): void {
-    const tour = this.tours().find((t) => t.id === id) ?? null;
-    this.selected.set(tour);
+      return this.tourApi.searchTour(q).pipe(
+        catchError((err) => {
+          this.error.set(err.message);
+          return EMPTY;
+        }),
+      );
+    }),
+  );
+  readonly filteredTours = toSignal(this.filteredTours$);
+
+  readonly tourCount = computed(() => this.tours().length);
+
+  // methods
+
+  select(id: number): void {
+    this.selectedTourId.set(id);
   }
 
-  //TODO(felix): something seems to not work here
-  create(tour: Tour): void {
-    this.execute(this.tourService.createTour(tour));
+  clearSelection(): void {
+    this.selectedTourId.set(null);
   }
 
-  update(tour: Tour): void {
-    this.execute(this.tourService.updateTour(tour));
-
-    if (this.selected()?.id === tour.id) {
-      this.selected.set(tour);
-    }
+  setQuery(query: string): void {
+    this.query.set(query);
   }
 
-  delete(id: string): void {
-    this.execute(this.tourService.deleteTour(id));
-
-    if (this.selected()?.id === id) {
-      this.selected.set(null);
-    }
+  clearQuery(): void {
+    this.query.set('');
   }
 
-  private execute<T>(op: Observable<T>): void {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    op.pipe(finalize(() => this.loadingSignal.set(false))).subscribe({
-      error: (err: Error) => this.errorSignal.set(err.message),
-    });
+  createTour(data: Omit<Tour, 'id' | 'distance' | 'estimated_time' | 'route_information'>): void {
+    this.tourApi.createTour(data).pipe(
+      startWith(() => {
+        this.loading.set(true);
+        this.error.set(null);
+      }),
+      catchError((err) => {
+        this.loading.set(false);
+        this.error.set(err.message);
+        return EMPTY;
+      }),
+      finalize(() => this.loading.set(false)),
+    );
   }
 
-  //TODO(felix): need to either change this or the display of our tours in this regard
-  private toSearchableString(tour: Tour & { popularity: number; childFriendly: boolean }): string {
-    return [
-      tour.name,
-      tour.description,
-      tour.from,
-      tour.to,
-      tour.transportType,
-      tour.popularity,
-      tour.childFriendly ? 'child friendly' : 'not child friendly',
-      ...tour.logs.map((l) => l.comment),
-    ]
-      .join(' ')
-      .toLowerCase();
+  updateTour(id: number, data: Partial<Omit<Tour, 'id'>>): void {
+    this.tourApi.updateTour(id, data).pipe(
+      startWith(() => {
+        this.loading.set(true);
+        this.error.set(null);
+      }),
+      catchError((err) => {
+        this.loading.set(false);
+        this.error.set(err.message);
+        return EMPTY;
+      }),
+      finalize(() => this.loading.set(false)),
+    );
   }
 
-  //TODO(felix): is popularity really the number of tour logs? i don't think so
-  private computePopularity(tour: Tour): number {
-    let popularity = 0;
-    let sum = 0;
-    let count = 0;
-    for (const log of tour.logs) {
-      sum += log.rating;
-      count++;
-    }
-    if (count > 0) {
-      popularity = sum / count;
-    }
-    return popularity;
-  }
-
-  private computeChildFriendly(tour: Tour): boolean {
-    if (!tour.logs.length) return false;
-    const avg = (fn: (l: TourLog) => number) =>
-      tour.logs.reduce((sum, l) => sum + fn(l), 0) / tour.logs.length;
-
-    return (
-      avg((l) => l.difficulty) <= 2 &&
-      avg((l) => l.totalTime) <= 120 &&
-      avg((l) => l.totalDistance) <= 10
+  deleteTour(id: number): void {
+    this.tourApi.deleteTour(id).pipe(
+      startWith(() => {
+        this.loading.set(true);
+        this.error.set(null);
+      }),
+      catchError((err) => {
+        this.loading.set(false);
+        this.error.set(err.message);
+        return EMPTY;
+      }),
+      finalize(() => this.loading.set(false)),
     );
   }
 }

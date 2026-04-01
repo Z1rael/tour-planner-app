@@ -7,7 +7,7 @@
         type="text"
         class="form-control"
         placeholder="Search tours..."
-        [value]="tourMediator.searchQuery()"
+        [value]="tourFacade.query()"
         (input)="setQuery(query.value)"
       />
     </div>
@@ -17,25 +17,22 @@
   </div>
 
   <!-- loading / error states -->
-  @if (tourMediator.loading()) {
+  @if (tourFacade.loading()) {
     <p class="state-message">Loading tours...</p>
-  } @else if (tourMediator.error()) {
-    <p class="state-message state-message--error">{{ tourMediator.error() }}</p>
-  } @else if (tourMediator.searchResults().length === 0) {
+  } @else if (tourFacade.error()) {
+    <p class="state-message state-message--error">{{ tourFacade.error() }}</p>
+  } @else if (tourFacade.tourCount() === 0) {
     <p class="state-message">No tours found.</p>
   }
 
   <!-- tour cards -->
   <div class="tour-list">
-    @for (tour of tourMediator.searchResults(); track tour.id) {
-      <div class="card mb-1" (click)="onSelect(tour)">
+    @for (tour of tourFacade.filteredTours(); track tour.id) {
+      <div class="card mb-1" (click)="onSelect(tour.id)">
         <div class="card-header">{{ tour.name }}</div>
         <div class="card-body">
-          <h5 card-title>{{ transportIcons[tour.transportType] }}</h5>
+          <h5 card-title>{{ transportIcons[tour.transport_type] }}</h5>
           <p class="card-text">{{ tour.from }} → {{ tour.to }}</p>
-        </div>
-        <div class="card-footer text-body-secondary text-center">
-          {{ tour.popularity }} {{ tour.popularity === 1 ? 'star' : 'stars' }}
         </div>
       </div>
     }

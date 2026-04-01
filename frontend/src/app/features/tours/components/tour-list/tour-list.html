@@ -27,11 +27,11 @@
 
   <!-- tour cards -->
   <div class="tour-list">
-    @for (tour of tourFacade.filteredTours(); track tour.id) {
+    @for (tour of tourFacade.tours(); track tour.id) {
       <div class="card mb-1" (click)="onSelect(tour.id)">
         <div class="card-header">{{ tour.name }}</div>
         <div class="card-body">
-          <h5 card-title>{{ transportIcons[tour.transport_type] }}</h5>
+          <h5 card-title>{{ tour.transport_type }}</h5>
           <p class="card-text">{{ tour.from }} → {{ tour.to }}</p>
         </div>
       </div>

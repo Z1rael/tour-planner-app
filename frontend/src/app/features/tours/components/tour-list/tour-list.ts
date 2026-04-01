@@ -14,13 +14,6 @@ export class TourList {
   private router = inject(Router);
   protected readonly tourFacade = inject(TourFacade);
 
-  protected readonly transportIcons: Record<string, string> = {
-    hike: '🥾',
-    bike: '🚲',
-    running: '🏃',
-    vacation: '✈️',
-  };
-
   protected setQuery(str: string): void {
     this.tourFacade.setQuery(str);
   }

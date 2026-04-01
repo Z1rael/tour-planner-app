@@ -43,6 +43,7 @@ export class TourFacade {
     this.selected.set(tour);
   }
 
+  //TODO(felix): something seems to not work here
   create(tour: Tour): void {
     this.execute(this.tourService.createTour(tour));
   }

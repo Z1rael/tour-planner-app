@@ -25,9 +25,8 @@ export interface Tour {
   from: string;
   to: string;
   transportType: TransportType;
-  distance: number; // km  – fetched from OpenRouteService
-  estimatedTime: number; // minutes
-  routeImagePath: string; // path on server filesystem
+  distance?: number; // km  – fetched from OpenRouteService
+  estimatedTime?: number; // minutes
   logs: TourLog[];
   // computed (derived in mediator, not stored):
   // popularity:    number
@@ -174,7 +173,6 @@ export const MOCK_TOURS: Tour[] = [
     transportType: 'running',
     distance: 7.3,
     estimatedTime: 90,
-    routeImagePath: '/assets/maps/prater-rundweg.png',
     logs: MOCK_LOGS.filter((l) => l.tourId === 'tour-001'),
   },
   {
@@ -188,7 +186,6 @@ export const MOCK_TOURS: Tour[] = [
     transportType: 'hike',
     distance: 14.2,
     estimatedTime: 210,
-    routeImagePath: '/assets/maps/kahlenberg.png',
     logs: MOCK_LOGS.filter((l) => l.tourId === 'tour-002'),
   },
   {
@@ -202,7 +199,6 @@ export const MOCK_TOURS: Tour[] = [
     transportType: 'bike',
     distance: 21.5,
     estimatedTime: 75,
-    routeImagePath: '/assets/maps/donauinsel.png',
     logs: MOCK_LOGS.filter((l) => l.tourId === 'tour-003'),
   },
   {
@@ -216,7 +212,6 @@ export const MOCK_TOURS: Tour[] = [
     transportType: 'running',
     distance: 5.6,
     estimatedTime: 35,
-    routeImagePath: '/assets/maps/ringstrasse.png',
     logs: MOCK_LOGS.filter((l) => l.tourId === 'tour-004'),
   },
   {
@@ -230,7 +225,6 @@ export const MOCK_TOURS: Tour[] = [
     transportType: 'vacation',
     distance: 38.0,
     estimatedTime: 150,
-    routeImagePath: '/assets/maps/wachau.png',
     logs: [], // intentionally empty – tests "unpopular" computed state
   },
   {
@@ -244,7 +238,6 @@ export const MOCK_TOURS: Tour[] = [
     transportType: 'hike',
     distance: 18.0,
     estimatedTime: 360,
-    routeImagePath: '/assets/maps/schneeberg.png',
     logs: MOCK_LOGS.filter((l) => l.tourId === 'tour-006'),
   },
 ];

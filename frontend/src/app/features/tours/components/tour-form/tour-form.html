@@ -1,1 +1,48 @@
-<p>tour-form works!</p>
+<section class="col-md-12 mx-auto px-3 bubble">
+  <h1 class="mb-4">Add new Tour</h1>
+  <form (submit)="onSubmit()">
+    <div class="row mb-2">
+      <div class="col-auto mb-2">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="tour-name" [formField]="tourForm.name" />
+      </div>
+      <div class="col-auto mb-2">
+        <label for="transportationType">Transportation Type</label>
+        <select
+          type="text"
+          class="form-select"
+          id="tour-transportation-type"
+          [formField]="tourForm.transportType"
+        >
+          @for (type of transType; track type) {
+            <option [value]="type">{{ type }}</option>
+          }
+        </select>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-auto mb-2">
+        <label for="from">From</label>
+        <input type="text" class="form-control" id="tour-from" [formField]="tourForm.from" />
+      </div>
+      <div class="col-auto mb-2">
+        <label for="to">To</label>
+        <input type="text" class="form-control" id="tour-to" [formField]="tourForm.to" />
+      </div>
+    </div>
+    <div class="col-auto mb-4">
+      <label for="description">Description</label>
+      <textarea
+        class="form-control"
+        id="tour-description"
+        [formField]="tourForm.description"
+        placeholder="Describe the tour details ..."
+        rows="10"
+      ></textarea>
+    </div>
+    <div class="row mb-2 justify-content-evenly">
+      <button class="btn btn-secondary col-auto" (click)="onCancel()">Cancel</button>
+      <button class="btn btn-primary col-auto" (click)="onSubmit()">Create</button>
+    </div>
+  </form>
+</section>

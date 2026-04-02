@@ -27,7 +27,7 @@
 
   <!-- tour cards -->
   <div class="tour-list">
-    @for (tour of tourFacade.tours(); track tour.id) {
+    @for (tour of tourFacade.filteredTours(); track tour.id) {
       <div class="card mb-1" (click)="onSelect(tour.id)">
         <div class="card-header">{{ tour.name }}</div>
         <div class="card-body">

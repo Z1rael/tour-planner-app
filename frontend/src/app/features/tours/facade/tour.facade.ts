@@ -73,16 +73,32 @@ export class TourFacade {
     debounceTime(300),
     distinctUntilChanged(),
     switchMap((q) => {
+      this.loading.set(true);
+      this.error.set(null);
+
       if (0 === q.length) {
-        this.loading.set(false);
-        this.error.set(null);
-        return [];
+        return this.tourApi.getTours().pipe(
+          catchError((err) => {
+            this.loading.set(false);
+            this.error.set(err.message);
+            return EMPTY;
+          }),
+          finalize(() => {
+            this.loading.set(false);
+            this.error.set(null);
+          }),
+        );
       }
 
       return this.tourApi.searchTour(q).pipe(
         catchError((err) => {
+          this.loading.set(false);
           this.error.set(err.message);
           return EMPTY;
+        }),
+        finalize(() => {
+          this.loading.set(false);
+          this.error.set(null);
         }),
       );
     }),

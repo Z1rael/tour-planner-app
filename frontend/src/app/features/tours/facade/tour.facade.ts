@@ -12,6 +12,7 @@ import {
   of,
   startWith,
   switchMap,
+  tap,
 } from 'rxjs';
 import { MockTourService } from '../../../mock/services/mock-tour-service';
 import { TourSummary } from '../../../core/models/tour-summary';
@@ -85,7 +86,6 @@ export class TourFacade {
           }),
           finalize(() => {
             this.loading.set(false);
-            this.error.set(null);
           }),
         );
       }
@@ -98,7 +98,6 @@ export class TourFacade {
         }),
         finalize(() => {
           this.loading.set(false);
-          this.error.set(null);
         }),
       );
     }),
@@ -126,18 +125,21 @@ export class TourFacade {
   }
 
   createTour(data: Omit<Tour, 'id' | 'distance' | 'estimated_time' | 'route_information'>): void {
-    this.tourApi.createTour(data).pipe(
-      startWith(() => {
-        this.loading.set(true);
-        this.error.set(null);
-      }),
-      catchError((err) => {
-        this.loading.set(false);
-        this.error.set(err.message);
-        return EMPTY;
-      }),
-      finalize(() => this.loading.set(false)),
-    );
+    this.loading.set(true);
+    this.error.set(null);
+
+    this.tourApi
+      .createTour(data)
+      .pipe(
+        tap((newTour) => console.log('API returned:', newTour)),
+        catchError((err) => {
+          console.error('error:', err);
+          this.error.set(err.message);
+          return EMPTY;
+        }),
+        finalize(() => this.loading.set(false)),
+      )
+      .subscribe();
   }
 
   updateTour(id: number, data: Partial<Omit<Tour, 'id'>>): void {

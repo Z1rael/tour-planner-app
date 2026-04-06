@@ -1,5 +1,6 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TourFacade } from '../../facade/tour.facade';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tour-details',
@@ -10,11 +11,13 @@ import { TourFacade } from '../../facade/tour.facade';
 })
 export class TourDetails {
   protected readonly tourFacade = inject(TourFacade);
+  private router = inject(Router);
+  return(): void {
+    this.router.navigate(['profile']);
+  }
 
-  protected readonly transportIcons: Record<string, string> = {
-    hike: '🥾',
-    bike: '🚲',
-    running: '🏃',
-    vacation: '✈️',
-  };
+  editTour(): void {
+    this.router.navigate(['add-tour']);
+    // need to implement this
+  }
 }

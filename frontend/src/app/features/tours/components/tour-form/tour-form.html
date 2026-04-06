@@ -1,5 +1,5 @@
 <section class="col-md-12 mx-auto px-3 bubble">
-  <h1 class="mb-4">Add new Tour</h1>
+  <h2 class="mb-4">{{ isEditMode() ? 'Edit Tour' : 'Add new Tour' }}</h2>
   <form (submit)="onSubmit()">
     <div class="row mb-2">
       <div class="col-auto mb-2">
@@ -42,7 +42,9 @@
     </div>
     <div class="row mb-2 justify-content-evenly">
       <button class="btn btn-secondary col-auto" (click)="onCancel()">Cancel</button>
-      <button class="btn btn-primary col-auto" (click)="onSubmit()">Create</button>
+      <button class="btn btn-primary col-auto" (click)="onSubmit()">
+        {{ isEditMode() ? 'Save Changes' : 'Create Tour' }}
+      </button>
     </div>
   </form>
 </section>

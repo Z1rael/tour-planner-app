@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { TourService } from '../../features/tours/services/tour-service';
 import { mockTours } from '../data/tour-mock-data';
 import { Tour } from '../../core/models/tour';
 import { from, Observable } from 'rxjs';
@@ -11,9 +10,13 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 @Injectable({
   providedIn: 'root',
 })
-export class MockTourService extends TourService {
+export class MockTourService {
   private _tours: Tour[] = structuredClone(mockTours);
   private nextTourId = Math.max(...this._tours.map((t) => t.id)) + 1;
+
+  constructor() {
+    console.log('Mock Tour API service instantiated');
+  }
 
   getTours(): Observable<TourSummary[]> {
     return from(this.fetchTours());

@@ -17,12 +17,15 @@ import {
 import { MockTourService } from '../../../mock/services/mock-tour-service';
 import { TourSummary } from '../../../core/models/tour-summary';
 import { Tour } from '../../../core/models/tour';
+import { MockLogService } from '../../../mock/services/mock-log-service';
+import { TourLog } from '../../../core/models/tour-log';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TourFacade {
   private readonly tourApi = inject(MockTourService);
+  private readonly logApi = inject(MockLogService);
   private readonly refresh$ = new BehaviorSubject<void>(undefined);
 
   // State
@@ -31,6 +34,9 @@ export class TourFacade {
   readonly selectedTourId = signal<number | null>(null);
   readonly query = signal('');
 
+  //
+  // Tour
+  //
   refresh(): void {
     this.refresh$.next();
   }
@@ -69,38 +75,42 @@ export class TourFacade {
 
   // query stuff
   readonly query$ = toObservable(this.query);
-  readonly filteredTours$ = this.query$.pipe(
-    map((q) => q.trim()),
-    debounceTime(300),
-    distinctUntilChanged(),
-    switchMap((q) => {
-      this.loading.set(true);
-      this.error.set(null);
+  readonly filteredTours$ = this.refresh$.pipe(
+    switchMap(() =>
+      this.query$.pipe(
+        map((q) => q.trim()),
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap((q) => {
+          this.loading.set(true);
+          this.error.set(null);
 
-      if (0 === q.length) {
-        return this.tourApi.getTours().pipe(
-          catchError((err) => {
-            this.loading.set(false);
-            this.error.set(err.message);
-            return EMPTY;
-          }),
-          finalize(() => {
-            this.loading.set(false);
-          }),
-        );
-      }
+          if (0 === q.length) {
+            return this.tourApi.getTours().pipe(
+              catchError((err) => {
+                this.loading.set(false);
+                this.error.set(err.message);
+                return EMPTY;
+              }),
+              finalize(() => {
+                this.loading.set(false);
+              }),
+            );
+          }
 
-      return this.tourApi.searchTour(q).pipe(
-        catchError((err) => {
-          this.loading.set(false);
-          this.error.set(err.message);
-          return EMPTY;
+          return this.tourApi.searchTour(q).pipe(
+            catchError((err) => {
+              this.loading.set(false);
+              this.error.set(err.message);
+              return EMPTY;
+            }),
+            finalize(() => {
+              this.loading.set(false);
+            }),
+          );
         }),
-        finalize(() => {
-          this.loading.set(false);
-        }),
-      );
-    }),
+      ),
+    ),
   );
   readonly filteredTours = toSignal(this.filteredTours$);
 
@@ -128,18 +138,15 @@ export class TourFacade {
     this.loading.set(true);
     this.error.set(null);
 
-    this.tourApi
-      .createTour(data)
-      .pipe(
-        tap((newTour) => console.log('API returned:', newTour)),
-        catchError((err) => {
-          console.error('error:', err);
-          this.error.set(err.message);
-          return EMPTY;
-        }),
-        finalize(() => this.loading.set(false)),
-      )
-      .subscribe();
+    this.tourApi.createTour(data).pipe(
+      tap((newTour) => console.log('API returned:', newTour)),
+      catchError((err) => {
+        this.loading.set(false);
+        this.error.set(err.message);
+        return EMPTY;
+      }),
+      finalize(() => this.loading.set(false)),
+    );
   }
 
   updateTour(id: number, data: Partial<Omit<Tour, 'id'>>): void {
@@ -163,6 +170,112 @@ export class TourFacade {
         this.loading.set(true);
         this.error.set(null);
       }),
+      catchError((err) => {
+        this.loading.set(false);
+        this.error.set(err.message);
+        return EMPTY;
+      }),
+      finalize(() => this.loading.set(false)),
+    );
+  }
+
+  //
+  // Log
+  //
+  readonly logs$ = this.selectedTour$.pipe(
+    switchMap((tour) => {
+      this.loading.set(true);
+      this.error.set(null);
+
+      if (null === tour) {
+        return EMPTY;
+      }
+
+      return this.logApi.getLogByTourId(tour.id).pipe(
+        catchError((err) => {
+          this.loading.set(false);
+          this.error.set(err);
+          return EMPTY;
+        }),
+        finalize(() => {
+          this.loading.set(false);
+        }),
+      );
+    }),
+  );
+  readonly logs = toSignal(this.logs$);
+  readonly logCount = computed(() => this.logs()?.length);
+
+  readonly filteredLogs$ = this.query$.pipe(
+    map((q) => q.trim()),
+    debounceTime(300),
+    distinctUntilChanged(),
+    switchMap((q) => {
+      this.loading.set(true);
+      this.error.set(null);
+
+      if (0 === q.length) {
+        return this.logApi.getTourLogs().pipe(
+          catchError((err) => {
+            this.loading.set(false);
+            this.error.set(err.message);
+            return EMPTY;
+          }),
+          finalize(() => {
+            this.loading.set(false);
+          }),
+        );
+      }
+
+      return this.logApi.searchTour(q).pipe(
+        catchError((err) => {
+          this.loading.set(false);
+          this.error.set(err.message);
+          return EMPTY;
+        }),
+        finalize(() => {
+          this.loading.set(false);
+        }),
+      );
+    }),
+  );
+  readonly filteredLogs = toSignal(this.filteredLogs$);
+
+  // methods
+
+  createLog(data: Omit<TourLog, 'id' | 'timestamp'>): void {
+    this.loading.set(true);
+    this.error.set(null);
+
+    this.logApi.createTourLog(data).pipe(
+      catchError((err) => {
+        this.loading.set(false);
+        this.error.set(err.message);
+        return EMPTY;
+      }),
+      finalize(() => this.loading.set(false)),
+    );
+  }
+
+  updateLog(id: number, data: Omit<TourLog, 'id' | 'timestamp'>): void {
+    this.loading.set(true);
+    this.error.set(null);
+
+    this.logApi.updateTourLog(id, data).pipe(
+      catchError((err) => {
+        this.loading.set(false);
+        this.error.set(err.message);
+        return EMPTY;
+      }),
+      finalize(() => this.loading.set(false)),
+    );
+  }
+
+  deleteLog(id: number): void {
+    this.loading.set(true);
+    this.error.set(null);
+
+    this.logApi.deleteTour(id).pipe(
       catchError((err) => {
         this.loading.set(false);
         this.error.set(err.message);

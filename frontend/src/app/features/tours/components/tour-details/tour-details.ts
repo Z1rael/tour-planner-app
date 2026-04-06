@@ -13,6 +13,7 @@ export class TourDetails {
   protected readonly tourFacade = inject(TourFacade);
   private router = inject(Router);
   return(): void {
+    this.tourFacade.clearSelection();
     this.router.navigate(['profile']);
   }
 

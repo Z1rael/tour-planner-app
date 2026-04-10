@@ -188,12 +188,19 @@ export class TourFacade {
   //
   readonly logs$ = this.selectedTour$.pipe(
     switchMap((tour) => {
-      if (null === tour) {
-        return EMPTY;
-      }
-
       this.loading.set(true);
       this.error.set(null);
+
+      if (null === tour) {
+        return this.logApi.getTourLogs().pipe(
+          catchError((err) => {
+            this.loading.set(false);
+            this.error.set(err.message);
+            return EMPTY;
+          }),
+          finalize(() => this.loading.set(false)),
+        );
+      }
 
       return this.logApi.getLogByTourId(tour.id).pipe(
         catchError((err) => {

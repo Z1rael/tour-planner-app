@@ -1,15 +1,38 @@
-<form>
-    <div class="form-group">
-        <label for="email">Email address</label>
-        <input type="email" class="form-control" id="email" placeholder="Enter email" [value]="email">
+<div class="col-sm-10 mx-auto px-3 bubble">
+  <form (submit)="$event.preventDefault(); submit()">
+    <div class="form-group mb-2">
+      <label for="email">Email address</label>
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        placeholder="Enter email"
+        [(ngModel)]="email"
+      />
     </div>
-    <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" placeholder="Password" [value]="password">
+
+    <div class="form-group mb-2">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        placeholder="Password"
+        [(ngModel)]="password"
+      />
     </div>
-    <div class="form-group">
-        <label for="confirmPassword">Confirm Password</label>
-        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password" [value]="confirmPassword">
+
+    <div class="form-group mb-2">
+      <label for="confirmPassword">Confirm Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="confirmPassword"
+        placeholder="Confirm Password"
+        [(ngModel)]="confirmPassword"
+      />
     </div>
-    <button type="submit" class="btn btn-primary" (click)="submit()">Register</button>
-</form>
+
+    <button type="submit" class="btn btn-primary">Register</button>
+  </form>
+</div>

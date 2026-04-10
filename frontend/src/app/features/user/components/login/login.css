@@ -1,17 +1,51 @@
 :host {
   display: block;
+  width: 100%;
+  max-width: 34rem;
+  align-items: center;
+  justify-content: center;
+  margin-inline: auto;
 }
 
 form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  background:
+    radial-gradient(circle at top right, rgba(122, 163, 74, 0.08), transparent 20%),
+    rgba(255, 251, 241, 0.94);
+  border: 2px solid rgba(172, 197, 214, 0.8);
+  border-radius: 1.4rem;
+  padding: 1.4rem;
+  box-shadow: 0 12px 28px rgba(69, 50, 20, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+form::before {
+  content: "";
+  position: absolute;
+  top: -1rem;
+  right: 1rem;
+  font-size: 2rem;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.12));
+}
+
+form::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  background-image:
+    radial-gradient(rgba(21, 34, 56, 0.12) 1px, transparent 1px);
+  background-size: 14px 14px;
 }
 
 label {
   font-weight: 700;
   margin-bottom: 0.35rem;
-  color: #4d3a20;
+  color: #4d5d78;
 }
 
 .form-group,
@@ -22,7 +56,7 @@ label {
 .error-list {
   margin: 0.5rem 0 0;
   padding-left: 1.2rem;
-  color: #a63d2d;
+  color: #c85b4f;
   font-size: 0.92rem;
 }
 

@@ -9,6 +9,7 @@
 
 .row {
   align-items: stretch;
+  row-gap: 1rem;
 }
 
 .col-12 {

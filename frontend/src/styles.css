@@ -153,6 +153,7 @@ textarea {
 .state-message {
   color: var(--app-muted);
   font-weight: 600;
+  height: 58vh;
 }
 
 .state-message--error {

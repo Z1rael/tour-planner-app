@@ -117,8 +117,7 @@ export class TourFacade {
     ),
   );
   readonly filteredTours = toSignal(this.filteredTours$);
-
-  readonly tourCount = computed(() => this.tours().length);
+  readonly tourCount = computed(() => this.filteredTours()?.length);
 
   // methods
 

@@ -1,7 +1,15 @@
-<section class="col-lg-10 mx-auto px-3 bubble">
+<section class="col-lg-12 mx-auto px-3 bubble">
+  <div class="mb-2 row justify-content-between">
+    <div class="col-auto mb-2 mx-4">
+      <h2>Tours</h2>
+    </div>
+    <div class="col-auto mx-4">
+      <button class="col-auto btn btn-primary mb-2" (click)="addTour()">Add</button>
+    </div>
+  </div>
   <!-- search bar -->
-  <div class="mb-3 row mx-auto">
-    <div class="col-auto mb-2">
+  <div class="mb-3 row justify-content-evenly">
+    <div class="col-lg-8 mb-2">
       <input
         #query
         type="text"
@@ -14,30 +22,27 @@
     <div class="col-auto">
       <button class="btn btn-primary mb-2" (click)="clearQuery()">Clear</button>
     </div>
-    <div class="col-auto">
-      <button class="btn btn-primary mb-2" (click)="addTour()">Add</button>
-    </div>
   </div>
-
-  <!-- loading / error states -->
-  @if (tourFacade.loading()) {
-    <p class="state-message">Loading tours...</p>
-  } @else if (tourFacade.error()) {
-    <p class="state-message state-message--error">{{ tourFacade.error() }}</p>
-  } @else if (tourFacade.tourCount() === 0) {
-    <p class="state-message">No tours found.</p>
-  }
 
   <!-- tour cards -->
   <div class="tour-list">
-    @for (tour of tourFacade.filteredTours(); track tour.id) {
-      <div class="card mb-1" (click)="onSelect(tour.id)">
-        <div class="card-header">{{ tour.name }}</div>
-        <div class="card-body">
-          <h5 card-title>{{ tour.transport_type }}</h5>
-          <p class="card-text">{{ tour.from }} → {{ tour.to }}</p>
+    <!-- loading / error states -->
+    @if (tourFacade.loading()) {
+      <p class="state-message mx-auto">Loading tours...</p>
+    } @else if (tourFacade.error()) {
+      <p class="state-message state-message--error mx-auto">{{ tourFacade.error() }}</p>
+    } @else if (tourFacade.tourCount() === 0 || tourFacade.tourCount() === undefined) {
+      <p class="state-message mx-auto">No tours found.</p>
+    } @else {
+      @for (tour of tourFacade.filteredTours(); track tour.id) {
+        <div class="card mb-1" (click)="onSelect(tour.id)">
+          <div class="card-header">{{ tour.name }}</div>
+          <div class="card-body">
+            <h5 card-title>{{ tour.transport_type }}</h5>
+            <p class="card-text">{{ tour.from }} → {{ tour.to }}</p>
+          </div>
         </div>
-      </div>
+      }
     }
   </div>
 </section>

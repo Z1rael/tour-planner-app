@@ -63,11 +63,15 @@ export class TourFacade {
         return of(null);
       }
 
+      this.loading.set(true);
+      this.error.set(null);
+
       return this.tourApi.getTourById(id).pipe(
         catchError((err) => {
           this.error.set(err.message);
           return EMPTY;
         }),
+        finalize(() => this.loading.set(false)),
       );
     }),
   );
@@ -184,12 +188,12 @@ export class TourFacade {
   //
   readonly logs$ = this.selectedTour$.pipe(
     switchMap((tour) => {
-      this.loading.set(true);
-      this.error.set(null);
-
       if (null === tour) {
         return EMPTY;
       }
+
+      this.loading.set(true);
+      this.error.set(null);
 
       return this.logApi.getLogByTourId(tour.id).pipe(
         catchError((err) => {

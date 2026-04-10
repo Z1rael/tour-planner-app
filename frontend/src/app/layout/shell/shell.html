@@ -27,13 +27,19 @@
       }
     </div>
 
-    <div class="col-12 col-md-4 my-auto">
+    <div class="col-12 col-md-4 my-auto test">
       @if (currentView === 'login') {
-        <h3>Welcome to the Tour Planner! Please log in or register to get started.</h3>
+        <h3 [class.order-first]="isNarrow()">
+          Welcome to the Tour Planner! Please log in or register to get started.
+        </h3>
       } @else if (currentView === 'register') {
-        <h3>Welcome to the Registration Page! Please fill out the form to create an account.</h3>
+        <h3 [class.order-first]="isNarrow()">
+          Welcome to the Registration Page! Please fill out the form to create an account.
+        </h3>
       } @else if (currentView === 'profile') {
-        <h3>Welcome to your profile! Here you can view and manage your tours and logs.</h3>
+        <h3 [class.order-first]="isNarrow()">
+          Welcome to your profile! Here you can view and manage your tours and logs.
+        </h3>
       } @else if (currentView === 'tours') {
         <app-log-list />
       } @else if (currentView === 'add-tour-log') {

@@ -30,7 +30,7 @@ section {
     box-shadow 0.18s ease,
     border-color 0.18s ease;
   position: relative;
-  overflow: hidden;
+  overflow: hidden; 
 }
 
 .card::after {

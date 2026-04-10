@@ -8,7 +8,7 @@
     </small>
   </div>
   <div class="row justify-content-evenly mb-3">
-    <div class="col-sm-4">
+    <div class="col-lg-4">
       <label class="form-label" for="">Rating</label>
       <input class="form-control" type="text" [value]="log().rating" [disabled]="true" />
     </div>
@@ -19,16 +19,16 @@
   </div>
   @if (expanded()) {
     <div class="row justify-content-evenly mb-2">
-      <div class="col-sm-4">
+      <div class="col-lg-4">
         <label class="form-label" for="">Total Time</label>
         <input class="form-control" type="text" [value]="log().total_time" [disabled]="true" />
       </div>
-      <div class="col-sm-4">
+      <div class="col-lg-4">
         <label class="form-label" for="">Total Distance</label>
         <input class="form-control" type="text" [value]="log().total_distance" [disabled]="true" />
       </div>
     </div>
-    <div class="col-sm-8 offset-sm-2 mb-3">
+    <div class="col-lg-10 offset-lg-1 mb-3 px-2">
       <label class="form-label" for="">Comment</label>
       <textarea class="form-control" [disabled]="true" [rows]="5"
         >{{ log().comment }}

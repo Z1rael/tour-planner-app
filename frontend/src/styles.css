@@ -1,26 +1,146 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 
-body {
-  background: #f8f9fa;
-  color: #212529;
+:root {
+  --app-bg: #f3ecd7;
+  --app-surface: #f8f1df;
+  --app-surface-alt: #efe2bf;
+  --app-border: #8a6f45;
+  --app-text: #2f2618;
+  --app-muted: #6e5a3d;
+  --app-primary: #6f8f3a;
+  --app-primary-hover: #5b772e;
+  --app-accent: #9b6a3c;
+  --app-danger: #a63d2d;
+  --app-radius-lg: 1.35rem;
+  --app-radius-md: 0.9rem;
+  --app-shadow: 0 14px 30px rgba(61, 42, 18, 0.14);
 }
 
-h1, h2, h3 {
-  font-weight: 600;
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--app-text);
+  background:
+    radial-gradient(circle at top left, rgba(111, 143, 58, 0.2), transparent 28%),
+    radial-gradient(circle at top right, rgba(155, 106, 60, 0.16), transparent 24%),
+    linear-gradient(180deg, #f6edd6 0%, #ead8a7 100%);
+  background-attachment: fixed;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #3a2c1a;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  border-radius: 0.9rem !important;
+}
+
+.form-control,
+.form-select {
+  border-color: var(--app-border);
+  box-shadow: none;
+  background-color: #fff8e9;
+  color: var(--app-text);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: rgba(111, 143, 58, 0.7);
+  box-shadow: 0 0 0 0.2rem rgba(111, 143, 58, 0.16);
+}
+
+.btn {
+  border-radius: 0.9rem;
+  font-weight: 700;
+  padding-inline: 1rem;
+}
+
+.btn-primary {
+  background-color: var(--app-primary);
+  border-color: var(--app-primary);
+}
+
+.btn-primary:hover {
+  background-color: var(--app-primary-hover);
+  border-color: var(--app-primary-hover);
+}
+
+.btn-secondary {
+  background-color: #8b6b3f;
+  border-color: #8b6b3f;
+}
+
+.btn-secondary:hover {
+  background-color: #72572f;
+  border-color: #72572f;
 }
 
 .container-fluid {
   padding-top: 1rem;
-  padding-left: 3rem;
-  padding-right: 3rem;
-  height: 100vh;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 .bubble {
-    background-color: blanchedalmond;
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-    border: .15rem solid brown;
-    border-radius: 3rem;
-    height: 80vh;
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255, 248, 229, 0.96), rgba(244, 228, 187, 0.94));
+  border: 2px solid rgba(138, 111, 69, 0.65);
+  border-radius: var(--app-radius-lg);
+  box-shadow: var(--app-shadow);
+  min-height: 72vh;
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+.bubble::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(111, 143, 58, 0.10), transparent 18%),
+    radial-gradient(circle at 82% 20%, rgba(155, 106, 60, 0.08), transparent 20%),
+    radial-gradient(circle at 50% 100%, rgba(138, 111, 69, 0.12), transparent 30%);
+}
+
+.state-message {
+  color: var(--app-muted);
+  font-weight: 600;
+}
+
+.state-message--error {
+  color: var(--app-danger);
+}
+
+@media (max-width: 768px) {
+  .container-fluid {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .bubble {
+    min-height: auto;
+    padding: 1rem;
+  }
 }

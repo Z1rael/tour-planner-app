@@ -1,0 +1,16 @@
+:host {
+  display: block;
+  padding: 1rem 0;
+}
+
+.container-fluid {
+  max-width: 1600px;
+}
+
+.row {
+  align-items: stretch;
+}
+
+.col-12 {
+  display: flex;
+}

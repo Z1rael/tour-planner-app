@@ -1,4 +1,12 @@
+:host {
+  display: block;
+}
+
 .tour-list {
-    height: 70vh;
-    overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  max-height: 60vh;
+  overflow: auto;
+  padding-right: 0.25rem;
 }

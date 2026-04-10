@@ -1,4 +1,44 @@
+:host {
+  display: block;
+}
+
 .tour-details {
-    height:100%;
-    overflow-y: auto;
+  border: 2px solid rgba(138, 111, 69, 0.45);
+  border-radius: 1.1rem;
+  overflow: hidden;
+  box-shadow: 0 10px 26px rgba(61, 42, 18, 0.1);
+  background: #fff8e9;
+}
+
+.card-header {
+  background: linear-gradient(135deg, #dfe8b0, #c7d88a);
+  border-bottom: 1px solid rgba(138, 111, 69, 0.35);
+}
+
+.card-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.card-body {
+  padding: 1.25rem;
+}
+
+label {
+  font-weight: 700;
+  color: #4d3a20;
+  margin-bottom: 0.35rem;
+}
+
+.form-control:disabled,
+textarea.form-control:disabled {
+  background: #fff8e9;
+  color: #2f2618;
+  opacity: 1;
+  border-color: rgba(138, 111, 69, 0.45);
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 10rem;
 }

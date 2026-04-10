@@ -122,6 +122,9 @@ textarea {
   min-height: 72vh;
   padding: 1.5rem;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .bubble::before {

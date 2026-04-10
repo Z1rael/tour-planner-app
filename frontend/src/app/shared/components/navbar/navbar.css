@@ -8,7 +8,6 @@
     linear-gradient(180deg, #10213d, #1a325a);
   border-bottom: 2px solid rgba(141, 183, 255, 0.25);
   box-shadow: 0 10px 24px rgba(6, 18, 41, 0.22);
-  border-radius: 0 0 1.2rem 1.2rem;
 }
 
 .navbar-brand {

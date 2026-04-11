@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import { from, Observable } from 'rxjs';
+import {isPlatformBrowser} from '@angular/common';
 
 export interface User {
   id: number;
@@ -14,10 +15,15 @@ export interface AuthResponse {
 }
 
 const MOCK_DELAY = 300;
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
-//TODO: some sort of local Storage
-const mockUsers: User[] = [
+const STORAGE_KEYS = {
+  users: 'mock_users',
+  currentUser: 'mock_current_user',
+  token: 'mock_token',
+} as const;
+
+const defaultUsers: User[] = [
   {
     id: 1,
     email: 'dino@example.com',
@@ -36,74 +42,125 @@ const mockUsers: User[] = [
   providedIn: 'root',
 })
 export class MockUserService {
-  private _users: User[] = structuredClone(mockUsers);
-  private _currentUser: Omit<User, 'passwordHash'> | null = null;
-  private nextUserId = Math.max(...this._users.map((u) => u.id)) + 1;
+  private readonly isBrowser: boolean;
 
-  constructor() {
+  constructor(@Inject(PLATFORM_ID) platformId: object) {
+    this.isBrowser = isPlatformBrowser(platformId);
+
+    if (this.isBrowser && !localStorage.getItem(STORAGE_KEYS.users)) {
+      localStorage.setItem(STORAGE_KEYS.users, JSON.stringify(structuredClone(defaultUsers)));
+    }
     console.log('Mock User API service instantiated');
   }
 
-  login(email: string, password: string): Observable<AuthResponse> {
-    return from(this.mockLogin(email, password));
+  private storageGet(key: string): string | null {
+    return this.isBrowser ? localStorage.getItem(key) : null;
   }
 
-  register(email: string, password: string): Observable<AuthResponse> {
-    return from(this.mockRegister(email, password));
+  private storageSet(key: string, value: string): void {
+    if (this.isBrowser) localStorage.setItem(key, value);
   }
 
-  logout(): Observable<void> {
-    return from(this.mockLogout());
+  private storageRemove(key: string): void {
+    if (this.isBrowser) localStorage.removeItem(key);
   }
 
-  getCurrentUser(): Observable<Omit<User, 'passwordHash'> | null> {
-    return from(this.mockGetCurrentUser());
+  private getUsers(): User[] {
+    const stored = this.storageGet(STORAGE_KEYS.users);
+    return stored ? JSON.parse(stored) : structuredClone(defaultUsers);
   }
 
-  private async mockLogin(email: string, password: string): Promise<AuthResponse> {
-    await delay(MOCK_DELAY);
-    const user = this._users.find(
-      (u) => u.email.toLowerCase() === email.toLowerCase() && u.passwordHash === password,
-    );
-    if (!user) throw new Error('Invalid email or password');
-    const { passwordHash, ...safeUser } = user;
-    this._currentUser = safeUser;
-    return { user: structuredClone(safeUser), token: this.generateMockToken(user.id) };
+  private saveUsers(users: User[]): void {
+    this.storageSet(STORAGE_KEYS.users, JSON.stringify(users));
   }
 
-  private async mockRegister(email: string, password: string): Promise<AuthResponse> {
-    await delay(MOCK_DELAY);
-    const exists = this._users.some((u) => u.email.toLowerCase() === email.toLowerCase());
-    if (exists) throw new Error(`An account with email ${email} already exists`);
-    const newUser: User = {
-      id: this.nextUserId++,
-      email,
-      passwordHash: password,
-      createdAt: new Date().toISOString(),
-    };
-    this._users.push(newUser);
-    const { passwordHash, ...safeUser } = newUser;
-    this._currentUser = safeUser;
-    return { user: structuredClone(safeUser), token: this.generateMockToken(newUser.id) };
+  private getStoredCurrentUser(): Omit<User, 'passwordHash'> | null {
+    const stored = this.storageGet(STORAGE_KEYS.currentUser);
+    return stored ? JSON.parse(stored) : null;
   }
 
-  private async mockLogout(): Promise<void> {
-    await delay(MOCK_DELAY);
-    this._currentUser = null;
+  private saveCurrentUser(user: Omit<User, 'passwordHash'> | null): void {
+    if (user === null) {
+      this.storageRemove(STORAGE_KEYS.currentUser);
+      this.storageRemove(STORAGE_KEYS.token);
+    } else {
+      this.storageSet(STORAGE_KEYS.currentUser, JSON.stringify(user));
+    }
   }
 
-  private async mockGetCurrentUser(): Promise<Omit<User, 'passwordHash'> | null> {
-    await delay(MOCK_DELAY);
-    return this._currentUser ? structuredClone(this._currentUser) : null;
+  resetMockData(): void {
+    this.storageRemove(STORAGE_KEYS.users);
+    this.storageRemove(STORAGE_KEYS.currentUser);
+    this.storageRemove(STORAGE_KEYS.token);
+    this.storageSet(STORAGE_KEYS.users, JSON.stringify(structuredClone(defaultUsers)));
+    console.log('Mock data reset to defaults');
+  }
+
+  private getNextUserId(): number {
+    const users = this.getUsers();
+    return users.length > 0 ? Math.max(...users.map((u) => u.id)) + 1 : 1;
   }
 
   private generateMockToken(userId: number): string {
     return `mock-jwt-token-${userId}-${Date.now()}`;
   }
 
-  resetMockData(): void {
-    this._users = structuredClone(mockUsers);
-    this._currentUser = null;
-    this.nextUserId = Math.max(...this._users.map((u) => u.id)) + 1;
+  login(email: string, password: string): Observable<AuthResponse> {
+    return from(
+      (async (): Promise<AuthResponse> => {
+        await delay(MOCK_DELAY);
+        const users = this.getUsers();
+        const user = users.find(
+          (u) => u.email.toLowerCase() === email.toLowerCase() && u.passwordHash === password,
+        );
+        if (!user) throw new Error('Invalid email or password');
+        const { passwordHash: _, ...safeUser } = user;
+        this.saveCurrentUser(safeUser);
+        const token = this.generateMockToken(user.id);
+        localStorage.setItem(STORAGE_KEYS.token, token);
+        return { user: structuredClone(safeUser), token };
+      })(),
+    );
+  }
+
+  register(email: string, password: string): Observable<AuthResponse> {
+    return from(
+      (async (): Promise<AuthResponse> => {
+        await delay(MOCK_DELAY);
+        const users = this.getUsers();
+        const exists = users.some((u) => u.email.toLowerCase() === email.toLowerCase());
+        if (exists) throw new Error(`An account with email ${email} already exists`);
+        const newUser: User = {
+          id: this.getNextUserId(),
+          email,
+          passwordHash: password,
+          createdAt: new Date().toISOString(),
+        };
+        this.saveUsers([...users, newUser]);
+        const { passwordHash: _, ...safeUser } = newUser;
+        this.saveCurrentUser(safeUser);
+        const token = this.generateMockToken(newUser.id);
+        localStorage.setItem(STORAGE_KEYS.token, token);
+        return { user: structuredClone(safeUser), token };
+      })(),
+    );
+  }
+
+  logout(): Observable<void> {
+    return from(
+      (async (): Promise<void> => {
+        await delay(MOCK_DELAY);
+        this.saveCurrentUser(null);
+      })(),
+    );
+  }
+
+  getCurrentUser(): Observable<Omit<User, 'passwordHash'> | null> {
+    return from(
+      (async (): Promise<Omit<User, 'passwordHash'> | null> => {
+        await delay(MOCK_DELAY);
+        return this.getStoredCurrentUser();
+      })(),
+    );
   }
 }

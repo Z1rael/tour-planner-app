@@ -27,7 +27,7 @@ export class Register {
     }
 
     this.service.register(this.email, this.password).subscribe({
-      next: () => this.router.navigate(['/tours']),
+      next: () => this.router.navigate(['/profile']),
       error: (err: Error) => alert(err.message),
     });
   }

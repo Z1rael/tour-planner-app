@@ -35,7 +35,7 @@ export class Login {
     const { email, password } = this.loginModel();
 
     this.userService.login(email, password).subscribe({
-      next: () => this.router.navigate(['/tours']),
+      next: () => this.router.navigate(['/profile']),
       error: (err: Error) => alert(err.message),
     });
   }

@@ -20,10 +20,11 @@ import { TourFacade } from '../../features/tours/facade/tour.facade';
 })
 export class Shell {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  readonly tourFacade = inject(TourFacade);
 
   readonly isNarrow = signal(this.isBrowser ? window.innerWidth <= 768 : false);
+
   currentView: string = '';
-  tourFacade = inject(TourFacade);
 
   constructor(private route: ActivatedRoute) {
     this.route.data.subscribe((data) => {

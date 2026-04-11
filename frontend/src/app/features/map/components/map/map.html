@@ -1,4 +1,5 @@
-<div id="leaflet-map"></div>
-@if (!from() || !to()) {
-  <p>Select a tour or enter From/To to see the route.</p>
-}
+<div id="leaflet-map" class="map">
+  @if (!selectedTour()) {
+    <p>Select a tour or enter From/To to see the route.</p>
+  }
+</div>

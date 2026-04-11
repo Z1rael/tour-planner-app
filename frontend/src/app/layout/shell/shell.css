@@ -19,7 +19,7 @@
 }
 
 @media (max-width: 768px) {
-  .test {
+  .reorder {
     order: -1;   
   }
 }

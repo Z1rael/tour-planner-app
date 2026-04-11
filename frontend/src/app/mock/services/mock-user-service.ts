@@ -16,18 +16,19 @@ export interface AuthResponse {
 const MOCK_DELAY = 300;
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+//TODO: some sort of local Storage
 const mockUsers: User[] = [
   {
     id: 1,
-    email: 'alice@example.com',
-    passwordHash: 'password123',
-    createdAt: new Date('2024-01-01').toISOString(),
+    email: 'dino@example.com',
+    passwordHash: 'pwd123',
+    createdAt: new Date('2026-01-01').toISOString(),
   },
   {
     id: 2,
-    email: 'bob@example.com',
-    passwordHash: 'hunter2',
-    createdAt: new Date('2024-02-15').toISOString(),
+    email: 'bronto@example.com',
+    passwordHash: 'pwd123',
+    createdAt: new Date('2026-01-02').toISOString(),
   },
 ];
 

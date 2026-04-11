@@ -1,44 +1,46 @@
 :host {
-  display: block;
+  display: contents;
 }
 
-.tour-details {
-  border: 2px solid rgba(172, 197, 214, 0.8);
-  border-radius: 1.2rem;
-  overflow: hidden;
-  box-shadow: 0 10px 26px rgba(69, 50, 20, 0.1);
-  background: rgba(255, 252, 245, 0.96);
-}
-
-.card-header {
-  background: linear-gradient(135deg, #dfe8b0, #c7d88a);
-  border-bottom: 1px solid rgba(138, 111, 69, 0.2);
-}
-
-.card-header h1 {
-  margin: 0;
-  font-size: 1.5rem;
-}
-
-.card-body {
-  padding: 1.25rem;
+h1 {
+  font-size: 1.8rem;
+  color: var(--app-primary);
 }
 
 label {
   font-weight: 700;
-  color: #4d5d78;
-  margin-bottom: 0.35rem;
+  color: var(--app-accent);
+  margin-bottom: 0.3rem;
+  display: block;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
-.form-control:disabled,
+input.form-control:disabled,
 textarea.form-control:disabled {
-  background: #fff8ef;
-  color: #2f2618;
+  background-color: rgba(127, 216, 200, 0.08);
+  color: var(--app-text);
+  border-color: rgba(127, 216, 200, 0.4);
   opacity: 1;
-  border-color: rgba(172, 197, 214, 0.8);
+  cursor: default;
 }
 
 textarea.form-control {
-  resize: vertical;
-  min-height: 10rem;
+  resize: none;
+}
+
+.row.justify-content-evenly .btn {
+  min-width: 110px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--app-primary), var(--app-accent));
+  border: none;
+  color: #10303a;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--app-primary-hover), #7aaaff);
+  color: #10303a;
 }

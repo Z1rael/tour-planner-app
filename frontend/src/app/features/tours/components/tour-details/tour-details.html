@@ -1,12 +1,12 @@
-<section class="col-md-12 mx-auto px-3 bubble">
-  <div class="card tour-details">
-    <div class="card-header">
+<section class="col-sm-10 mx-auto px-3 bubble">
+  <div class="bubble-inner">
+    <div class="mb-3">
       <h1>{{ tourFacade.selectedTour()?.name }}</h1>
     </div>
     <div class="card-body">
       <div class="row mb-3">
         <div class="col-auto">
-          <label for="">From</label>
+          <label>From</label>
           <input
             type="text"
             class="form-control"
@@ -15,7 +15,7 @@
           />
         </div>
         <div class="col-auto">
-          <label for="">To</label>
+          <label>To</label>
           <input
             type="text"
             class="form-control"
@@ -25,7 +25,7 @@
         </div>
       </div>
       <div class="col-auto mb-3">
-        <label for="">Transportation Type</label>
+        <label>Transportation Type</label>
         <input
           type="text"
           class="form-control"
@@ -35,7 +35,7 @@
       </div>
       <div class="row mb-3">
         <div class="col-auto">
-          <label for="">Distance [km]</label>
+          <label>Distance [km]</label>
           <input
             type="text"
             class="form-control"
@@ -44,7 +44,7 @@
           />
         </div>
         <div class="col-auto">
-          <label for="">Duration [min]</label>
+          <label>Duration [min]</label>
           <input
             type="text"
             class="form-control"
@@ -54,9 +54,8 @@
         </div>
       </div>
       <div class="col-auto mb-3">
-        <label for="">Description</label>
+        <label>Description</label>
         <textarea
-          type="text"
           class="form-control"
           [value]="tourFacade.selectedTour()?.description"
           [disabled]="true"

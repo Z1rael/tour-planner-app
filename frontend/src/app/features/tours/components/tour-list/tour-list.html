@@ -31,10 +31,10 @@
   <!-- tour cards -->
   <div class="tour-list">
     @for (tour of tourFacade.filteredTours(); track tour.id) {
-      <div class="card mb-1" (click)="onSelect(tour.id)">
+      <div class="bubble-inner card mb-1" (click)="onSelect(tour.id)">
         <div class="card-header">{{ tour.name }}</div>
         <div class="card-body">
-          <h5 card-title>{{ tour.transport_type }}</h5>
+          <h5 class="card-title">{{ tour.transport_type }}</h5>
           <p class="card-text">{{ tour.from }} → {{ tour.to }}</p>
         </div>
       </div>

@@ -120,34 +120,12 @@ textarea {
   border-radius: var(--app-radius-lg);
   box-shadow: var(--app-shadow);
   min-height: 72vh;
-  padding: 1.5rem;
+  max-height: 72vh;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-}
-
-.bubble::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 12% 14%, rgba(127, 216, 200, 0.12), transparent 16%),
-    radial-gradient(circle at 85% 18%, rgba(141, 183, 255, 0.12), transparent 18%),
-    radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.08), transparent 32%);
-}
-
-.bubble::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.12;
-  background-image:
-    radial-gradient(rgba(21, 34, 56, 0.08) 1px, transparent 1px);
-  background-size: 16px 16px;
-  mix-blend-mode: multiply;
 }
 
 .state-message {
@@ -169,4 +147,10 @@ textarea {
     min-height: auto;
     padding: 1rem;
   }
+}
+
+.bubble-inner {
+  background-color: var(--app-surface-alt);
+  border-radius: var(--app-radius-md);
+  padding: 1rem;
 }

@@ -1,20 +1,10 @@
 :host {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-height: 400px;
+  width: 100%;
+  overflow: hidden;
 }
 
 #leaflet-map {
-  flex: 1;
-  min-height: 0;
-  border-radius: 1rem;
-  z-index: 0;
-}
-
-p {
-  margin: 0.5rem 0 0;
-  color: #627d98;
-  font-weight: 500;
-  text-align: center;
+  min-height: 72vh;
+  width: 100%;
+  border-radius: var(--app-radius-md);
 }

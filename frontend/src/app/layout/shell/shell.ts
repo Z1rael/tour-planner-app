@@ -9,6 +9,7 @@ import { TourForm } from '../../features/tours/components/tour-form/tour-form';
 import { LogForm } from '../../features/tours/components/log-form/log-form';
 import { LogList } from '../../features/tours/components/log-list/log-list';
 import { isPlatformBrowser } from '@angular/common';
+import { TourFacade } from '../../features/tours/facade/tour.facade';
 
 @Component({
   selector: 'app-shell',
@@ -22,6 +23,7 @@ export class Shell {
 
   readonly isNarrow = signal(this.isBrowser ? window.innerWidth <= 768 : false);
   currentView: string = '';
+  tourFacade = inject(TourFacade);
 
   constructor(private route: ActivatedRoute) {
     this.route.data.subscribe((data) => {

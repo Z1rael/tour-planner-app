@@ -21,7 +21,7 @@ form {
 }
 
 form::before {
-  content: "🥚";
+  content: "";
   position: absolute;
   top: -1rem;
   right: 1rem;

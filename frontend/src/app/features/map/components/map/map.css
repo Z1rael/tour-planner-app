@@ -1,9 +1,20 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 400px;
+}
+
+#leaflet-map {
+  flex: 1;
+  min-height: 0;
+  border-radius: 1rem;
+  z-index: 0;
 }
 
 p {
-  margin: 0;
+  margin: 0.5rem 0 0;
   color: #627d98;
   font-weight: 500;
+  text-align: center;
 }

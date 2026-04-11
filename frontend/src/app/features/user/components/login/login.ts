@@ -1,7 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { LoginForm } from './models';
 import { email, form, FormField, required } from '@angular/forms/signals';
-import { debounce } from 'rxjs';
+import { MockUserService } from '../../../../mock/services/mock-user-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -11,6 +12,9 @@ import { debounce } from 'rxjs';
   styleUrl: './login.css',
 })
 export class Login {
+  private userService = inject(MockUserService);  // TODO: swap for real UserService
+  private router = inject(Router);
+
   readonly loginModel = signal<LoginForm>({
     email: '',
     password: '',
@@ -20,15 +24,19 @@ export class Login {
   readonly loginForm = form(this.loginModel, (schemaPath) => {
     required(schemaPath.email, { message: 'Email is required' });
     email(schemaPath.email, { message: 'Enter a valid email address' });
-
     required(schemaPath.password, { message: 'Password is required' });
   });
 
   onSubmit(event: Event) {
     event.preventDefault();
 
-    const credentials = this.loginModel();
+    if (this.loginForm.email().invalid() || this.loginForm.password().invalid()) return;
 
-    console.log('Logging in with: ', credentials);
+    const { email, password } = this.loginModel();
+
+    this.userService.login(email, password).subscribe({
+      next: () => this.router.navigate(['/profile']),
+      error: (err: Error) => alert(err.message),
+    });
   }
 }

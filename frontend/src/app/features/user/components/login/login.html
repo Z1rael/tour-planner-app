@@ -9,7 +9,6 @@
         placeholder="Enter email"
         [formField]="loginForm.email"
       />
-
       @if (loginForm.email().touched() && loginForm.email().invalid()) {
         <ul class="error-list">
           @for (error of loginForm.email().errors(); track error) {
@@ -28,13 +27,12 @@
         placeholder="Password"
         [formField]="loginForm.password"
       />
-
       @if (loginForm.password().touched() && loginForm.password().invalid()) {
-        <div class="error-list">
+        <ul class="error-list">
           @for (error of loginForm.password().errors(); track error) {
-            <p>{{ error.message }}</p>
+            <li>{{ error.message }}</li>
           }
-        </div>
+        </ul>
       }
     </div>
 

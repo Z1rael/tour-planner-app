@@ -31,6 +31,7 @@ export class TourDetails {
     const id = this.tour()?.id;
     if (id !== undefined) {
       this.tourFacade.deleteTour(id);
+      this.tourFacade.clearSelection();
       this.router.navigate(['profile']);
     }
   }

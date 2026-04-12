@@ -10,7 +10,6 @@ export interface RouteResult {
 @Injectable({ providedIn: 'root' })
 export class MapService {
 
-  // Swap this method body for a real fetch() call once you have a key
   async getRoute(from: string, to: string): Promise<RouteResult | null> {
     // Mock: just return two random points near Vienna
     await new Promise(r => setTimeout(r, 400)); // fake latency

@@ -1,6 +1,9 @@
 import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import { from, Observable } from 'rxjs';
 import {isPlatformBrowser} from '@angular/common';
+import {Tour} from '../../core/models/tour';
+import {mockTours} from '../data/tour-mock-data';
+import {mockUsers} from '../data/user-mock-data';
 
 export interface User {
   id: number;
@@ -23,32 +26,20 @@ const STORAGE_KEYS = {
   token: 'mock_token',
 } as const;
 
-const defaultUsers: User[] = [
-  {
-    id: 1,
-    email: 'dino@example.com',
-    passwordHash: 'pwd123',
-    createdAt: new Date('2026-01-01').toISOString(),
-  },
-  {
-    id: 2,
-    email: 'bronto@example.com',
-    passwordHash: 'pwd123',
-    createdAt: new Date('2026-01-02').toISOString(),
-  },
-];
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class MockUserService {
+  private defaultUsers: User[] = structuredClone(mockUsers);
   private readonly isBrowser: boolean;
 
   constructor(@Inject(PLATFORM_ID) platformId: object) {
     this.isBrowser = isPlatformBrowser(platformId);
 
     if (this.isBrowser && !localStorage.getItem(STORAGE_KEYS.users)) {
-      localStorage.setItem(STORAGE_KEYS.users, JSON.stringify(structuredClone(defaultUsers)));
+      localStorage.setItem(STORAGE_KEYS.users, JSON.stringify(structuredClone(mockUsers)));
     }
     console.log('Mock User API service instantiated');
   }
@@ -67,7 +58,7 @@ export class MockUserService {
 
   private getUsers(): User[] {
     const stored = this.storageGet(STORAGE_KEYS.users);
-    return stored ? JSON.parse(stored) : structuredClone(defaultUsers);
+    return stored ? JSON.parse(stored) : structuredClone(mockUsers);
   }
 
   private saveUsers(users: User[]): void {
@@ -92,7 +83,7 @@ export class MockUserService {
     this.storageRemove(STORAGE_KEYS.users);
     this.storageRemove(STORAGE_KEYS.currentUser);
     this.storageRemove(STORAGE_KEYS.token);
-    this.storageSet(STORAGE_KEYS.users, JSON.stringify(structuredClone(defaultUsers)));
+    this.storageSet(STORAGE_KEYS.users, JSON.stringify(structuredClone(mockUsers)));
     console.log('Mock data reset to defaults');
   }
 

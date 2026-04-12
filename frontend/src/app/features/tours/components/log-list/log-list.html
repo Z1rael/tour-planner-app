@@ -1,22 +1,15 @@
-<section class="mx-auto px-3 bubble">
-  <div class="mb-3">
-    <h2>Logs</h2>
-  </div>
-  <div>
-    <!-- tour cards -->
-    <div class="tour-list">
-      <!-- loading / error states -->
-      @if (tourFacade.loading()) {
-        <p class="state-message mx-auto">Loading logs...</p>
-      } @else if (tourFacade.error()) {
-        <p class="state-message state-message--error mx-auto">{{ tourFacade.error() }}</p>
-      } @else if (tourFacade.logCount() === 0 || tourFacade.logCount() === undefined) {
-        <p class="state-message mx-auto">No tours found.</p>
-      } @else {
-        @for (item of tourFacade.logs(); track item.id) {
-          <app-log-list-item [log]="item"></app-log-list-item>
-        }
-      }
-    </div>
+<section class="col-sm-10 mx-auto px-3 bubble">
+  @if (tourFacade.loading()) {
+    <p class="state-message">Loading tours...</p>
+  } @else if (tourFacade.error()) {
+    <p class="state-message state-message--error">{{ tourFacade.error() }}</p>
+  } @else if (tourFacade.tourCount() === 0) {
+    <p class="state-message">No tours found.</p>
+  }
+
+  <div class="tour-list">
+    @for (item of tourFacade.logs(); track item.id) {
+      <app-log-list-item [log]="item"></app-log-list-item>
+    }
   </div>
 </section>

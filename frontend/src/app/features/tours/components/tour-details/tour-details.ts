@@ -20,6 +20,6 @@ export class TourDetails {
 
   editTour(): void {
     this.router.navigate(['add-tour']);
-    // need to implement this
+    //TODO: need to implement this
   }
 }

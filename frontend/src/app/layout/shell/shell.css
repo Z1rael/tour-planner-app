@@ -1,25 +1,4 @@
 :host {
-  display: block;
-  padding: 1rem 0;
+  width: 100%;
 }
 
-.container-fluid {
-  max-width: 1600px;
-}
-
-.row {
-  align-items: stretch;
-  row-gap: 1rem;
-  height: 90vh;
-}
-
-.col-12 {
-  display: flex;
-  flex-direction: column;
-}
-
-@media (max-width: 768px) {
-  .reorder {
-    order: -1;   
-  }
-}

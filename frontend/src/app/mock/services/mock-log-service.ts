@@ -42,7 +42,7 @@ export class MockLogService {
     return from(this.mockCreateTourLog(tour_log));
   }
 
-  deleteTour(id: number): Observable<void> {
+  deleteTourLog(id: number): Observable<void> {
     return from(this.mockDeleteTourLog(id));
   }
 
@@ -123,14 +123,6 @@ export class MockLogService {
     );
 
     return out;
-  }
-
-  private async mockGetTourLogById(id: number): Promise<TourLog> {
-    await delay(MOCK_DELAY);
-    const uid = await this.currentUserId();
-    const tour = this._logs.find((t) => t.id === id && t.creator_id === uid);
-    if (!tour) throw new Error(`Tour with id ${id} not found`);
-    return structuredClone(tour);
   }
 
   private async currentUserId(): Promise<number> {

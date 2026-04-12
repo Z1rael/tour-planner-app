@@ -9,6 +9,7 @@ import {
   finalize,
   map,
   of,
+  startWith,
   switchMap,
   tap,
 } from 'rxjs';
@@ -40,7 +41,6 @@ export class LogFacade {
             this.error.set(err.message);
             return EMPTY;
           }),
-          tap((logs) => console.log(logs)),
           finalize(() => this.loading.set(false)),
         );
       }
@@ -51,7 +51,6 @@ export class LogFacade {
           this.error.set(err);
           return EMPTY;
         }),
-        tap((logs) => console.log(logs)),
         finalize(() => {
           this.loading.set(false);
         }),
@@ -172,16 +171,25 @@ export class LogFacade {
   }
 
   deleteLog(id: number): void {
-    this.loading.set(true);
-    this.error.set(null);
-
-    this.logApi.deleteTour(id).pipe(
-      catchError((err) => {
-        this.loading.set(false);
-        this.error.set(err.message);
-        return EMPTY;
-      }),
-      finalize(() => this.loading.set(false)),
-    );
+    this.logApi
+      .deleteTourLog(id)
+      .pipe(
+        startWith(() => {
+          this.loading.set(true);
+          this.error.set(null);
+        }),
+        catchError((err) => {
+          this.loading.set(false);
+          this.error.set(err.message);
+          return EMPTY;
+        }),
+        finalize(() => {
+          // whacky refresh again
+          const tourId = this.tourId();
+          this.clearTourId();
+          this.setTourId(tourId);
+        }),
+      )
+      .subscribe();
   }
 }

@@ -7,4 +7,5 @@ export interface TourLog {
   total_distance: number;
   total_time: number;
   rating: number; // 1-5
+  creator_id: number;
 }

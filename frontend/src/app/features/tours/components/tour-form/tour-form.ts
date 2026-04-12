@@ -4,6 +4,10 @@ import { TourFacade } from '../../facade/tour.facade';
 import { form, FormField, required } from '@angular/forms/signals';
 import { Tour } from '../../../../core/models/tour';
 import { TransportationType } from '../../../../core/models/transportation-type';
+import { UserFacade } from '../../../user/facade/user.facade';
+import { UserService } from '../../../user/services/user.service';
+import { MockUserService } from '../../../../mock/services/mock-user-service';
+import { firstValueFrom, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-tour-form',
@@ -15,6 +19,7 @@ import { TransportationType } from '../../../../core/models/transportation-type'
 export class TourForm {
   private router = inject(Router);
   protected readonly tourFacade = inject(TourFacade);
+  private readonly userService = inject(MockUserService);
 
   readonly transportOptions = [
     { value: TransportationType.CAR, label: 'Car' },
@@ -43,11 +48,11 @@ export class TourForm {
 
     if (selected) {
       this.tourFacade.updateTour(selected.id, this.tourModel());
+      this.router.navigate(['tours']);
     } else {
       this.tourFacade.createTour(this.tourModel());
+      this.router.navigate(['profile']);
     }
-
-    this.router.navigate(['profile']);
   }
 
   onCancel(): void {
@@ -86,7 +91,7 @@ export class TourForm {
       to: '',
       transport_type: TransportationType.CAR,
       description: '',
-      creator_id: 0,
+      creator_id: 1,
     };
   }
 }

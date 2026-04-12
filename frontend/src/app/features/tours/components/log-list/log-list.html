@@ -1,14 +1,14 @@
 <section class="col-sm-10 mx-auto px-3 bubble">
-  @if (tourFacade.loading()) {
+  @if (logFacade.loading()) {
     <p class="state-message">Loading tours...</p>
-  } @else if (tourFacade.error()) {
-    <p class="state-message state-message--error">{{ tourFacade.error() }}</p>
-  } @else if (tourFacade.tourCount() === 0) {
+  } @else if (logFacade.error()) {
+    <p class="state-message state-message--error">{{ logFacade.error() }}</p>
+  } @else if (logFacade.logCount() === 0) {
     <p class="state-message">No tours found.</p>
   }
 
   <div class="tour-list">
-    @for (item of tourFacade.logs(); track item.id) {
+    @for (item of logFacade.logs(); track item.id) {
       <app-log-list-item [log]="item"></app-log-list-item>
     }
   </div>

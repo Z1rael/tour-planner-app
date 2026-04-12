@@ -1,1 +1,55 @@
-<p>log-form works!</p>
+<section class="col-md-12 mx-auto px-3 bubble">
+  <h2 class="mb-4">{{ isEditMode() ? 'Edit Log' : 'Add new Log' }}</h2>
+  <form (submit)="onSubmit()">
+    <div class="row mb-2">
+      <div class="col-auto mb-2">
+        <label for="difficulty">Difficulty</label>
+        <input
+          type="number"
+          class="form-control"
+          id="log-difficulty"
+          [formField]="logForm.difficulty"
+        />
+      </div>
+      <div class="col-auto mb-2">
+        <label for="rating">Rating</label>
+        <input type="number" class="form-control" id="log-rating" [formField]="logForm.rating" />
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-auto mb-2">
+        <label for="total_distance">Total Distance</label>
+        <input
+          type="number"
+          class="form-control"
+          id="log-total-distance"
+          [formField]="logForm.total_distance"
+        />
+      </div>
+      <div class="col-auto mb-2">
+        <label for="total_time">Total Time</label>
+        <input
+          type="number"
+          class="form-control"
+          id="log-total-time"
+          [formField]="logForm.total_time"
+        />
+      </div>
+    </div>
+    <div class="col-auto mb-4">
+      <label for="comment">Comment</label>
+      <textarea
+        class="form-control"
+        id="log-comment"
+        [formField]="logForm.comment"
+        placeholder="What do you want to add ..."
+      ></textarea>
+    </div>
+    <div class="row mb-2 justify-content-evenly">
+      <button class="btn btn-secondary col-auto" (click)="onCancel()">Cancel</button>
+      <button class="btn btn-primary col-auto" (click)="onSubmit()">
+        {{ isEditMode() ? 'Save Changes' : 'Create Tour' }}
+      </button>
+    </div>
+  </form>
+</section>

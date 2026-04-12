@@ -1,8 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { TourFacade } from '../../facade/tour.facade';
 import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
 import { LogListItem } from '../log-list-item/log-list-item';
+import { LogFacade } from '../../facade/log-facade';
 
 @Component({
   selector: 'app-log-list',
@@ -13,11 +12,18 @@ import { LogListItem } from '../log-list-item/log-list-item';
 })
 export class LogList {
   private router = inject(Router);
-  protected readonly tourFacade = inject(TourFacade);
+  protected readonly logFacade = inject(LogFacade);
 
   protected addLog(): void {
-    this.router.navigate(['add-log']);
+    this.router.navigate(['add-tour-log']);
   }
 
-  toggle(): void {}
+  canAddLog(): boolean {
+    return this.logFacade.tourId() === null;
+  }
+
+  edit(id: number): void {
+    this.logFacade.selectLog(id);
+    this.router.navigate(['add-tour-log']);
+  }
 }

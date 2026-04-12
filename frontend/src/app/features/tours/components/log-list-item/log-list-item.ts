@@ -1,6 +1,8 @@
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { TourLog } from '../../../../core/models/tour-log';
 import { DatePipe } from '@angular/common';
+import { LogFacade } from '../../facade/log-facade';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-log-list-item',
@@ -12,6 +14,10 @@ import { DatePipe } from '@angular/common';
 export class LogListItem {
   readonly log = input.required<TourLog>();
   protected readonly expanded = signal(false);
+  private readonly logFacade = inject(LogFacade);
+  private readonly router = inject(Router);
+
+  logId = computed(() => this.log().id);
 
   toggle(): void {
     this.expanded.update((visible) => !visible);
@@ -36,4 +42,10 @@ export class LogListItem {
 
     return `${days} days ago`;
   });
+
+  edit(): void {
+    const id = this.logId();
+    this.logFacade.selectLog(id);
+    this.router.navigate(['add-tour-log']);
+  }
 }

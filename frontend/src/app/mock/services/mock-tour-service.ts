@@ -68,9 +68,7 @@ export class MockTourService {
   private async fetchTours(): Promise<TourSummary[]> {
     await delay(MOCK_DELAY);
     const uid = await this.currentUserId();
-    return this._tours
-      .filter((t) => t.creator_id === uid)
-      .map(toSummary);
+    return this._tours.filter((t) => t.creator_id === uid).map(toSummary);
   }
 
   private async fetchTourById(id: number): Promise<Tour> {

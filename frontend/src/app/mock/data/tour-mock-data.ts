@@ -139,6 +139,7 @@ export const mockTourLogs: TourLog[] = [
     total_distance: 79.1,
     total_time: 238,
     rating: 5,
+    creator_id: 1,
   },
   {
     id: 2,
@@ -149,6 +150,7 @@ export const mockTourLogs: TourLog[] = [
     total_distance: 78.6,
     total_time: 255,
     rating: 4,
+    creator_id: 1,
   },
   {
     id: 3,
@@ -160,6 +162,7 @@ export const mockTourLogs: TourLog[] = [
     total_distance: 5.8,
     total_time: 80,
     rating: 4,
+    creator_id: 2,
   },
   {
     id: 4,
@@ -171,6 +174,7 @@ export const mockTourLogs: TourLog[] = [
     total_distance: 14.7,
     total_time: 320,
     rating: 5,
+    creator_id: 2,
   },
   {
     id: 5,
@@ -182,6 +186,7 @@ export const mockTourLogs: TourLog[] = [
     total_distance: 14.9,
     total_time: 355,
     rating: 4,
+    creator_id: 1,
   },
   {
     id: 6,
@@ -193,6 +198,7 @@ export const mockTourLogs: TourLog[] = [
     total_distance: 33.4,
     total_time: 165,
     rating: 5,
+    creator_id: 2,
   },
   {
     id: 7,
@@ -204,6 +210,7 @@ export const mockTourLogs: TourLog[] = [
     total_distance: 5.0,
     total_time: 24,
     rating: 3,
+    creator_id: 2,
   },
   {
     id: 8,
@@ -215,6 +222,7 @@ export const mockTourLogs: TourLog[] = [
     total_distance: 3.7,
     total_time: 60,
     rating: 5,
+    creator_id: 2,
   },
   {
     id: 9,
@@ -226,6 +234,7 @@ export const mockTourLogs: TourLog[] = [
     total_distance: 41.9,
     total_time: 118,
     rating: 4,
+    creator_id: 1,
   },
   {
     id: 10,
@@ -237,6 +246,7 @@ export const mockTourLogs: TourLog[] = [
     total_distance: 12.1,
     total_time: 275,
     rating: 5,
+    creator_id: 1,
   },
   {
     id: 11,
@@ -248,6 +258,7 @@ export const mockTourLogs: TourLog[] = [
     total_distance: 11.9,
     total_time: 290,
     rating: 4,
+    creator_id: 2,
   },
   {
     id: 12,
@@ -259,5 +270,6 @@ export const mockTourLogs: TourLog[] = [
     total_distance: 32.3,
     total_time: 142,
     rating: 5,
+    creator_id: 1,
   },
 ];

@@ -27,6 +27,10 @@ export class MockLogService {
     return from(this.fetchLogByTourId(id));
   }
 
+  getLogById(id: number): Observable<TourLog> {
+    return from(this.mockGetLogById(id));
+  }
+
   updateTourLog(
     id: number,
     tour_log: Partial<Omit<TourLog, 'id' | 'timestamp'>>,
@@ -46,10 +50,6 @@ export class MockLogService {
     return from(this.mockSearchTourLog(query));
   }
 
-  getLogById(id: number): Observable<TourLog> {
-    return from(this.mockGetTourLogById(id));
-  }
-
   private async fetchTourLogs(): Promise<TourLog[]> {
     await delay(MOCK_DELAY);
     return this._logs;
@@ -63,6 +63,15 @@ export class MockLogService {
     }
 
     return structuredClone(logs);
+  }
+
+  private async mockGetLogById(id: number): Promise<TourLog> {
+    await delay(MOCK_DELAY);
+    const log = this._logs.find((t) => t.id === id);
+    if (!log) {
+      throw new Error(`Log with id: ${id} not found`);
+    }
+    return structuredClone(log);
   }
 
   private async mockCreateTourLog(data: Omit<TourLog, 'id' | 'timestamp'>): Promise<TourLog> {
@@ -91,7 +100,6 @@ export class MockLogService {
     return structuredClone(this._logs[index]);
   }
 
-  // TODO(felix): don't forget to implement the same for tour logs
   private async mockDeleteTourLog(id: number): Promise<void> {
     await delay(MOCK_DELAY);
     const index = this._logs.findIndex((t) => t.id === id);

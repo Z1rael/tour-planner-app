@@ -123,7 +123,7 @@ textarea {
   max-height: 72vh;
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
-  overflow: hidden;
+  overflow: auto;
   display: flex;
   flex-direction: column;
 }

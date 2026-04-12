@@ -104,15 +104,15 @@ export class LogFacade {
         return of(null);
       }
 
-      this.loading.set(true);
-      this.error.set(null);
+      //this.loading.set(true);
+      //this.error.set(null);
 
       return this.logApi.getLogById(id).pipe(
         catchError((err) => {
           this.error.set(err.message);
           return EMPTY;
         }),
-        finalize(() => this.loading.set(false)),
+        //finalize(() => this.loading.set(false)),
       );
     }),
   );

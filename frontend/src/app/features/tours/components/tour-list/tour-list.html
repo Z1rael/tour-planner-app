@@ -26,6 +26,16 @@
 
   <!-- tour cards -->
   <div class="tour-list">
+    <div class="text-center mt-3">
+      @if (tourFacade.loading()) {
+        <p class="state-message">Loading tours...</p>
+      } @else if (tourFacade.error()) {
+        <p class="state-message state-message--error">{{ tourFacade.error() }}</p>
+      } @else if (tourFacade.tourCount() === 0) {
+        <p class="state-message">No tours found.</p>
+      }
+    </div>
+
     @for (tour of tourFacade.filteredTours(); track tour.id) {
       <div class="bubble-inner card mb-1" (click)="onSelect(tour.id)">
         <div class="card-header">{{ tour.name }}</div>

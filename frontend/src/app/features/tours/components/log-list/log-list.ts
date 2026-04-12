@@ -26,4 +26,12 @@ export class LogList {
     this.logFacade.selectLog(id);
     this.router.navigate(['add-tour-log']);
   }
+
+  selectLog(id: number): void {
+    if (this.logFacade.selectedLogId() === null) {
+      this.logFacade.selectLog(id);
+    } else {
+      this.logFacade.clearLogSelection();
+    }
+  }
 }

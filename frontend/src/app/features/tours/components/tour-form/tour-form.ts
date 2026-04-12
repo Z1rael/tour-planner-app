@@ -47,6 +47,10 @@ export class TourForm {
     const selected = this.tourFacade.selectedTour();
 
     if (selected) {
+      // trigger refresh for details
+      this.tourFacade.clearSelection();
+      this.tourFacade.select(selected.id);
+
       this.tourFacade.updateTour(selected.id, this.tourModel());
       this.router.navigate(['tours']);
     } else {

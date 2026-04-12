@@ -12,6 +12,8 @@
   --app-primary-hover: #67c5b6;
   --app-accent: #8db7ff;
   --app-danger: #d96c7b;
+  --app-danger-accent: #b84d5b;
+  --app-danger-hover: #af5863;
   --app-radius-lg: 1.65rem;
   --app-radius-md: 1.05rem;
   --app-shadow: 0 14px 28px rgba(6, 18, 41, 0.18);

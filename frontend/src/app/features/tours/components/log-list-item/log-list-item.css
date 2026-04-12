@@ -56,3 +56,25 @@ textarea.form-control:disabled {
   cursor: default;
   resize: none;
 }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--app-primary), var(--app-accent));
+  border: none;
+  color: #10303a;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--app-primary-hover), #7aaaff);
+  color: #10303a;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, var(--app-danger), var(--app-danger-accent));
+  border: none;
+  color: #10303a;
+}
+
+.btn-danger:hover {
+  background: linear-gradient(135deg, var(--app-danger-hover), var(--app-danger-accent));
+  color: #10303a;
+}

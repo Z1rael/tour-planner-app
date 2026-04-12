@@ -20,9 +20,6 @@ import { TourFacade } from '../../features/tours/facade/tour.facade';
 })
 export class Shell {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
-  readonly tourFacade = inject(TourFacade);
-
-  readonly isNarrow = signal(this.isBrowser ? window.innerWidth <= 768 : false);
 
   currentView: string = '';
 
@@ -30,10 +27,5 @@ export class Shell {
     this.route.data.subscribe((data) => {
       this.currentView = data['view'];
     });
-  }
-
-  @HostListener('window:resize')
-  onResize(): void {
-    this.isNarrow.set(window.innerWidth <= 768);
   }
 }

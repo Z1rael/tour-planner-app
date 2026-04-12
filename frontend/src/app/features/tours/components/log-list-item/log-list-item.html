@@ -1,38 +1,52 @@
-<a class="bubble-inner list-group-item list-group-item-action mb-2" (click)="toggle()">
-  <div class="d-flex w-100 justify-content-between">
-    <h5 class="mb-1">
-      {{ log().timestamp | date }}
-    </h5>
-    <small>
-      {{ timeAgoLabel() }}
-    </small>
-  </div>
-  <div class="row justify-content-evenly mb-3">
-    <div class="col-sm-4">
-      <label class="form-label" for="">Rating</label>
-      <input class="form-control" type="text" [value]="log().rating" [disabled]="true" />
+<div class="bubble-inner mb-2" (click)="toggle()">
+  <a class="list-group-item list-group-item-action">
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1">
+        {{ log().timestamp | date }}
+      </h5>
+      <small>
+        {{ timeAgoLabel() }}
+      </small>
     </div>
-    <div class="col-sm-4">
-      <label class="form-label" for="">Difficulty</label>
-      <input class="form-control" type="text" [value]="log().difficulty" [disabled]="true" />
+    <div class="row justify-content-evenly mb-3">
+      <div class="col-sm-4">
+        <label class="form-label" for="">Rating</label>
+        <input class="form-control" type="text" [value]="log().rating" [disabled]="true" />
+      </div>
+      <div class="col-sm-4">
+        <label class="form-label" for="">Difficulty</label>
+        <input class="form-control" type="text" [value]="log().difficulty" [disabled]="true" />
+      </div>
     </div>
-  </div>
+    @if (expanded()) {
+      <div class="row justify-content-evenly mb-2">
+        <div class="col-sm-4">
+          <label class="form-label" for="">Total Time</label>
+          <input class="form-control" type="text" [value]="log().total_time" [disabled]="true" />
+        </div>
+        <div class="col-sm-4">
+          <label class="form-label" for="">Total Distance</label>
+          <input
+            class="form-control"
+            type="text"
+            [value]="log().total_distance"
+            [disabled]="true"
+          />
+        </div>
+      </div>
+      <div class="col-auto mb-3 px-4">
+        <label class="form-label" for="">Comment</label>
+        <textarea class="form-control" [disabled]="true" [rows]="5"
+          >{{ log().comment }}
+      </textarea
+        >
+      </div>
+    }
+  </a>
   @if (expanded()) {
     <div class="row justify-content-evenly mb-2">
-      <div class="col-sm-4">
-        <label class="form-label" for="">Total Time</label>
-        <input class="form-control" type="text" [value]="log().total_time" [disabled]="true" />
-      </div>
-      <div class="col-sm-4">
-        <label class="form-label" for="">Total Distance</label>
-        <input class="form-control" type="text" [value]="log().total_distance" [disabled]="true" />
-      </div>
-    </div>
-    <div class="col-auto mb-3 px-4">
-      <label class="form-label" for="">Comment</label>
-      <textarea class="form-control" [disabled]="true" [rows]="5"
-        >{{ log().comment }}
-      </textarea>
+      <a role="button" class="col-auto btn btn-danger" (click)="deleteLog()">Delete</a>
+      <a role="button" class="col-auto btn btn-primary" (click)="editLog()">Edit</a>
     </div>
   }
-</a>
+</div>

@@ -43,9 +43,14 @@ export class LogListItem {
     return `${days} days ago`;
   });
 
-  edit(): void {
-    const id = this.logId();
-    this.logFacade.selectLog(id);
+  editLog(): void {
     this.router.navigate(['add-tour-log']);
+  }
+
+  deleteLog(): void {
+    const id = this.logFacade.selectedLog()?.id;
+    if (id) {
+      this.logFacade.deleteLog(id);
+    }
   }
 }

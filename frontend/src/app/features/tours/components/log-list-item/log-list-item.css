@@ -3,7 +3,7 @@
   margin-bottom: 0.5rem;
 }
 
-a.bubble-inner {
+div.bubble-inner {
   display: block;
   border-radius: var(--app-radius-md);
   border: 2px solid var(--app-border);
@@ -14,7 +14,7 @@ a.bubble-inner {
   color: var(--app-text);
 }
 
-a.bubble-inner:hover {
+div.bubble-inner:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(6, 18, 41, 0.13);
   border-left-color: var(--app-primary);

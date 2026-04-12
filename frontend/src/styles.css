@@ -121,13 +121,28 @@ textarea {
   border: 2px solid rgba(172, 197, 214, 0.82);
   border-radius: var(--app-radius-lg);
   box-shadow: var(--app-shadow);
-  min-height: 72vh;
-  max-height: 72vh;
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
   overflow: auto;
   display: flex;
   flex-direction: column;
+  min-height: 72vh;
+  max-height: 72vh;
+}
+
+.bubble-auth {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(250, 245, 235, 0.95), rgba(236, 245, 247, 0.93));
+  border: 2px solid rgba(172, 197, 214, 0.82);
+  border-radius: var(--app-radius-lg);
+  box-shadow: var(--app-shadow);
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .state-message {
@@ -156,4 +171,5 @@ textarea {
   background-color: var(--app-surface-alt);
   border-radius: var(--app-radius-md);
   padding: 1rem;
+  justify-content: center;
 }

@@ -237,7 +237,7 @@ export class TourFacade {
         );
       }
 
-      return this.logApi.searchTour(q).pipe(
+      return this.logApi.searchTourLogs(q).pipe(
         catchError((err) => {
           this.loading.set(false);
           this.error.set(err.message);

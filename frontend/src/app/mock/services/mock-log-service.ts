@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { mockTourLogs, mockTours } from '../data/tour-mock-data';
 import { Tour } from '../../core/models/tour';
-import { from, Observable } from 'rxjs';
+import { firstValueFrom, from, Observable } from 'rxjs';
 import { TourLog } from '../../core/models/tour-log';
+import { MockUserService } from './mock-user-service';
 
 const MOCK_DELAY = 300;
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -14,7 +15,7 @@ export class MockLogService {
   private _logs: TourLog[] = structuredClone(mockTourLogs);
   private nextLogId = Math.max(...this._logs.map((t) => t.id)) + 1;
 
-  constructor() {
+  constructor(private userService: MockUserService) {
     console.log('Mock Log API service instantiated');
   }
 
@@ -41,8 +42,12 @@ export class MockLogService {
     return from(this.mockDeleteTourLog(id));
   }
 
-  searchTour(query: string): Observable<TourLog[]> {
+  searchTourLogs(query: string): Observable<TourLog[]> {
     return from(this.mockSearchTourLog(query));
+  }
+
+  getLogById(id: number): Observable<TourLog> {
+    return from(this.mockGetTourLogById(id));
   }
 
   private async fetchTourLogs(): Promise<TourLog[]> {
@@ -110,6 +115,20 @@ export class MockLogService {
     );
 
     return out;
+  }
+
+  private async mockGetTourLogById(id: number): Promise<TourLog> {
+    await delay(MOCK_DELAY);
+    const uid = await this.currentUserId();
+    const tour = this._logs.find((t) => t.id === id && t.creator_id === uid);
+    if (!tour) throw new Error(`Tour with id ${id} not found`);
+    return structuredClone(tour);
+  }
+
+  private async currentUserId(): Promise<number> {
+    const user = await firstValueFrom(this.userService.getCurrentUser());
+    if (!user) throw new Error('Not authenticated');
+    return user.id;
   }
 
   resetMockData(): void {

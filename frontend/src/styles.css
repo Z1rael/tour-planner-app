@@ -1,29 +1,175 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 
-body {
-  background: #f8f9fa;
-  color: #212529;
+:root {
+  --app-bg: #101f3c;
+  --app-surface: rgba(252, 247, 237, 0.92);
+  --app-surface-alt: rgba(235, 244, 246, 0.92);
+  --app-border: rgba(171, 194, 214, 0.92);
+  --app-outline: rgba(49, 69, 94, 0.18);
+  --app-text: #152238;
+  --app-muted: #5c7085;
+  --app-primary: #7fd8c8;
+  --app-primary-hover: #67c5b6;
+  --app-accent: #8db7ff;
+  --app-danger: #d96c7b;
+  --app-danger-accent: #b84d5b;
+  --app-danger-hover: #af5863;
+  --app-radius-lg: 1.65rem;
+  --app-radius-md: 1.05rem;
+  --app-shadow: 0 14px 28px rgba(6, 18, 41, 0.18);
 }
 
-h1, h2, h3 {
-  font-weight: 600;
+html,
+body {
+  height: 100%;
+  font-family: 'Fredoka', sans-serif;}
+
+body {
+  margin: 0;
+  color: var(--app-text);
+  background:
+    linear-gradient(rgba(10, 20, 40, 0.68), rgba(10, 20, 40, 0.68)),
+    url("/dino-bg.png") center center / cover no-repeat fixed;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #e7dcc8;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  border-radius: 1rem !important;
+}
+
+.form-control,
+.form-select {
+  border: 2px solid var(--app-border);
+  box-shadow: none;
+  background-color: rgba(255, 255, 255, 0.94);
+  color: var(--app-text);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: rgba(127, 216, 200, 0.9);
+  box-shadow: 0 0 0 0.22rem rgba(127, 216, 200, 0.16);
+}
+
+.btn {
+  border-radius: 999px;
+  font-weight: 800;
+  padding-inline: 1rem;
+  box-shadow: 0 4px 0 rgba(18, 32, 58, 0.12);
+  transform: translateY(0);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    filter 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 0 rgba(18, 32, 58, 0.12);
+}
+
+.btn-primary {
+  background-color: var(--app-primary);
+  border-color: var(--app-primary);
+  color: #10303a;
+}
+
+.btn-primary:hover {
+  background-color: var(--app-primary-hover);
+  border-color: var(--app-primary-hover);
+  color: #10303a;
+}
+
+.btn-secondary {
+  background-color: #e7dcc8;
+  border-color: #e7dcc8;
+  color: #24324a;
+}
+
+.btn-secondary:hover {
+  background-color: #d8ccb6;
+  border-color: #d8ccb6;
 }
 
 .container-fluid {
-  padding-top: 1rem;
-  padding-left: 3rem;
-  padding-right: 3rem;
-  height: 100vh;
-}
-
-.row {
-  height: 100vh;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 .bubble {
-    background-color: blanchedalmond;
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-    border: .15rem solid brown;
-    border-radius: 3rem;
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(250, 245, 235, 0.95), rgba(236, 245, 247, 0.93));
+  border: 2px solid rgba(172, 197, 214, 0.82);
+  border-radius: var(--app-radius-lg);
+  box-shadow: var(--app-shadow);
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 72vh;
+  max-height: 72vh;
+}
+
+.bubble-auth {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(250, 245, 235, 0.95), rgba(236, 245, 247, 0.93));
+  border: 2px solid rgba(172, 197, 214, 0.82);
+  border-radius: var(--app-radius-lg);
+  box-shadow: var(--app-shadow);
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.state-message {
+  color: var(--app-muted);
+  font-weight: 600;
+  height: 58vh;
+}
+
+.state-message--error {
+  color: var(--app-danger);
+}
+
+@media (max-width: 768px) {
+  .container-fluid {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .bubble {
+    min-height: auto;
+    padding: 1rem;
+  }
+}
+
+.bubble-inner {
+  background-color: var(--app-surface-alt);
+  border-radius: var(--app-radius-md);
+  padding: 1rem;
+  justify-content: center;
 }

@@ -1,0 +1,47 @@
+:host {
+  display: contents;
+}
+
+.tour-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow-y: auto;
+}
+
+.tour-list .card {
+  background: var(--app-surface);
+  border: 2px solid var(--app-border);
+  border-left: 4px solid var(--app-primary);
+  border-radius: var(--app-radius-md);
+  box-shadow: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-left-color 0.15s ease;
+}
+
+.tour-list .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(6, 18, 41, 0.13);
+  border-left-color: var(--app-accent);
+}
+
+.tour-list .card-header {
+  background: transparent;
+  border-bottom: 1.5px solid var(--app-border);
+  font-weight: 800;
+  color: var(--app-text);
+  padding: 0.6rem 1rem;
+}
+
+.tour-list .card-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--app-primary-hover);
+  margin-bottom: 0.25rem;
+}
+
+.tour-list .card-text {
+  font-size: 0.95rem;
+  color: var(--app-text);
+  margin: 0;
+}

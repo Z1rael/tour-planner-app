@@ -1,0 +1,11 @@
+:host {
+  width: 100%;
+  overflow: hidden;
+}
+
+#leaflet-map {
+  min-height: 72vh;
+  width: 100%;
+  border-radius: var(--app-radius-md);
+}
+

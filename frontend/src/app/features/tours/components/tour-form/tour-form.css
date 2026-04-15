@@ -1,0 +1,47 @@
+:host {
+  display: contents;
+}
+
+h2 {
+  font-size: 1.6rem;
+  color: var(--app-primary);
+}
+
+label {
+  font-weight: 700;
+  color: var(--app-accent);
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 160px;
+  border-color: var(--app-primary);
+}
+
+textarea.form-control:focus {
+  border-color: var(--app-accent);
+  box-shadow: 0 0 0 0.22rem rgba(141, 183, 255, 0.2);
+}
+
+.btn-secondary {
+  border: 2px solid var(--app-muted);
+  color: var(--app-muted);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--app-primary), var(--app-accent));
+  border: none;
+  color: #10303a;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--app-primary-hover), #7aaaff);
+  color: #10303a;
+}
+
+.btn-secondary,
+.btn-primary {
+  min-width: 130px;
+}

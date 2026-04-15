@@ -1,0 +1,63 @@
+:host {
+  display: block;
+}
+
+.navbar {
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.08), transparent 28%),
+    linear-gradient(180deg, #10213d, #1a325a);
+  border-bottom: 2px solid rgba(141, 183, 255, 0.25);
+  box-shadow: 0 10px 24px rgba(6, 18, 41, 0.22);
+}
+
+.navbar-brand {
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: #fdf7ea !important;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.14);
+}
+
+.brand-mark {
+  font-size: 1.6rem;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.18));
+}
+
+.brand-subtitle {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(255, 247, 223, 0.75);
+  text-transform: lowercase;
+}
+
+.nav-link {
+  font-weight: 700;
+  color: #fdf7ea !important;
+  opacity: 0.9;
+  position: relative;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0.2rem;
+  width: 0;
+  height: 2px;
+  background: #7fd8c8;
+  border-radius: 999px;
+  transform: translateX(-50%);
+  transition: width 0.2s ease;
+}
+
+.nav-link:hover::after,
+.nav-link:focus::after,
+.nav-link.active::after {
+  width: 70%;
+}
+
+.nav-link:hover,
+.nav-link:focus,
+.nav-link.active {
+  color: #7fd8c8 !important;
+  opacity: 1;
+}

@@ -1,0 +1,10 @@
+:host {
+  display: contents;
+}
+
+.tour-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  overflow-y: auto;
+}

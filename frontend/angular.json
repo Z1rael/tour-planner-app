@@ -51,8 +51,10 @@
               }
             ],
             "styles": [
+              "leaflet/dist/leaflet.css",
               "src/styles.css"
             ],
+            "scripts": ["leaflet/dist/leaflet-src.js"],
             "server": "src/main.server.ts",
             "outputMode": "server",
             "security": {

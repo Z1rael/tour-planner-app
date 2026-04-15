@@ -1,0 +1,23 @@
+:host {
+  display: contents;
+}
+
+.form-group label {
+  font-weight: 700;
+  color: var(--app-accent);
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+button[type="submit"] {
+  width: 100%;
+  margin-top: 0.5rem;
+  background: linear-gradient(135deg, var(--app-primary), var(--app-accent));
+  border: none;
+  color: #10303a;
+}
+
+button[type="submit"]:hover {
+  background: linear-gradient(135deg, var(--app-primary-hover), #7aaaff);
+  color: #10303a;
+}

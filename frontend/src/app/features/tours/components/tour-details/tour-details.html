@@ -1,0 +1,78 @@
+<section class="col-sm-10 mx-auto px-3 bubble">
+  <div class="bubble-inner">
+    <div class="mb-3">
+      <h1>{{ tourFacade.selectedTour()?.name }}</h1>
+    </div>
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-auto">
+          <label>From</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="tourFacade.selectedTour()?.from"
+            [disabled]="true"
+          />
+        </div>
+        <div class="col-auto">
+          <label>To</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="tourFacade.selectedTour()?.to"
+            [disabled]="true"
+          />
+        </div>
+      </div>
+      <div class="col-auto mb-3">
+        <label>Transportation Type</label>
+        <input
+          type="text"
+          class="form-control"
+          [value]="tourFacade.selectedTour()?.transport_type"
+          [disabled]="true"
+        />
+      </div>
+      <div class="row mb-3">
+        <div class="col-auto">
+          <label>Distance [km]</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="tourFacade.selectedTour()?.distance"
+            [disabled]="true"
+          />
+        </div>
+        <div class="col-auto">
+          <label>Duration [min]</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="tourFacade.selectedTour()?.estimated_time"
+            [disabled]="true"
+          />
+        </div>
+      </div>
+      <div class="col-auto mb-3">
+        <label>Description</label>
+        <textarea
+          class="form-control"
+          [value]="tourFacade.selectedTour()?.description"
+          [disabled]="true"
+          rows="4"
+        ></textarea>
+      </div>
+      <div class="row justify-content-evenly">
+        <div class="col-auto">
+          <button class="btn btn-primary mb-2" (click)="return()">Return</button>
+        </div>
+        <div class="col-auto">
+          <button class="btn btn-primary mb-2" (click)="editTour()">Edit</button>
+        </div>
+        <div class="col-auto">
+          <button class="btn btn-danger mb-2" (click)="deleteTour()">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

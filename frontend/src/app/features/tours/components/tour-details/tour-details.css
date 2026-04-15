@@ -1,0 +1,57 @@
+:host {
+  display: contents;
+}
+
+h1 {
+  font-size: 1.8rem;
+  color: var(--app-primary);
+}
+
+label {
+  font-weight: 700;
+  color: var(--app-accent);
+  margin-bottom: 0.3rem;
+  display: block;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+input.form-control:disabled,
+textarea.form-control:disabled {
+  background-color: rgba(127, 216, 200, 0.08);
+  color: var(--app-text);
+  border-color: rgba(127, 216, 200, 0.4);
+  opacity: 1;
+  cursor: default;
+}
+
+textarea.form-control {
+  resize: none;
+}
+
+.row.justify-content-evenly .btn {
+  min-width: 110px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--app-primary), var(--app-accent));
+  border: none;
+  color: #10303a;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--app-primary-hover), #7aaaff);
+  color: #10303a;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, var(--app-danger), var(--app-danger-accent));
+  border: none;
+  color: #10303a;
+}
+
+.btn-danger:hover {
+  background: linear-gradient(135deg, var(--app-danger-hover), var(--app-danger-accent));
+  color: #10303a;
+}

@@ -1,18 +1,16 @@
 services:
   db:
-    image: postgres:16
+    image: postgis/postgis:16-3.5
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTRGES_DB: ${DB_NAME}
-      POSTGRES_PASSWORD: /run/secrets/db_password
-    secrets:
-      - db_password
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
-      - ./data:/var/lib/postgresql/data
-      - ./init:/docker/entrypoint-initdb.d
+      - tour_data:/var/lib/postgresql/data
+      - ./database:/docker-entrypoint-initdb.d
 
   app:
     build:
@@ -38,6 +36,5 @@ services:
     depends_on:
       - app
 
-secrets:
-  db_password:
-    file: ./secret/db_password.txt
+volumes:
+  tour_data:

@@ -1,4 +1,4 @@
-package at.tourplanner.tour_planner.persistence.entity;
+package at.tourplanner.tour_planner.features.transporttype;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,0 +1,13 @@
+Zieglergasse 1
+
+"coordinates": [
+16.345655,
+48.197451
+]
+
+Dresdner Straße
+
+"coordinates": [
+16.380229,
+48.237308
+]

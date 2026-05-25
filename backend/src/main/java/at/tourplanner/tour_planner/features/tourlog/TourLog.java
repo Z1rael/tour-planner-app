@@ -1,8 +1,10 @@
-package at.tourplanner.tour_planner.persistence.entity;
+package at.tourplanner.tour_planner.features.tourlog;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import at.tourplanner.tour_planner.features.tour.Tour;
+import at.tourplanner.tour_planner.features.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,7 +12,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
@@ -39,7 +40,7 @@ public class TourLog {
 
     private LocalDateTime logDate;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String comment;
 
     @Min(value = 1, message = "Difficulty must be at least 1")
@@ -54,8 +55,8 @@ public class TourLog {
 
     @Min(value = 0, message = "Time cannot be less than 0")
     @Column(name = "total_time")
-    private Long totalTime;
+    private Long totalTimeS;
 
     @Column(name = "total_distance", precision = 10, scale = 2)
-    private BigDecimal totalDistance;
+    private BigDecimal totalDistanceKm;
 }

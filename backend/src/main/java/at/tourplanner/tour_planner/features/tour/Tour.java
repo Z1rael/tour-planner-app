@@ -1,10 +1,11 @@
-package at.tourplanner.tour_planner.persistence.entity;
+package at.tourplanner.tour_planner.features.tour;
 
-import java.lang.System.Logger.Level;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.tourplanner.tour_planner.features.tourlog.TourLog;
+import at.tourplanner.tour_planner.features.transporttype.TransportType;
+import at.tourplanner.tour_planner.features.user.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +14,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -24,6 +24,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.locationtech.jts.geom.LineString;
 
 @Getter
 @Setter
@@ -43,34 +44,28 @@ public class Tour {
     @NotBlank(message = "Tour name cannot be blank")
     @Size(min = 3, max = 255)
     @Column(nullable = false)
-    private String tourName;
+    private String name;
 
-    @Lob
-    private String tourDescription;
-
-    private Double fromLatitude;
-    private Double fromLongitude;
-
-    private Double toLatitude;
-    private Double toLongitude;
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "transportation_type_id")
     private TransportType transportType;
 
-    @Column(precision = 10, scale = 2)
-    private BigDecimal tourDistance;
+    @Column(name = "tour_distance")
+    private Double distanceKm;
 
-    @Lob
-    private String tourInformation;
+    @Column(nullable = false, columnDefinition = "GEOMETRY(LINESTRING, 4326)")
+    private LineString route;
 
     @Size(max = 1000)
     private String imagePath;
 
     @Min(value = 0, message = "Time cannot be less than 0")
-    private Long estimatedTime;
+    @Column(name = "estimated_time")
+    private Long estimatedTimeS;
 
     @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Tour> tours = new ArrayList<>();
-
+    private List<TourLog> logs = new ArrayList<>();
 }

@@ -1,9 +1,11 @@
-package at.tourplanner.tour_planner.persistence.entity;
+package at.tourplanner.tour_planner.features.user;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.tourplanner.tour_planner.features.tour.Tour;
+import at.tourplanner.tour_planner.features.tourlog.TourLog;
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.CascadeType;

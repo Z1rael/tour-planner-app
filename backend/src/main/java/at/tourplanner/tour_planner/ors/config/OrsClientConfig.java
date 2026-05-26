@@ -1,18 +1,24 @@
 package at.tourplanner.tour_planner.ors.config;
 
+import feign.Logger;
 import feign.RequestInterceptor;
-import lombok.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@RequiredArgsConstructor
 public class OrsClientConfig {
 
-    @Value("${ors.api-key}")
-    private String apiKey;
+    private final OrsProperties orsProperties;
 
     @Bean
     public RequestInterceptor orsApiKeyInterceptor() {
-        return template -> template.header("Authorization", apiKey);
+        return template -> template.header("Authorization", orsProperties.getApiKey());
+    }
+
+    @Bean
+    public Logger.Level feignLoggerLevel() {
+        return Logger.Level.FULL;
     }
 }

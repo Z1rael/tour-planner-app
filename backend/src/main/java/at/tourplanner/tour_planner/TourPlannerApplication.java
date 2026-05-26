@@ -11,15 +11,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 public class TourPlannerApplication {
 
 	public static void main(String[] args) {
-		Scanner scanner = new Scanner(System.in);
-
-		System.out.print("Enter name: ");
-		String name = scanner.next();
-		System.out.printf("\nHello, %s", name);
-
 		SpringApplication.run(TourPlannerApplication.class, args);
-
-		scanner.close();
 	}
 
 }

@@ -4,8 +4,8 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${DB_USER}
-      POSTRGES_DB: ${DB_NAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTRGES_DB: ${DB_NAME}
     ports:
       - "5432:5432"
     volumes:
@@ -19,7 +19,7 @@ services:
      target: live
     restart: unless-stopped
     env_file:
-      - ./env/.env
+      - .env
     depends_on:
       - db
       

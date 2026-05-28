@@ -13,8 +13,6 @@ public record CreateTourRequest(
         @NotNull double fromLng,
         @NotNull double toLat,
         @NotNull double toLng,
-        @NotNull String profile,    // "driving-car", "cycling-regular" etc.
-
-        Long transportTypeId
+        @NotNull String profile    // "driving-car", "cycling-regular" etc.
 ) {
 }

@@ -11,3 +11,13 @@ Dresdner Straße
 16.380229,
 48.237308
 ]
+
+{
+  "name": "Test Tour",
+  "description": "This is a test!",
+  "from_lat": 16.345655,
+  "from_lng": 48.197451,
+  "to_lat": 16.380229,
+  "to_lng": 48.237308,
+  "profile": "driving-car"
+}

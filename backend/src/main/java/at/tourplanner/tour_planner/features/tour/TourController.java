@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,16 +22,10 @@ public class TourController {
 
     @PostMapping
     public ResponseEntity<TourResponse> createTour(
-            @RequestBody @Valid CreateTourRequest request) throws Exception { // TODO(Felix): add AuthenticationPrincipal later
-
-       // Tour tour = tourService.createTour(request, user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new TourResponse(
-                1L,
-                "TestTour",
-                "ladiladila",
-                420,
-                69,
-                ""
-        ));
+            @RequestBody @Valid CreateTourRequest request,
+            @AuthenticationPrincipal User user
+    ) throws Exception {
+       Tour tour = tourService.createTour(request, user);
+       return ResponseEntity.status(HttpStatus.CREATED).body(TourResponse.from(tour));
     }
 }

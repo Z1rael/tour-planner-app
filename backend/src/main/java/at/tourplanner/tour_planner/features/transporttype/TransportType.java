@@ -16,7 +16,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "transportation_types")
+@Table(name = "transport_types")
 public class TransportType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

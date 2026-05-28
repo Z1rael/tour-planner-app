@@ -1,6 +1,8 @@
 package at.tourplanner.tour_planner.features.tour;
 
 import at.tourplanner.tour_planner.api.dto.tour.CreateTourRequest;
+import at.tourplanner.tour_planner.features.transporttype.TransportType;
+import at.tourplanner.tour_planner.features.transporttype.TransportTypeRepository;
 import at.tourplanner.tour_planner.features.user.User;
 import at.tourplanner.tour_planner.ors.directions.OrsDirectionsClient;
 import at.tourplanner.tour_planner.ors.directions.model.OrsDirectionsFeature;
@@ -17,14 +19,15 @@ import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class TourService {
 
     private final TourRepository tourRepository;
+    private final TransportTypeRepository transportTypeRepository;
     private final OrsDirectionsClient orsDirectionsClient;
-    private final GeoJsonReader geoJsonReader = new  GeoJsonReader();
 
     public Tour createTour(CreateTourRequest request, User user) throws ParseException {
         OrsDirectionsRequest orsRequest = new OrsDirectionsRequest(List.of(
@@ -36,16 +39,20 @@ public class TourService {
 
         OrsDirectionsFeature feature = orsResponse.features().getFirst();
 
-        String geometryJson = new ObjectMapper().writeValueAsString(feature.geometry());
         LineString route = buildLineString(feature.geometry().coordinates());
+        Optional<TransportType> optTransportType = transportTypeRepository.findByTransportationName(request.profile());
+
 
         Tour tour = new Tour();
         tour.setUser(user);
         tour.setName(request.name());
         tour.setDescription(request.description());
         tour.setRoute(route);
-        tour.setDistanceKm(feature.properties().summary().distance());
+        tour.setDistanceKm(feature.properties().summary().distance() / 1000.0);
         tour.setEstimatedTimeS((long) feature.properties().summary().duration());
+        optTransportType.ifPresent(tour::setTransportType);
+
+        tourRepository.save(tour);
 
         return tour;
     }

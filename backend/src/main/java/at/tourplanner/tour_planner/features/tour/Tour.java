@@ -43,20 +43,20 @@ public class Tour {
     @NotNull(message = "Tour name cannot be empty")
     @NotBlank(message = "Tour name cannot be blank")
     @Size(min = 3, max = 255)
-    @Column(nullable = false)
+    @Column(name = "tour_name", nullable = false)
     private String name;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "tour_description", columnDefinition = "TEXT")
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "transportation_type_id")
+    @JoinColumn(name = "transport_type_id")
     private TransportType transportType;
 
     @Column(name = "tour_distance")
     private Double distanceKm;
 
-    @Column(nullable = false, columnDefinition = "GEOMETRY(LINESTRING, 4326)")
+    @Column(name = "route_information", nullable = false, columnDefinition = "GEOMETRY(LINESTRING, 4326)")
     private LineString route;
 
     @Size(max = 1000)

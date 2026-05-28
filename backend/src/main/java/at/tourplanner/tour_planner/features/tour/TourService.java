@@ -1,0 +1,64 @@
+package at.tourplanner.tour_planner.features.tour;
+
+import at.tourplanner.tour_planner.api.dto.tour.CreateTourRequest;
+import at.tourplanner.tour_planner.features.user.User;
+import at.tourplanner.tour_planner.ors.directions.OrsDirectionsClient;
+import at.tourplanner.tour_planner.ors.directions.model.OrsDirectionsFeature;
+import at.tourplanner.tour_planner.ors.directions.model.OrsDirectionsRequest;
+import at.tourplanner.tour_planner.ors.directions.model.OrsDirectionsResponse;
+import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.PrecisionModel;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.geojson.GeoJsonReader;
+import org.springframework.stereotype.Service;
+import tools.jackson.databind.ObjectMapper;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class TourService {
+
+    private final TourRepository tourRepository;
+    private final OrsDirectionsClient orsDirectionsClient;
+    private final GeoJsonReader geoJsonReader = new  GeoJsonReader();
+
+    public Tour createTour(CreateTourRequest request, User user) throws ParseException {
+        OrsDirectionsRequest orsRequest = new OrsDirectionsRequest(List.of(
+                List.of(request.fromLat(), request.fromLng()),
+                List.of(request.toLat(), request.toLng())
+        ));
+
+        OrsDirectionsResponse orsResponse = orsDirectionsClient.getDirections(request.profile(), orsRequest);
+
+        OrsDirectionsFeature feature = orsResponse.features().getFirst();
+
+        String geometryJson = new ObjectMapper().writeValueAsString(feature.geometry());
+        LineString route = buildLineString(feature.geometry().coordinates());
+
+        Tour tour = new Tour();
+        tour.setUser(user);
+        tour.setName(request.name());
+        tour.setDescription(request.description());
+        tour.setRoute(route);
+        tour.setDistanceKm(feature.properties().summary().distance());
+        tour.setEstimatedTimeS((long) feature.properties().summary().duration());
+
+        return tour;
+    }
+
+
+    private LineString buildLineString(List<List<Double>> coordinates) {
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
+
+        Coordinate[] coords = coordinates.stream()
+                .map(c -> new Coordinate(c.getFirst(), c.get(1)))
+                .toArray(Coordinate[]::new);
+
+        return geometryFactory.createLineString(coords);
+    }
+
+}

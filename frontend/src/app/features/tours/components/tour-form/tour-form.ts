@@ -6,7 +6,6 @@ import { Tour } from '../../../../core/models/tour';
 import { TransportationType } from '../../../../core/models/transportation-type';
 import { UserFacade } from '../../../user/facade/user.facade';
 import { UserService } from '../../../user/services/user.service';
-import { MockUserService } from '../../../../mock/services/mock-user-service';
 import { firstValueFrom, switchMap } from 'rxjs';
 
 @Component({
@@ -19,7 +18,7 @@ import { firstValueFrom, switchMap } from 'rxjs';
 export class TourForm {
   private router = inject(Router);
   protected readonly tourFacade = inject(TourFacade);
-  private readonly userService = inject(MockUserService);
+  private readonly userService = inject(UserService);
 
   readonly transportOptions = [
     { value: TransportationType.CAR, label: 'Car' },

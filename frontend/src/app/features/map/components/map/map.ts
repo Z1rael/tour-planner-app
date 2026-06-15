@@ -1,7 +1,8 @@
 import { Component, OnDestroy, effect, inject, signal, AfterViewInit } from '@angular/core';
-import { MapService } from '../../../../mock/services/mock-map-service';
+import { MapService } from '../../services/map.service';
 import { TourFacade } from '../../../tours/facade/tour.facade';
 import { MapFacade } from '../../facade/map-facade';
+import { Tour } from '../../../../core/models/tour';
 
 @Component({
   selector: 'app-map',
@@ -36,14 +37,14 @@ export class Map implements AfterViewInit, OnDestroy {
         return;
       }
 
-      const from = this.selectedTour()?.from;
-      const to = this.selectedTour()?.to;
-      if (!from || !to) {
+      const tour = this.selectedTour();
+
+      if (!tour?.route_information) {
         this.mapFacade.clearRoute();
         return;
       }
 
-      this.drawRoute(from, to);
+      this.drawRoute(tour);
     });
   }
 
@@ -51,8 +52,13 @@ export class Map implements AfterViewInit, OnDestroy {
     this.mapFacade.destroyMap();
   }
 
-  async drawRoute(from: string, to: string): Promise<void> {
-    const result = await this.mapService.getRoute(from, to);
+  async drawRoute(tour: Tour): Promise<void> {
+    const result = this.mapService.routeFromGeoJson(
+      tour.route_information,
+      tour.distance,
+      tour.estimated_time,
+    );
+
     if (!result) return;
 
     this.mapFacade.clearRoute();

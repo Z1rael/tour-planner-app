@@ -50,10 +50,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "leaflet/dist/leaflet.css",
-              "src/styles.css"
-            ],
+            "styles": ["leaflet/dist/leaflet.css", "src/styles.css"],
             "scripts": ["leaflet/dist/leaflet-src.js"],
             "server": "src/main.server.ts",
             "outputMode": "server",
@@ -90,6 +87,9 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "proxyConfig": "proxy.conf.json"
+          },
           "configurations": {
             "production": {
               "buildTarget": "tour-planner-ui:build:production"

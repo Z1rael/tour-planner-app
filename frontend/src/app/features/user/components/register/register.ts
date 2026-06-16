@@ -1,19 +1,17 @@
 import { Component, inject } from '@angular/core';
-import { MockUserService } from '../../../../mock/services/mock-user-service';
 import { Router } from '@angular/router';
-import {FormsModule} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [
-    FormsModule
-  ],
+  imports: [FormsModule],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
 export class Register {
-  private service = inject(MockUserService); // TODO: swap for real UserService
+  private service = inject(UserService);
   private router = inject(Router);
 
   public email: string = '';
@@ -26,9 +24,15 @@ export class Register {
       return;
     }
 
-    this.service.register(this.email, this.password).subscribe({
-      next: () => this.router.navigate(['/profile']),
-      error: (err: Error) => alert(err.message),
-    });
+    this.service
+      .register({
+        email: this.email,
+        password: this.password,
+        password_repeat: this.confirmPassword,
+      })
+      .subscribe({
+        next: () => this.router.navigate(['/profile']),
+        error: (err: Error) => alert(err.message),
+      });
   }
 }

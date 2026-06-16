@@ -28,6 +28,7 @@ import lombok.Setter;
 public class TourLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name= "log_id")
     private Long tourLogId;
 
     @ManyToOne(fetch = FetchType.LAZY)

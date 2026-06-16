@@ -14,17 +14,16 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { MockTourService } from '../../../mock/services/mock-tour-service';
 import { TourSummary } from '../../../core/models/tour-summary';
 import { Tour } from '../../../core/models/tour';
-import { MockLogService } from '../../../mock/services/mock-log-service';
 import { TourLog } from '../../../core/models/tour-log';
+import { TourService } from '../services/tour.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TourFacade {
-  private readonly tourApi = inject(MockTourService);
+  private readonly tourApi = inject(TourService);
   private readonly refresh$ = new BehaviorSubject<void>(undefined);
 
   // State

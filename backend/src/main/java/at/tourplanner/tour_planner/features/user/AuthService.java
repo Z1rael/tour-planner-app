@@ -24,7 +24,7 @@ public class AuthService {
             throw new IllegalArgumentException("Email already exists");
         }
 
-        if (!request.password().equals(request.passwordRepeat())) {
+        if (!request.password().equals(request.password_repeat())) {
             throw new IllegalArgumentException("Passwords do not match");
         }
 

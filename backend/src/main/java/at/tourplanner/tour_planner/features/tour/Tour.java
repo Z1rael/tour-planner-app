@@ -34,6 +34,7 @@ import org.locationtech.jts.geom.LineString;
 public class Tour {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="tour_id")
     private Long tourId;
 
     @ManyToOne(fetch = FetchType.LAZY)

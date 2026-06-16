@@ -8,7 +8,7 @@ export interface AuthPayload {
 }
 
 export interface RegisterPayload extends AuthPayload {
-  passwordRepeat: string;
+  password_repeat: string;
 }
 
 export interface AuthApiResponse {
@@ -51,8 +51,8 @@ export class UserService {
     return !!this.getToken();
   }
 
-  // Decode the JWT payload to get basic user info without a backend round-trip.
-  // The token is not verified here — that's the backend's job.
+  // decode the JWT payload to get basic user info without a backend round-trip
+  // token is not verified here — that's the backend's job
   getCurrentUser(): CurrentUser | null {
     const token = this.getToken();
     if (!token) return null;

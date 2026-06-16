@@ -6,7 +6,7 @@ import { Tour } from '../../../core/models/tour';
 @Injectable({
   providedIn: 'root',
 })
-export class TourServiceImpl {
+export class TourService {
   private http = inject(HttpClient);
 
   private readonly baseUrl = '/api/tours';
@@ -55,5 +55,18 @@ export class TourServiceImpl {
         1;
       }),
     );
+  }
+
+  searchTour(query: string): Observable<Tour[]> {
+    return this.http
+      .get<Tour[]>(`${this.baseUrl}/search`, {
+        params: { q: query },
+      })
+      .pipe(
+        catchError((err) => {
+          console.error('Failed to search tours', err);
+          return throwError(() => err);
+        }),
+      );
   }
 }

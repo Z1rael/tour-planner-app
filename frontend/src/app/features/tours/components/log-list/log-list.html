@@ -16,8 +16,8 @@
       }
     </div>
 
-    @for (item of logFacade.logs(); track item.id) {
-      <div (click)="selectLog(item.id)">
+    @for (item of logFacade.logs(); track item.logId) {
+      <div (click)="selectLog(item.logId)">
         <app-log-list-item [log]="item"></app-log-list-item>
       </div>
     }

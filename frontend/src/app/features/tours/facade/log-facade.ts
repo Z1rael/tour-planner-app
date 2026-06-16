@@ -1,5 +1,4 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { MockLogService } from '../../../mock/services/mock-log-service';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import {
   catchError,
@@ -13,13 +12,13 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { TourLog } from '../../../core/models/tour-log';
+import { TourLogService, TourLogApiResponse, CreateLogPayload } from '../services/tour-log.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LogFacade {
-  private readonly logApi = inject(MockLogService);
+  private readonly logApi = inject(TourLogService);
 
   readonly error = signal<string | null>(null);
   readonly loading = signal(false);
@@ -35,25 +34,15 @@ export class LogFacade {
       this.error.set(null);
 
       if (null === id) {
-        return this.logApi.getTourLogs().pipe(
-          catchError((err) => {
-            this.loading.set(false);
-            this.error.set(err.message);
-            return EMPTY;
-          }),
-          finalize(() => this.loading.set(false)),
-        );
+        return EMPTY;
       }
 
-      return this.logApi.getLogByTourId(id).pipe(
+      return this.logApi.getLogs(id).pipe(
         catchError((err) => {
-          this.loading.set(false);
-          this.error.set(err);
+          this.error.set(err.message);
           return EMPTY;
         }),
-        finalize(() => {
-          this.loading.set(false);
-        }),
+        finalize(() => this.loading.set(false)),
       );
     }),
   );
@@ -69,28 +58,25 @@ export class LogFacade {
       this.loading.set(true);
       this.error.set(null);
 
+      const id = this.tourId();
+      if (null === id) return EMPTY;
+
       if (0 === q.length) {
-        return this.logApi.getTourLogs().pipe(
+        return this.logApi.getLogs(id).pipe(
           catchError((err) => {
-            this.loading.set(false);
             this.error.set(err.message);
             return EMPTY;
           }),
-          finalize(() => {
-            this.loading.set(false);
-          }),
+          finalize(() => this.loading.set(false)),
         );
       }
 
-      return this.logApi.searchTourLogs(q).pipe(
+      return this.logApi.searchLogs(id, q).pipe(
         catchError((err) => {
-          this.loading.set(false);
           this.error.set(err.message);
           return EMPTY;
         }),
-        finalize(() => {
-          this.loading.set(false);
-        }),
+        finalize(() => this.loading.set(false)),
       );
     }),
   );
@@ -98,96 +84,95 @@ export class LogFacade {
 
   readonly selectedLogId$ = toObservable(this.selectedLogId);
   readonly selectedLog$ = this.selectedLogId$.pipe(
-    switchMap((id) => {
-      if (null === id) {
-        return of(null);
-      }
+    switchMap((logId) => {
+      if (null === logId) return of(null);
 
-      //this.loading.set(true);
-      //this.error.set(null);
+      const tourId = this.tourId();
+      if (null === tourId) return of(null);
 
-      return this.logApi.getLogById(id).pipe(
+      return this.logApi.getLog(tourId, logId).pipe(
         catchError((err) => {
           this.error.set(err.message);
           return EMPTY;
         }),
-        //finalize(() => this.loading.set(false)),
       );
     }),
   );
   readonly selectedLog = toSignal(this.selectedLog$, { initialValue: null });
 
-  // methods
   setTourId(id: number | null): void {
     this.tourId.set(id);
   }
-
   clearTourId(): void {
     this.tourId.set(null);
   }
-
   setQuery(str: string): void {
     this.query.set(str);
   }
-
   clearQuery(): void {
     this.query.set('');
   }
-
   selectLog(id: number): void {
     this.selectedLogId.set(id);
   }
-
   clearLogSelection(): void {
     this.selectedLogId.set(null);
   }
 
-  createLog(data: Omit<TourLog, 'id' | 'timestamp'>): void {
+  createLog(tourId: number, payload: CreateLogPayload): void {
     this.loading.set(true);
     this.error.set(null);
 
-    this.logApi.createTourLog(data).pipe(
-      catchError((err) => {
-        this.loading.set(false);
-        this.error.set(err.message);
-        return EMPTY;
-      }),
-      finalize(() => this.loading.set(false)),
-    );
-  }
-
-  updateLog(id: number, data: Omit<TourLog, 'id' | 'timestamp'>): void {
-    this.loading.set(true);
-    this.error.set(null);
-
-    this.logApi.updateTourLog(id, data).pipe(
-      catchError((err) => {
-        this.loading.set(false);
-        this.error.set(err.message);
-        return EMPTY;
-      }),
-      finalize(() => this.loading.set(false)),
-    );
-  }
-
-  deleteLog(id: number): void {
     this.logApi
-      .deleteTourLog(id)
+      .createLog(tourId, payload)
       .pipe(
-        startWith(() => {
-          this.loading.set(true);
-          this.error.set(null);
-        }),
         catchError((err) => {
-          this.loading.set(false);
           this.error.set(err.message);
           return EMPTY;
         }),
         finalize(() => {
-          // whacky refresh again
-          const tourId = this.tourId();
+          this.loading.set(false);
+          this.setTourId(tourId); // refresh
+        }),
+      )
+      .subscribe();
+  }
+
+  updateLog(tourId: number, logId: number, payload: Partial<CreateLogPayload>): void {
+    this.loading.set(true);
+    this.error.set(null);
+
+    this.logApi
+      .updateLog(tourId, logId, payload)
+      .pipe(
+        catchError((err) => {
+          this.error.set(err.message);
+          return EMPTY;
+        }),
+        finalize(() => {
+          this.loading.set(false);
+          this.setTourId(tourId); // refresh
+        }),
+      )
+      .subscribe();
+  }
+
+  deleteLog(logId: number): void {
+    const tourId = this.tourId();
+    if (null === tourId) return;
+
+    this.logApi
+      .deleteLog(tourId, logId)
+      .pipe(
+        catchError((err) => {
+          this.error.set(err.message);
+          return EMPTY;
+        }),
+        finalize(() => {
+          this.loading.set(false);
+          const id = this.tourId();
           this.clearTourId();
-          this.setTourId(tourId);
+          this.setTourId(id);
         }),
       )
       .subscribe();

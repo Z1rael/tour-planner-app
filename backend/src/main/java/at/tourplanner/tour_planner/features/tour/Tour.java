@@ -46,6 +46,12 @@ public class Tour {
     @Column(name = "tour_name", nullable = false)
     private String name;
 
+    @Column(name="from_address")
+    private String fromAddress;
+
+    @Column(name="to_address")
+    private String toAddress;
+
     @Column(name = "tour_description", columnDefinition = "TEXT")
     private String description;
 

@@ -1,37 +1,27 @@
 package at.tourplanner.tour_planner.api.dto.tour;
 
 import at.tourplanner.tour_planner.features.tour.Tour;
-import org.locationtech.jts.io.geojson.GeoJsonWriter;
 
-public record TourResponse(
+public record TourSummaryResponse(
         Long tourId,
         String name,
-        String description,
         String fromAddress,
         String toAddress,
         String transportTypeName,
         double distanceKm,
         long estimatedTimeS,
-        String routeGeoJson,
-        String imagePath,
-        int popularity,           // number of logs
-        double childFriendliness  // 0.0 – 1.0, higher = more child-friendly
+        int popularity,
+        double childFriendliness
 ) {
-    public static TourResponse from(Tour tour, int popularity, double childFriendliness) {
-        String geoJson = tour.getRoute() != null
-                ? new GeoJsonWriter().write(tour.getRoute())
-                : null;
-        return new TourResponse(
+    public static TourSummaryResponse from(Tour tour, int popularity, double childFriendliness) {
+        return new TourSummaryResponse(
                 tour.getTourId(),
                 tour.getName(),
-                tour.getDescription(),
                 tour.getFromAddress(),
                 tour.getToAddress(),
                 tour.getTransportType() != null ? tour.getTransportType().getTransportationName() : null,
                 tour.getDistanceKm() != null ? tour.getDistanceKm() : 0,
                 tour.getEstimatedTimeS() != null ? tour.getEstimatedTimeS() : 0,
-                geoJson,
-                tour.getImagePath(),
                 popularity,
                 childFriendliness
         );

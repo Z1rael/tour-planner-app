@@ -4,13 +4,13 @@ import at.tourplanner.tour_planner.api.dto.auth.AuthResponse;
 import at.tourplanner.tour_planner.api.dto.auth.LoginRequest;
 import at.tourplanner.tour_planner.api.dto.auth.RegisterRequest;
 import at.tourplanner.tour_planner.jwt.JwtService;
-import jakarta.inject.Named;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Named
+@Service
 @RequiredArgsConstructor
 public class AuthService {
 

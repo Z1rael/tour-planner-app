@@ -9,6 +9,9 @@ public record CreateTourRequest(
         String name,
         String description,
 
+        @NotBlank String fromAddress,
+        @NotBlank String toAddress,
+
         @NotNull double fromLat,
         @NotNull double fromLng,
         @NotNull double toLat,

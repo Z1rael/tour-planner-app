@@ -13,17 +13,32 @@ CREATE TABLE transport_types (
     transportation_name     VARCHAR(255) NOT NULL
 );
 
+-- Seed ORS routing profiles
+INSERT INTO transport_types (transportation_name) VALUES
+    ('driving-car'),
+    ('cycling-regular'),
+    ('cycling-road'),
+    ('cycling-mountain'),
+    ('foot-walking'),
+    ('foot-hiking')
+ON CONFLICT (transportation_name) DO NOTHING;
+
 CREATE TABLE tours (
     tour_id             SERIAL PRIMARY KEY,
     user_id             INT REFERENCES users(user_id) ON DELETE CASCADE,
     tour_name           VARCHAR(255) NOT NULL,
     tour_description    TEXT,
+    from_address       VARCHAR(500),
+    to_address         VARCHAR(500),
     transport_type_id   INT REFERENCES transport_types(transportation_type_id),
     tour_distance       FLOAT,    ---were we doing this in meters or kilometers? km for now
-    route_information   GEOMETRY(LINESTRING, 4326) NOT NULL,
+    route_information   GEOMETRY(LINESTRING, 4326),
     image_path          TEXT,
     estimated_time      BIGINT CHECK (estimated_time >= 0)
 );
+
+-- spatial index for map queries
+CREATE INDEX tours_route_geom_idx ON tours USING GIST (route_information);
 
 CREATE TABLE tour_logs (
     log_id          SERIAL PRIMARY KEY,
@@ -36,5 +51,3 @@ CREATE TABLE tour_logs (
     total_time      BIGINT CHECK (total_time >= 0),
     total_distance  FLOAT          ---needs to be changed to match tours.tour_distance if needed
 );
-
-CREATE INDEX tours_route_geom_idx ON tours USING GIST (route_information);

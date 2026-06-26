@@ -10,7 +10,7 @@ CREATE TABLE users (
 
 CREATE TABLE transport_types (
     transportation_type_id  SERIAL PRIMARY KEY,
-    transportation_name     VARCHAR(255) NOT NULL
+    transportation_name     VARCHAR(255) NOT NULL UNIQUE
 );
 
 -- Seed ORS routing profiles

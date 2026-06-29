@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { LoginForm } from './models';
 import { email, form, FormField, required } from '@angular/forms/signals';
-import { MockUserService } from '../../../../mock/services/mock-user-service';
+import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   styleUrl: './login.css',
 })
 export class Login {
-  private userService = inject(MockUserService);  // TODO: swap for real UserService
+  private userService = inject(UserService);
   private router = inject(Router);
 
   readonly loginModel = signal<LoginForm>({

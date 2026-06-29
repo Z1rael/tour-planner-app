@@ -1,5 +1,10 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { MockLogService } from '../../../mock/services/mock-log-service';
+import {
+  TourLogService,
+  UpdateTourLogPayload,
+  CreateTourLogPayload,
+  TourLogResponse,
+} from '../services/tour-log.service';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import {
   catchError,
@@ -19,7 +24,7 @@ import { TourLog } from '../../../core/models/tour-log';
   providedIn: 'root',
 })
 export class LogFacade {
-  private readonly logApi = inject(MockLogService);
+  private readonly logApi = inject(TourLogService);
 
   readonly error = signal<string | null>(null);
   readonly loading = signal(false);
@@ -36,6 +41,7 @@ export class LogFacade {
 
       if (null === id) {
         return this.logApi.getTourLogs().pipe(
+          map((logs) => logs.map((l) => this.mapLog(l))),
           catchError((err) => {
             this.loading.set(false);
             this.error.set(err.message);
@@ -46,9 +52,10 @@ export class LogFacade {
       }
 
       return this.logApi.getLogByTourId(id).pipe(
+        map((logs) => logs.map((l) => this.mapLog(l))),
         catchError((err) => {
           this.loading.set(false);
-          this.error.set(err);
+          this.error.set(err.message);
           return EMPTY;
         }),
         finalize(() => {
@@ -71,6 +78,7 @@ export class LogFacade {
 
       if (0 === q.length) {
         return this.logApi.getTourLogs().pipe(
+          map((logs) => logs.map((l) => this.mapLog(l))),
           catchError((err) => {
             this.loading.set(false);
             this.error.set(err.message);
@@ -83,6 +91,7 @@ export class LogFacade {
       }
 
       return this.logApi.searchTourLogs(q).pipe(
+        map((logs) => logs.map((l) => this.mapLog(l))),
         catchError((err) => {
           this.loading.set(false);
           this.error.set(err.message);
@@ -107,6 +116,7 @@ export class LogFacade {
       //this.error.set(null);
 
       return this.logApi.getLogById(id).pipe(
+        map((l) => this.mapLog(l)),
         catchError((err) => {
           this.error.set(err.message);
           return EMPTY;
@@ -142,32 +152,38 @@ export class LogFacade {
     this.selectedLogId.set(null);
   }
 
-  createLog(data: Omit<TourLog, 'id' | 'timestamp'>): void {
+  createLog(data: CreateTourLogPayload): void {
     this.loading.set(true);
     this.error.set(null);
 
-    this.logApi.createTourLog(data).pipe(
-      catchError((err) => {
-        this.loading.set(false);
-        this.error.set(err.message);
-        return EMPTY;
-      }),
-      finalize(() => this.loading.set(false)),
-    );
+    this.logApi
+      .createTourLog(data)
+      .pipe(
+        catchError((err) => {
+          this.loading.set(false);
+          this.error.set(err.message);
+          return EMPTY;
+        }),
+        finalize(() => this.loading.set(false)),
+      )
+      .subscribe();
   }
 
-  updateLog(id: number, data: Omit<TourLog, 'id' | 'timestamp'>): void {
+  updateLog(id: number, data: UpdateTourLogPayload): void {
     this.loading.set(true);
     this.error.set(null);
 
-    this.logApi.updateTourLog(id, data).pipe(
-      catchError((err) => {
-        this.loading.set(false);
-        this.error.set(err.message);
-        return EMPTY;
-      }),
-      finalize(() => this.loading.set(false)),
-    );
+    this.logApi
+      .updateTourLog(id, data)
+      .pipe(
+        catchError((err) => {
+          this.loading.set(false);
+          this.error.set(err.message);
+          return EMPTY;
+        }),
+        finalize(() => this.loading.set(false)),
+      )
+      .subscribe();
   }
 
   deleteLog(id: number): void {
@@ -191,5 +207,20 @@ export class LogFacade {
         }),
       )
       .subscribe();
+  }
+
+  // helpers
+  private mapLog(t: TourLogResponse): TourLog {
+    return {
+      id: t.tour_log_id,
+      tour_id: t.tour_id,
+      comment: t.comment,
+      difficulty: t.difficulty,
+      rating: t.rating,
+      total_distance: t.total_distance,
+      total_time: t.total_time,
+      timestamp: t.log_date,
+      creator_id: 0,
+    };
   }
 }

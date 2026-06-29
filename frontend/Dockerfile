@@ -44,6 +44,9 @@ FROM nginxinc/nginx-unprivileged:${NGINX_VERSION} AS live
 # copy output from the build to default serving dir
 COPY --chown=nginx:nginx --from=builder /app/dist/*/browser /usr/share/nginx/html
 
+# angular router needs this to talk to backend
+COPY --chown=nginx:nginx nginx.conf /etc/nginx/conf.d/default.conf
+
 # use non root user
 USER nginx
 

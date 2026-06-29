@@ -1,25 +1,47 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { TourFacade } from '../../facade/tour.facade';
 import { form, FormField, required } from '@angular/forms/signals';
-import { Tour } from '../../../../core/models/tour';
 import { TransportationType } from '../../../../core/models/transportation-type';
-import { UserFacade } from '../../../user/facade/user.facade';
-import { UserService } from '../../../user/services/user.service';
-import { MockUserService } from '../../../../mock/services/mock-user-service';
-import { firstValueFrom, switchMap } from 'rxjs';
+import { OrsGeocodeService, GeocodeDTO } from '../../../map/services/ors-geocode.service';
+import { NgFor, NgIf } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
+
+interface TourFormModel {
+  name: string;
+  description: string;
+  from: string;
+  to: string;
+  transport_type: TransportationType;
+}
+
+const EMPTY_FORM: TourFormModel = {
+  name: '',
+  description: '',
+  from: '',
+  to: '',
+  transport_type: TransportationType.WALK,
+};
 
 @Component({
   selector: 'app-tour-form',
   standalone: true,
-  imports: [FormField],
+  imports: [FormField, NgFor, NgIf],
   templateUrl: './tour-form.html',
   styleUrl: './tour-form.css',
 })
 export class TourForm {
-  private router = inject(Router);
+  private readonly router = inject(Router);
   protected readonly tourFacade = inject(TourFacade);
-  private readonly userService = inject(MockUserService);
+  private readonly geocodeService = inject(OrsGeocodeService);
+
+  readonly isSubmitting = signal(false);
+  readonly geocodeError = signal<string | null>(null);
+  readonly fromCoords = signal<GeocodeDTO | null>(null);
+  readonly toCoords = signal<GeocodeDTO | null>(null);
+  readonly fromSuggestions = signal<GeocodeDTO[]>([]);
+  readonly toSuggestions = signal<GeocodeDTO[]>([]);
+  readonly tourModel = signal<TourFormModel>(EMPTY_FORM);
 
   readonly transportOptions = [
     { value: TransportationType.CAR, label: 'Car' },
@@ -30,72 +52,133 @@ export class TourForm {
     { value: TransportationType.HIKE, label: 'Hike' },
   ];
 
-  readonly isEditMode = computed(() => this.tourFacade.selectedTour !== null);
-
-  readonly tourModel = signal<
-    Omit<Tour, 'id' | 'distance' | 'estimated_time' | 'route_information'>
-  >(this.initialFormValue());
+  readonly isEditMode = computed(() => this.tourFacade.selectedTour() !== null);
 
   readonly tourForm = form(this.tourModel, (schemaPath) => {
     required(schemaPath.name, { message: 'Tour name is required' });
     required(schemaPath.from, { message: 'Tour start is required' });
     required(schemaPath.to, { message: 'Tour destination is required' });
-    required(schemaPath.transport_type, { message: 'Tour transportation type is required' });
+    required(schemaPath.transport_type, { message: 'Transport type is required' });
   });
 
-  onSubmit(): void {
+  private coordsInitialized = false;
+
+  constructor() {
+    effect(() => {
+      const selected = this.tourFacade.selectedTour();
+      if (selected && !this.coordsInitialized) {
+        this.coordsInitialized = true;
+        this.tourModel.set({
+          name: selected.name,
+          description: selected.description ?? '',
+          from: selected.from,
+          to: selected.to,
+          transport_type: selected.transport_type as TransportationType,
+        });
+
+        // Geocode existing addresses to get real coords
+        Promise.all([
+          firstValueFrom(this.geocodeService.geocode(selected.from)),
+          firstValueFrom(this.geocodeService.geocode(selected.to)),
+        ]).then(([fromCoords, toCoords]) => {
+          if (fromCoords) this.fromCoords.set(fromCoords);
+          if (toCoords) this.toCoords.set(toCoords);
+        });
+      } else if (!selected) {
+        this.coordsInitialized = false;
+        this.fromCoords.set(null);
+        this.toCoords.set(null);
+        this.fromSuggestions.set([]);
+        this.toSuggestions.set([]);
+        this.tourModel.set(EMPTY_FORM);
+      }
+    });
+  }
+
+  onFromInput(query: string): void {
+    this.fromCoords.set(null);
+    if (query.length < 3) {
+      this.fromSuggestions.set([]);
+      return;
+    }
+    this.geocodeService.geocodeAll(query).subscribe((r) => this.fromSuggestions.set(r));
+  }
+
+  onToInput(query: string): void {
+    this.toCoords.set(null);
+    if (query.length < 3) {
+      this.toSuggestions.set([]);
+      return;
+    }
+    this.geocodeService.geocodeAll(query).subscribe((r) => this.toSuggestions.set(r));
+  }
+
+  selectFrom(result: GeocodeDTO): void {
+    this.fromCoords.set(result);
+    this.fromSuggestions.set([]);
+    this.tourModel.update((m) => ({ ...m, from: result.label }));
+  }
+
+  selectTo(result: GeocodeDTO): void {
+    this.toCoords.set(result);
+    this.toSuggestions.set([]);
+    this.tourModel.update((m) => ({ ...m, to: result.label }));
+  }
+
+  onSubmit(event?: Event): void {
+    event?.preventDefault();
+    const model = this.tourModel();
+    const fromCoords = this.fromCoords();
+    const toCoords = this.toCoords();
+
+    this.geocodeError.set(null);
+
+    if (!fromCoords || !toCoords) {
+      this.geocodeError.set('Please select a location from the suggestions for both From and To.');
+      return;
+    }
+
+    this.isSubmitting.set(true);
     const selected = this.tourFacade.selectedTour();
 
     if (selected) {
-      // trigger refresh for details
-      this.tourFacade.clearSelection();
-      this.tourFacade.select(selected.id);
+      fromCoords.lat !== 0 && fromCoords.lng !== 0 && toCoords.lat !== 0 && toCoords.lng !== 0;
+      const payload = {
+        name: model.name,
+        description: model.description,
+        profile: model.transport_type,
 
-      this.tourFacade.updateTour(selected.id, this.tourModel());
-      this.router.navigate(['tours']);
+        fromAddress: fromCoords.label,
+        toAddress: toCoords.label,
+        fromLat: fromCoords.lat,
+        fromLng: fromCoords.lng,
+        toLat: toCoords.lat,
+        toLng: toCoords.lng,
+      };
+
+      this.tourFacade.updateTour(selected.id, payload);
+      this.tourFacade.clearSelection();
+      this.router.navigate(['profile']);
     } else {
-      this.tourFacade.createTour(this.tourModel());
+      this.tourFacade.createTour({
+        name: model.name,
+        description: model.description,
+        from_address: fromCoords.label,
+        to_address: toCoords.label,
+        from_lat: fromCoords.lat,
+        from_lng: fromCoords.lng,
+        to_lat: toCoords.lat,
+        to_lng: toCoords.lng,
+        profile: model.transport_type,
+      });
       this.router.navigate(['profile']);
     }
+    this.isSubmitting.set(false);
   }
 
   onCancel(): void {
-    const selected = this.tourFacade.selectedTour();
-
-    if (selected) {
-      this.router.navigate(['tours']);
-    } else {
-      this.router.navigate(['profile']);
-    }
-  }
-
-  clearForm(): void {
-    this.tourModel.set(this.initialFormValue());
-  }
-
-  private initialFormValue(): Omit<
-    Tour,
-    'id' | 'distance' | 'estimated_time' | 'route_information'
-  > {
-    const selected = this.tourFacade.selectedTour();
-    if (selected) {
-      return {
-        name: selected.name,
-        from: selected.from,
-        to: selected.to,
-        transport_type: selected.transport_type,
-        description: selected.description,
-        creator_id: selected.creator_id,
-      };
-    }
-
-    return {
-      name: '',
-      from: '',
-      to: '',
-      transport_type: TransportationType.CAR,
-      description: '',
-      creator_id: 1,
-    };
+    this.tourFacade.selectedTour()
+      ? this.router.navigate(['tours'])
+      : this.router.navigate(['profile']);
   }
 }

@@ -14,5 +14,5 @@ public record CreateTourLogRequest(
 
         @NotNull @Min(0) Long totalTimeS,
 
-        @NotNull @DecimalMin("0.0") BigDecimal totalDistanceKm
+        @NotNull @Min(0) Long totalDistanceKm
 ) {}

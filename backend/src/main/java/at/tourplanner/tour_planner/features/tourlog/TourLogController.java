@@ -33,7 +33,7 @@ public class TourLogController {
     // GET /api/logs?tourId=...
     @GetMapping
     public ResponseEntity<List<TourLogResponse>> getLogs(
-            @RequestParam Long tourId,
+            @RequestParam(required=false) Long tourId,
             @AuthenticationPrincipal User user
     ) {
         List<TourLogResponse> logs = tourLogService.getLogsForTour(tourId, user).stream()

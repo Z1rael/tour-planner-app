@@ -1,6 +1,5 @@
 package at.tourplanner.tour_planner.features.tourlog;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import at.tourplanner.tour_planner.features.tour.Tour;
@@ -58,5 +57,5 @@ public class TourLog {
     private Long totalTimeS;
 
     @Column(name = "total_distance", precision = 10, scale = 2)
-    private BigDecimal totalDistanceKm;
+    private Long totalDistanceKm;
 }

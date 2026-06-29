@@ -12,7 +12,7 @@ public record TourLogResponse(
         Integer difficulty,
         Integer rating,
         Long totalTimeS,
-        BigDecimal totalDistanceKm,
+        Long totalDistanceKm,
         LocalDateTime logDate
 ) {
     public static TourLogResponse from(TourLog log) {

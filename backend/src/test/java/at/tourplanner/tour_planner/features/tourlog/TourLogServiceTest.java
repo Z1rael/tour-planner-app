@@ -13,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,14 +56,14 @@ class TourLogServiceTest {
         existingLog.setDifficulty(3);
         existingLog.setRating(4);
         existingLog.setTotalTimeS(3600L);
-        existingLog.setTotalDistanceKm(BigDecimal.valueOf(10.0));
+        existingLog.setTotalDistanceKm((long)10);
     }
 
     /* createLog */
     @Test
     void createLog_validRequest_savesAndReturnsLog() {
         CreateTourLogRequest request = new CreateTourLogRequest(
-                10L, "Great hike!", 2, 5, 7200L, BigDecimal.valueOf(15.0)
+                10L, "Great hike!", 2, 5, 7200L, 15L
         );
         when(tourRepository.findByIdAndUserId(10L, 1L)).thenReturn(Optional.of(tour));
         when(tourLogRepository.save(any(TourLog.class))).thenAnswer(i -> i.getArgument(0));
@@ -83,7 +82,7 @@ class TourLogServiceTest {
     @Test
     void createLog_tourNotFound_throwsEntityNotFoundException() {
         CreateTourLogRequest request = new CreateTourLogRequest(
-                99L, "comment", 1, 1, 100L, BigDecimal.ONE
+                99L, "comment", 1, 1, 100L, 1L
         );
         when(tourRepository.findByIdAndUserId(99L, 1L)).thenReturn(Optional.empty());
 
@@ -98,7 +97,7 @@ class TourLogServiceTest {
     void createLog_tourBelongingToOtherUser_throwsEntityNotFoundException() {
         // findByIdAndUserId already filters by userId, so empty = access denied
         CreateTourLogRequest request = new CreateTourLogRequest(
-                10L, "comment", 1, 1, 100L, BigDecimal.ONE
+                10L, "comment", 1, 1, 100L, 1L
         );
         when(tourRepository.findByIdAndUserId(10L, 1L)).thenReturn(Optional.empty());
 
@@ -129,7 +128,7 @@ class TourLogServiceTest {
     @Test
     void updateLog_allFieldsProvided_updatesAllFields() {
         UpdateTourLogRequest request = new UpdateTourLogRequest(
-                "Updated comment", 5, 2, 1800L, BigDecimal.valueOf(5.0)
+                "Updated comment", 5, 2, 1800L, 5L
         );
         when(tourLogRepository.findByIdAndUserId(100L, 1L)).thenReturn(Optional.of(existingLog));
         when(tourLogRepository.save(existingLog)).thenReturn(existingLog);
@@ -140,7 +139,7 @@ class TourLogServiceTest {
         assertThat(result.getDifficulty()).isEqualTo(5);
         assertThat(result.getRating()).isEqualTo(2);
         assertThat(result.getTotalTimeS()).isEqualTo(1800L);
-        assertThat(result.getTotalDistanceKm()).isEqualByComparingTo(BigDecimal.valueOf(5.0));
+        assertThat(result.getTotalDistanceKm()).isEqualTo(5L);
     }
 
     @Test
@@ -162,7 +161,7 @@ class TourLogServiceTest {
 
     @Test
     void updateLog_logNotFound_throwsEntityNotFoundException() {
-        UpdateTourLogRequest request = new UpdateTourLogRequest("x", 1, 1, 1L, BigDecimal.ONE);
+        UpdateTourLogRequest request = new UpdateTourLogRequest("x", 1, 1, 1L, 1L);
         when(tourLogRepository.findByIdAndUserId(999L, 1L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> tourLogService.updateLog(999L, request, user))

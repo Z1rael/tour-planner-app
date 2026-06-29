@@ -4,7 +4,6 @@ import at.tourplanner.tour_planner.features.tourlog.TourLog;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
 import java.util.List;
  
 import static org.assertj.core.api.Assertions.assertThat;
@@ -113,7 +112,7 @@ public class TourServiceTest {
             TourLog log = new TourLog();
             log.setDifficulty(difficulty);
             log.setTotalTimeS(totalTimeS);
-            log.setTotalDistanceKm(BigDecimal.valueOf(distanceKm));
+            log.setTotalDistanceKm((long)distanceKm);
             log.setRating(3);
             log.setComment("test");
             return log;

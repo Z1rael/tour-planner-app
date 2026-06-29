@@ -18,9 +18,14 @@ public record TourResponse(
         double childFriendliness  // 0.0 – 1.0, higher = more child-friendly
 ) {
     public static TourResponse from(Tour tour, int popularity, double childFriendliness) {
-        String geoJson = tour.getRoute() != null
-                ? new GeoJsonWriter().write(tour.getRoute())
-                : null;
+        String geoJson = null;
+        try {
+                if (tour.getRoute() != null) {
+                geoJson = new GeoJsonWriter().write(tour.getRoute());
+                }
+        } catch (Exception e) {
+                geoJson = null;
+        }
         return new TourResponse(
                 tour.getTourId(),
                 tour.getName(),

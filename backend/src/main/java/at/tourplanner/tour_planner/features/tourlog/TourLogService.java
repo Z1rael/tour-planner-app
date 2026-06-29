@@ -44,6 +44,11 @@ public class TourLogService {
     }
 
     @Transactional(readOnly = true)
+    public List<TourLog> getAllLogsForUser(User user) {
+        return tourLogRepository.findByUserId(user.getUserId());
+    }
+
+    @Transactional(readOnly = true)
     public List<TourLog> getLogsForTour(Long tourId, User user) {
         return tourLogRepository.findByTourIdAndUserId(tourId, user.getUserId());
     }

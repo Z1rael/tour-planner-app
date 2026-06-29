@@ -19,6 +19,8 @@ export const mockTours: Tour[] = [
     estimated_time: 225,
     route_information: '',
     creator_id: 1,
+    popularity: 0,
+    child_friendliness: 0,
   },
   {
     id: 2,
@@ -32,6 +34,8 @@ export const mockTours: Tour[] = [
     estimated_time: 70,
     route_information: '',
     creator_id: 2,
+    popularity: 0,
+    child_friendliness: 0,
   },
   {
     id: 3,
@@ -45,6 +49,8 @@ export const mockTours: Tour[] = [
     estimated_time: 300,
     route_information: '',
     creator_id: 1,
+    popularity: 0,
+    child_friendliness: 0,
   },
   {
     id: 4,
@@ -58,6 +64,8 @@ export const mockTours: Tour[] = [
     estimated_time: 150,
     route_information: '',
     creator_id: 3,
+    popularity: 0,
+    child_friendliness: 0,
   },
   {
     id: 5,
@@ -71,6 +79,8 @@ export const mockTours: Tour[] = [
     estimated_time: 20,
     route_information: '',
     creator_id: 2,
+    popularity: 0,
+    child_friendliness: 0,
   },
   {
     id: 6,
@@ -84,6 +94,8 @@ export const mockTours: Tour[] = [
     estimated_time: 55,
     route_information: '',
     creator_id: 4,
+    popularity: 0,
+    child_friendliness: 0,
   },
   {
     id: 7,
@@ -97,6 +109,8 @@ export const mockTours: Tour[] = [
     estimated_time: 110,
     route_information: '',
     creator_id: 3,
+    popularity: 0,
+    child_friendliness: 0,
   },
   {
     id: 8,
@@ -110,6 +124,8 @@ export const mockTours: Tour[] = [
     estimated_time: 260,
     route_information: '',
     creator_id: 1,
+    popularity: 0,
+    child_friendliness: 0,
   },
 ];
 

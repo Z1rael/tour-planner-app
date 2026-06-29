@@ -18,15 +18,10 @@ export class MapFacade {
   private routeLine: import('leaflet').Polyline | null = null;
 
   async initMap(containerId: string): Promise<void> {
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
+    if (!isPlatformBrowser(this.platformId)) return;
 
-    //if (this.map) {
-    //  return;
-    //}
-
-    this.L = await import('leaflet');
+    const leaflet = await import('leaflet');
+    this.L = (leaflet.default ?? leaflet) as LeafletModule;
     const L = this.L;
 
     this.map = L.map(containerId, {
@@ -34,7 +29,7 @@ export class MapFacade {
       attributionControl: true,
     });
 
-    this.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors',
       maxZoom: 19,
     }).addTo(this.map);
@@ -69,7 +64,7 @@ export class MapFacade {
   }
 
   setRoute(points: readonly LatLng[]): void {
-    if (!this.map || !this.L) {
+    if (!this.map || !this.L || !points?.length) {
       return;
     }
     const L = this.L;

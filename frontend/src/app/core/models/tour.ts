@@ -7,8 +7,10 @@ export interface Tour {
   to: string;
   transport_type: TransportationType;
   description: string;
-  distance: number; // both are calculated by the backend so hard to mock rn
-  estimated_time: number; // both are calculated by the backend so hard to mock rn
-  route_information: string; // this is the geoJSON string from ORS but this is hard to replicate without backend
+  distance: number;
+  estimated_time: number;
+  route_information: string;
   creator_id: number;
+  popularity: number;
+  child_friendliness: number;
 }

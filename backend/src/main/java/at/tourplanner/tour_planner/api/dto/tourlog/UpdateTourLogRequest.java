@@ -8,5 +8,5 @@ public record UpdateTourLogRequest(
         @Min(1) @Max(5) Integer difficulty,
         @Min(1) @Max(5) Integer rating,
         @Min(0) Long totalTimeS,
-        @DecimalMin("0.0") BigDecimal totalDistanceKm
+        @Min(0) Long totalDistanceKm
 ) {}

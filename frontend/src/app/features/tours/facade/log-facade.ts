@@ -29,6 +29,14 @@ export interface CreateTourLogForm {
   total_distance_km: number;
 }
 
+export interface UpdateTourLogForm {
+  comment?: string;
+  difficulty?: number;
+  rating?: number;
+  total_time_m?: number;
+  total_distance_km?: number;
+}
+
 
 @Injectable({
   providedIn: 'root',
@@ -189,12 +197,21 @@ export class LogFacade {
       .subscribe();
   }
 
-  updateLog(id: number, data: UpdateTourLogPayload): void {
+  updateLog(id: number, data: UpdateTourLogForm): void {
     this.loading.set(true);
     this.error.set(null);
 
+    const payload: UpdateTourLogPayload = {
+      comment: data.comment,
+      difficulty: data.difficulty,
+      rating: data.rating,
+      total_time_s: data.total_time_m ? data.total_time_m * 60 : undefined,
+      total_distance_km: data.total_distance_km
+    }
+
+
     this.logApi
-      .updateTourLog(id, data)
+      .updateTourLog(id, payload)
       .pipe(
         catchError((err) => {
           this.loading.set(false);

@@ -37,8 +37,8 @@ public class TourService {
     @Transactional
     public Tour createTour(CreateTourRequest request, User user) {
         OrsDirectionsRequest orsRequest = new OrsDirectionsRequest(List.of(
-                List.of(request.fromLng(), request.fromLat()),   // ORS expects [lng, lat] I think
-                List.of(request.toLng(), request.toLat())
+                List.of(request.fromGeocode().lng(), request.fromGeocode().lat()),   // ORS expects [lng, lat] I think
+                List.of(request.toGeocode().lng(), request.toGeocode().lat())
         ));
         OrsDirectionsResponse orsResponse = orsDirectionsClient.getDirections(request.profile(), orsRequest);
         OrsDirectionsFeature feature = orsResponse.features().getFirst();
@@ -52,8 +52,8 @@ public class TourService {
         tour.setUser(user);
         tour.setName(request.name());
         tour.setDescription(request.description());
-        tour.setFromAddress(request.fromAddress());
-        tour.setToAddress(request.toAddress());
+        tour.setFromAddress(request.fromGeocode().label());
+        tour.setToAddress(request.toGeocode().label());
         tour.setRoute(route);
         tour.setDistanceKm(feature.properties().summary().distance() / 1000.0);
         tour.setEstimatedTimeS((long) feature.properties().summary().duration());
@@ -75,43 +75,57 @@ public class TourService {
     }
 
     @Transactional
-public Tour updateTour(Long tourId, UpdateTourRequest request, User user) {
-    // Inline — don't call getTourForUser, load directly in this transaction
-    Tour tour = tourRepository.findByIdAndUserId(tourId, user.getUserId())
-            .orElseThrow(() -> new EntityNotFoundException("Tour not found: " + tourId));
+    public Tour updateTour(Long tourId, UpdateTourRequest request, User user) {
+        // Inline — don't call getTourForUser, load directly in this transaction
+        Tour tour = tourRepository.findByIdAndUserId(tourId, user.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("Tour not found: " + tourId));
 
-    if (request.name() != null)        tour.setName(request.name());
-    if (request.description() != null) tour.setDescription(request.description());
+        if (!request.name().equals(tour.getName())) {
+            tour.setName(request.name());
+        }
 
-    if (request.profile() != null) {
+        if (!request.description().equals(tour.getDescription())) {
+            tour.setDescription(request.description());
+        }
+
+
         transportTypeRepository.findByTransportationName(request.profile())
-                .ifPresent(tour::setTransportType);
-    }
+                .ifPresent((tt) -> {
+                    if (!tt.equals(tour.getTransportType())) {
+                        tour.setTransportType(tt);
+                    }
+                });
 
-    boolean hasCoords = request.fromLat() != null && request.fromLng() != null
-            && request.toLat() != null && request.toLng() != null
-            && (request.fromLat() != 0.0 || request.fromLng() != 0.0);
-    if (hasCoords) {
-        String routingProfile = request.profile() != null ? request.profile()
-                : tour.getTransportType() != null
-                        ? tour.getTransportType().getTransportationName() : "foot-walking";
-        OrsDirectionsRequest orsRequest = new OrsDirectionsRequest(List.of(
-                List.of(request.fromLng(), request.fromLat()),
-                List.of(request.toLng(), request.toLat())
-        ));
-        OrsDirectionsResponse orsResponse = orsDirectionsClient.getDirections(routingProfile, orsRequest);
-        OrsDirectionsFeature feature = orsResponse.features().getFirst();
-        tour.setRoute(buildLineString(feature.geometry().coordinates()));
-        tour.setDistanceKm(feature.properties().summary().distance() / 1000.0);
-        tour.setEstimatedTimeS((long) feature.properties().summary().duration());
-        if (request.fromAddress() != null) tour.setFromAddress(request.fromAddress());
-        if (request.toAddress() != null)   tour.setToAddress(request.toAddress());
-    }
+        if (!request.fromGeocode().label().equals(tour.getFromAddress()) || !request.toGeocode().label().equals(tour.getToAddress())) {
 
-    log.info("About to save tour [{}] name='{}' from='{}' to='{}'",
-        tour.getTourId(), tour.getName(), tour.getFromAddress(), tour.getToAddress());
-    return tourRepository.saveAndFlush(tour);  // saveAndFlush forces immediate write
-}
+            String routingProfile = request.profile() != null ? request.profile() : tour.getTransportType() != null
+                                                                                    ? tour.getTransportType().getTransportationName() : "foot-walking";
+
+            // request the new route from ors
+            OrsDirectionsRequest orsRequest = new OrsDirectionsRequest(List.of(
+                    List.of(request.fromGeocode().lng(), request.fromGeocode().lat()),
+                    List.of(request.toGeocode().lng(), request.toGeocode().lat())
+            ));
+            OrsDirectionsResponse orsResponse = orsDirectionsClient.getDirections(routingProfile, orsRequest);
+            OrsDirectionsFeature feature = orsResponse.features().getFirst();
+
+            tour.setRoute(buildLineString(feature.geometry().coordinates()));
+            tour.setDistanceKm(feature.properties().summary().distance() / 1000.0);
+            tour.setEstimatedTimeS((long) feature.properties().summary().duration());
+        }
+
+        if (!request.fromGeocode().label().equals(tour.getFromAddress())) {
+            tour.setFromAddress(request.fromGeocode().label());
+        }
+
+        if (!request.toGeocode().label().equals(tour.getToAddress())) {
+            tour.setToAddress(request.toGeocode().label());
+        }
+
+        log.info("About to save tour [{}] name='{}' from='{}' to='{}'",
+                tour.getTourId(), tour.getName(), tour.getFromAddress(), tour.getToAddress());
+        return tourRepository.saveAndFlush(tour);  // saveAndFlush forces immediate write
+    }
 
     @Transactional
     public void deleteTour(Long tourId, User user) {
@@ -139,14 +153,14 @@ public Tour updateTour(Long tourId, UpdateTourRequest request, User user) {
         if (logs.isEmpty()) return 0.0;
 
         double avgDifficulty = logs.stream().mapToInt(TourLog::getDifficulty).average().orElse(3.0);
-        double avgTimeMin    = logs.stream().mapToLong(TourLog::getTotalTimeS).average().orElse(3600) / 60.0;
-        double avgDistKm     = logs.stream()
+        double avgTimeMin = logs.stream().mapToLong(TourLog::getTotalTimeS).average().orElse(3600) / 60.0;
+        double avgDistKm = logs.stream()
                 .mapToLong(l -> l.getTotalDistanceKm() != null ? l.getTotalDistanceKm() : 0L)
                 .average().orElse(10.0);
 
         double diffScore = 1.0 - (avgDifficulty - 1.0) / 4.0;
         double timeScore = 1.0 - clamp((avgTimeMin - 60.0) / 180.0);
-        double distScore = 1.0 - clamp((avgDistKm  -  5.0) /  25.0);
+        double distScore = 1.0 - clamp((avgDistKm - 5.0) / 25.0);
 
         return (diffScore + timeScore + distScore) / 3.0;
     }

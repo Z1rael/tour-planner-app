@@ -11,7 +11,8 @@ public record TourSummaryResponse(
         double distanceKm,
         long estimatedTimeS,
         int popularity,
-        double childFriendliness
+        double childFriendliness,
+        long creatorId
 ) {
     public static TourSummaryResponse from(Tour tour, int popularity, double childFriendliness) {
         return new TourSummaryResponse(
@@ -23,7 +24,8 @@ public record TourSummaryResponse(
                 tour.getDistanceKm() != null ? tour.getDistanceKm() : 0,
                 tour.getEstimatedTimeS() != null ? tour.getEstimatedTimeS() : 0,
                 popularity,
-                childFriendliness
+                childFriendliness,
+                tour.getUser().getUserId()
         );
     }
 }

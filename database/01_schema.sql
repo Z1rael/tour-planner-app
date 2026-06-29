@@ -25,7 +25,7 @@ ON CONFLICT (transportation_name) DO NOTHING;
 
 CREATE TABLE tours (
     tour_id             SERIAL PRIMARY KEY,
-    user_id      d       INT REFERENCES users(user_id) ON DELETE CASCADE,
+    user_id             INT REFERENCES users(user_id) ON DELETE CASCADE,
     tour_name           VARCHAR(255) NOT NULL,
     tour_description    TEXT,
     from_address        VARCHAR(500),

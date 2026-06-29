@@ -1,14 +1,16 @@
 package at.tourplanner.tour_planner.api.dto.tour;
 
+import at.tourplanner.tour_planner.api.dto.geocode.GeocodeDTO;
 import at.tourplanner.tour_planner.features.tour.Tour;
+import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.io.geojson.GeoJsonWriter;
 
 public record TourResponse(
         Long tourId,
         String name,
         String description,
-        String fromAddress,
-        String toAddress,
+        GeocodeDTO fromGeocode,
+        GeocodeDTO toGeocode,
         String transportTypeName,
         double distanceKm,
         long estimatedTimeS,
@@ -18,6 +20,9 @@ public record TourResponse(
         double childFriendliness  // 0.0 – 1.0, higher = more child-friendly
 ) {
     public static TourResponse from(Tour tour, int popularity, double childFriendliness) {
+        Point startPoint = tour.getRoute().getStartPoint();
+        Point endPoint = tour.getRoute().getEndPoint();
+
         String geoJson = null;
         try {
                 if (tour.getRoute() != null) {
@@ -30,8 +35,8 @@ public record TourResponse(
                 tour.getTourId(),
                 tour.getName(),
                 tour.getDescription(),
-                tour.getFromAddress(),
-                tour.getToAddress(),
+                createGeocodeDTO(tour.getFromAddress(), startPoint),
+                createGeocodeDTO(tour.getToAddress(), endPoint),
                 tour.getTransportType() != null ? tour.getTransportType().getTransportationName() : null,
                 tour.getDistanceKm() != null ? tour.getDistanceKm() : 0,
                 tour.getEstimatedTimeS() != null ? tour.getEstimatedTimeS() : 0,
@@ -40,5 +45,9 @@ public record TourResponse(
                 popularity,
                 childFriendliness
         );
+    }
+
+    private static GeocodeDTO createGeocodeDTO(String label, Point point) {
+        return new GeocodeDTO(label, point.getX(), point.getY());
     }
 }

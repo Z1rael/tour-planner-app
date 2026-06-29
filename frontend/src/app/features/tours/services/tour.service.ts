@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Tour } from '../../../core/models/tour';
 import { TourSummary } from '../../../core/models/tour-summary';
+import { GeocodeDTO } from '../../map/services/ors-geocode.service';
 
 export interface TourSummaryResponse {
   tour_id: number;
@@ -15,14 +16,15 @@ export interface TourSummaryResponse {
   estimated_time_s: number;
   popularity: number;
   child_friendliness: number;
+  creator_id: number;
 }
 
 export interface TourResponse {
   tour_id: number;
   name: string;
   description: string;
-  from_address: string;
-  to_address: string;
+  from_geocode: GeocodeDTO;
+  to_geocode: GeocodeDTO;
   transport_type_name: string;
   distance_km: number;
   estimated_time_s: number;
@@ -35,28 +37,17 @@ export interface TourResponse {
 export interface CreateTourPayload {
   name: string;
   description?: string;
-  from_address: string;
-  to_address: string;
-  from_lat: number;
-  from_lng: number;
-  to_lat: number;
-  to_lng: number;
+  fromGeocode: GeocodeDTO;
+  toGeocode: GeocodeDTO;
   profile: string;
 }
 
 export interface UpdateTourPayload {
-  name?: string;
+  name: string;
   description?: string;
-
-  fromAddress?: string;
-  toAddress?: string;
-
-  fromLat?: number;
-  fromLng?: number;
-  toLat?: number;
-  toLng?: number;
-
-  profile?: string;
+  fromGeocode: GeocodeDTO;
+  toGeocode: GeocodeDTO;
+  profile: string;
 }
 
 @Injectable({ providedIn: 'root' })

@@ -10,7 +10,7 @@
           <input
             type="text"
             class="form-control"
-            [value]="tourFacade.selectedTour()?.from"
+            [value]="tourFacade.selectedTour()?.fromGeocode?.label"
             [disabled]="true"
           />
         </div>
@@ -19,7 +19,7 @@
           <input
             type="text"
             class="form-control"
-            [value]="tourFacade.selectedTour()?.to"
+            [value]="tourFacade.selectedTour()?.toGeocode?.label"
             [disabled]="true"
           />
         </div>

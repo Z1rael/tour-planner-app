@@ -3,6 +3,10 @@ export interface TourSummary {
   name: string;
   from: string;
   to: string;
-  transport_type: string; // or a kind of enum i have not come to a decision yet
-  creator_id: number;
+  transportType: string; // or a kind of enum i have not come to a decision yet
+  distanceKm: number;
+  estimatedTimeS: number;
+  popularity: number;
+  childFriendliness: number;
+  creatorId: number;
 }

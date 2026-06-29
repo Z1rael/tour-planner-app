@@ -4,7 +4,7 @@
   </h2>
 
   <div class="bubble-inner">
-    <form (ngSubmit)="onSubmit()">
+    <form (submit)="onSubmit()">
       <div class="row mb-2">
         <div class="col-auto mb-2">
           <label for="tour-name">Name</label>
@@ -31,45 +31,53 @@
         <div class="col-auto mb-2 position-relative">
           <label for="tour-from">From</label>
           <input
+            #fromQuery
             type="text"
             class="form-control"
             id="tour-from"
-            [formField]="tourForm.from"
-            (input)="onFromInput($any($event.target).value)"
+            [formField]="tourForm.from.label"
+            (input)="onFromInput(fromQuery.value)"
           />
 
-          <ul *ngIf="fromSuggestions().length" class="list-group position-absolute z-3">
-            <li
-              *ngFor="let s of fromSuggestions()"
-              class="list-group-item list-group-item-action"
-              (click)="selectFrom(s)"
-              style="cursor: pointer"
-            >
-              {{ s.label }}
-            </li>
-          </ul>
+          @if (!fromCoords()) {
+            <ul class="list-group position-absolute z-3">
+              @for (s of fromSuggestions(); track $index) {
+                <li
+                  class="list-group-item list-group-item-action"
+                  (click)="selectFrom(s)"
+                  style="cursor: pointer"
+                >
+                  {{ s.label }}
+                </li>
+              }
+            </ul>
+          }
         </div>
 
         <div class="col-auto mb-2 position-relative">
           <label for="tour-to">To</label>
           <input
+            #toQuery
             type="text"
             class="form-control"
             id="tour-to"
-            [formField]="tourForm.to"
-            (input)="onToInput($any($event.target).value)"
+            [formField]="tourForm.to.label"
+            (input)="onToInput(toQuery.value)"
           />
 
-          <ul *ngIf="toSuggestions().length" class="list-group position-absolute z-3">
-            <li
-              *ngFor="let s of toSuggestions()"
-              class="list-group-item list-group-item-action"
-              (click)="selectTo(s)"
-              style="cursor: pointer"
-            >
-              {{ s.label }}
-            </li>
-          </ul>
+          @if (!toCoords()) {
+            <ul class="list-group position-absolute z-3">
+              @for (s of toSuggestions(); track $index) {
+                <li
+                  class="list-group-item list-group-item-action"
+                  (click)="selectTo(s)"
+                  style="cursor: pointer"
+                >
+                  {{ s.label }}
+                </li>
+              }
+            </ul>
+          }
         </div>
       </div>
 
@@ -89,7 +97,7 @@
           Cancel
         </button>
 
-        <button type="submit" class="btn btn-primary col-auto">
+        <button class="btn btn-primary col-auto">
           {{ isEditMode() ? 'Save Changes' : 'Create Tour' }}
         </button>
       </div>

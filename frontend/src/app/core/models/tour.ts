@@ -1,10 +1,11 @@
+import { GeocodeDTO } from '../../features/map/services/ors-geocode.service';
 import { TransportationType } from './transportation-type';
 
 export interface Tour {
   id: number;
   name: string;
-  from: string;
-  to: string;
+  fromGeocode: GeocodeDTO;
+  toGeocode: GeocodeDTO;
   transport_type: TransportationType;
   description: string;
   distance: number;

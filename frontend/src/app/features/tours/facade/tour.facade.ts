@@ -10,7 +10,6 @@ import {
   map,
   Observable,
   of,
-  startWith,
   switchMap,
   tap,
 } from 'rxjs';
@@ -21,11 +20,9 @@ import {
   TourSummaryResponse,
   UpdateTourPayload,
 } from '../services/tour.service';
-import { TourSummary } from '../../../core/models/tour-summary';
 import { Tour } from '../../../core/models/tour';
-import { TourLogService } from '../services/tour-log.service';
-import { TourLog } from '../../../core/models/tour-log';
 import { TransportationType } from '../../../core/models/transportation-type';
+import { TourSummary } from '../../../core/models/tour-summary';
 
 @Injectable({
   providedIn: 'root',
@@ -48,7 +45,7 @@ export class TourFacade {
   }
 
   // Load Tour Summaries list
-  readonly tourSummaries$: Observable<Tour[]> = this.refresh$.pipe(
+  readonly tourSummaries$: Observable<TourSummary[]> = this.refresh$.pipe(
     switchMap(() =>
       this.tourApi.getTours().pipe(
         map((tours) => tours.map(this.mapSummary.bind(this))),
@@ -204,20 +201,18 @@ export class TourFacade {
   }
 
   // helpers
-  private mapSummary(t: TourSummaryResponse): Tour {
+  private mapSummary(t: TourSummaryResponse): TourSummary {
     return {
       id: t.tour_id,
       name: t.name,
       from: t.from_address,
       to: t.to_address,
-      transport_type: t.transport_type_name as TransportationType,
-      description: '',
-      distance: t.distance_km,
-      estimated_time: t.estimated_time_s,
-      route_information: '',
-      creator_id: 0,
+      transportType: t.transport_type_name as TransportationType,
+      distanceKm: t.distance_km,
+      estimatedTimeS: t.estimated_time_s,
       popularity: t.popularity,
-      child_friendliness: t.child_friendliness,
+      childFriendliness: t.child_friendliness,
+      creatorId: 0,
     };
   }
 
@@ -225,8 +220,8 @@ export class TourFacade {
     return {
       id: t.tour_id,
       name: t.name,
-      from: t.from_address,
-      to: t.to_address,
+      fromGeocode: t.from_geocode,
+      toGeocode: t.to_geocode,
       transport_type: t.transport_type_name as TransportationType,
       description: t.description,
       distance: t.distance_km,

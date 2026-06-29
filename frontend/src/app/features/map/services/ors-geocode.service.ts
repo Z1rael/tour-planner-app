@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable, of, catchError } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 export interface GeocodeDTO {
   label: string;
@@ -11,11 +12,12 @@ export interface GeocodeDTO {
 @Injectable({ providedIn: 'root' })
 export class OrsGeocodeService {
   private readonly http = inject(HttpClient);
+  private readonly baseUrl = `${environment.apiUrl}/geocode`
 
-  geocode(address: string): Observable<{ lat: number; lng: number; label: string } | null> {
+  geocode(address: string): Observable<GeocodeDTO | null> {
     const params = new HttpParams().set('query', address);
 
-    return this.http.get<GeocodeDTO[]>('/api/geocode', { params }).pipe(
+    return this.http.get<GeocodeDTO[]>(this.baseUrl, { params }).pipe(
       map((results) => {
         if (!results?.length) return null;
         const first = results[0];
@@ -27,8 +29,9 @@ export class OrsGeocodeService {
       }),
     );
   }
+
   geocodeAll(address: string): Observable<GeocodeDTO[]> {
     const params = new HttpParams().set('query', address);
-    return this.http.get<GeocodeDTO[]>('/api/geocode', { params }).pipe(catchError(() => of([])));
+    return this.http.get<GeocodeDTO[]>(this.baseUrl, { params }).pipe(catchError(() => of([])));
   }
 }

@@ -20,7 +20,13 @@
       />
     </div>
     <div class="col-auto">
-      <button class="btn btn-primary mb-2"  style="background-color: var(--app-danger)" (click)="clearQuery()">Clear</button>
+      <button
+        class="btn btn-primary mb-2"
+        style="background-color: var(--app-danger)"
+        (click)="clearQuery()"
+      >
+        Clear
+      </button>
     </div>
   </div>
 
@@ -40,7 +46,7 @@
       <div class="bubble-inner card mb-1" (click)="onSelect(tour.id)">
         <div class="card-header">{{ tour.name }}</div>
         <div class="card-body">
-          <h5 class="card-title">{{ tour.transport_type }}</h5>
+          <h5 class="card-title">{{ tour.transportType }}</h5>
           <p class="card-text">{{ tour.from }} → {{ tour.to }}</p>
         </div>
       </div>

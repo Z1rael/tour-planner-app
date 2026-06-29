@@ -225,7 +225,7 @@ export class TourFacade {
       transport_type: t.transport_type_name as TransportationType,
       description: t.description,
       distance: t.distance_km,
-      estimated_time: t.estimated_time_s,
+      estimated_time: t.estimated_time_s / 60,
       route_information: t.route_geo_json ?? '',
       creator_id: 0,
       popularity: t.popularity,

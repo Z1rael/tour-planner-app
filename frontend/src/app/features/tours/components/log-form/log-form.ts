@@ -33,12 +33,12 @@ export class LogForm {
     min(schemaPath.difficulty, 0);
     max(schemaPath.difficulty, 5);
 
-    required(schemaPath.total_distance, { message: 'Tour total distance is required' });
-    min(schemaPath.total_distance, 0);
-    max(schemaPath.total_distance, this.tourDistance);
+    required(schemaPath.total_distance_km, { message: 'Tour total distance is required' });
+    min(schemaPath.total_distance_km, 0);
+    max(schemaPath.total_distance_km, this.tourDistance);
 
-    required(schemaPath.total_time, { message: 'Tour total time is required' });
-    min(schemaPath.total_time, 0);
+    required(schemaPath.total_time_m, { message: 'Tour total time is required' });
+    min(schemaPath.total_time_m, 0);
 
     required(schemaPath.rating, { message: 'Tour rating is required' });
     min(schemaPath.rating, 0);
@@ -76,8 +76,8 @@ export class LogForm {
         tour_id: selected.tour_id,
         comment: selected.comment,
         difficulty: selected.difficulty,
-        total_distance: selected.total_distance,
-        total_time: selected.total_time,
+        total_distance_km: selected.total_distance_km,
+        total_time_m: selected.total_time_m,
         rating: selected.rating,
         creator_id: selected.creator_id,
       };
@@ -87,8 +87,8 @@ export class LogForm {
       tour_id: this.selectedTour !== null ? this.selectedTour.id : 0,
       comment: '',
       difficulty: 0,
-      total_distance: 0,
-      total_time: 0,
+      total_distance_km: 0,
+      total_time_m: 0,
       rating: 0,
       creator_id: 1,
     };

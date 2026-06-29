@@ -20,6 +20,16 @@ import {
 } from 'rxjs';
 import { TourLog } from '../../../core/models/tour-log';
 
+export interface CreateTourLogForm {
+  tour_id: number;
+  comment: string;
+  difficulty: number;
+  rating: number;
+  total_time_m: number;
+  total_distance_km: number;
+}
+
+
 @Injectable({
   providedIn: 'root',
 })
@@ -152,12 +162,22 @@ export class LogFacade {
     this.selectedLogId.set(null);
   }
 
-  createLog(data: CreateTourLogPayload): void {
+  createLog(data: CreateTourLogForm): void {
     this.loading.set(true);
     this.error.set(null);
 
+    // need to convert from minutes to seconds 
+    const payload: CreateTourLogPayload = {
+      tour_id: data.tour_id,
+      comment: data.comment,
+      difficulty: data.difficulty,
+      rating: data.rating,
+      total_time_s: data.total_time_m * 60,
+      total_distance_km: data.total_distance_km
+    }
+
     this.logApi
-      .createTourLog(data)
+      .createTourLog(payload)
       .pipe(
         catchError((err) => {
           this.loading.set(false);
@@ -217,8 +237,8 @@ export class LogFacade {
       comment: t.comment,
       difficulty: t.difficulty,
       rating: t.rating,
-      total_distance: t.total_distance,
-      total_time: t.total_time,
+      total_distance_km: t.total_distance_km,
+      total_time_m: t.total_time_s / 60,
       timestamp: t.log_date,
       creator_id: 0,
     };

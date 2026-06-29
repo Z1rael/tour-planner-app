@@ -9,8 +9,8 @@ export interface TourLogResponse {
   comment: string;
   difficulty: number;
   rating: number;
-  total_time: number;
-  total_distance: number;
+  total_time_s: number; // in s
+  total_distance_km: number; // in km
   log_date: string;
 }
 
@@ -19,16 +19,16 @@ export interface CreateTourLogPayload {
   comment: string;
   difficulty: number;
   rating: number;
-  total_time: number;
-  total_distance: number;
+  total_time_s: number;
+  total_distance_km: number;
 }
 
 export interface UpdateTourLogPayload {
   comment?: string;
   difficulty?: number;
   rating?: number;
-  total_time?: number;
-  total_distance?: number;
+  total_time_s?: number;
+  total_distance_km?: number;
 }
 
 @Injectable({ providedIn: 'root' })

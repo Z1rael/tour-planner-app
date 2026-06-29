@@ -4,8 +4,8 @@ export interface TourLog {
   comment: string;
   timestamp: string; // ISO datetime
   difficulty: number; // 1-5
-  total_distance: number;
-  total_time: number;
+  total_distance_km: number;
+  total_time_m: number;
   rating: number; // 1-5
   creator_id: number;
 }

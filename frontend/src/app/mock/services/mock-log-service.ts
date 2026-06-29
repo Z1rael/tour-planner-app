@@ -117,8 +117,8 @@ export class MockLogService {
         tour.comment.toLowerCase().includes(q) ||
         tour.timestamp.toLowerCase().includes(q) ||
         tour.difficulty.toString().includes(q) ||
-        tour.total_distance.toString().includes(q) ||
-        tour.total_time.toString().includes(q) ||
+        tour.total_distance_km.toString().includes(q) ||
+        tour.total_time_m.toString().includes(q) ||
         tour.rating.toString().includes(q),
     );
 

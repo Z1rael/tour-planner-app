@@ -2,6 +2,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { TourLogService } from '../services/tour-log.service';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import {
+  BehaviorSubject,
   catchError,
   debounceTime,
   distinctUntilChanged,
@@ -25,6 +26,7 @@ import { TourLogResponse } from '../models/log/tour-log-response';
 })
 export class LogFacade {
   private readonly logApi = inject(TourLogService);
+  readonly refreshTrigger = signal(0);
 
   readonly error = signal<string | null>(null);
   readonly loading = signal(false);
@@ -33,9 +35,16 @@ export class LogFacade {
   readonly tourId = signal<number | null>(null);
   readonly selectedLogId = signal<number | null>(null);
 
-  readonly tourId$ = toObservable(this.tourId);
-  readonly logs$ = this.tourId$.pipe(
-    switchMap((id) => {
+  private readonly logsQuery = computed(() => ({
+    id: this.tourId(),
+    tick: this.refreshTrigger(),
+  }));
+
+  readonly logsQuery$ = toObservable(this.logsQuery);
+
+  //readonly tourId$ = toObservable(this.tourId);
+  readonly logs$ = this.logsQuery$.pipe(
+    switchMap(({ id }) => {
       this.loading.set(true);
       this.error.set(null);
 

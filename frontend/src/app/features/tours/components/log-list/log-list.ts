@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy, effect } from '@angular/core';
 import { Router } from '@angular/router';
 import { LogListItem } from '../log-list-item/log-list-item';
 import { LogFacade } from '../../facade/log-facade';

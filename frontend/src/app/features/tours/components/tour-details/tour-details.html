@@ -10,7 +10,7 @@
           <input
             type="text"
             class="form-control"
-            [value]="tourFacade.selectedTour()?.fromGeocode?.label"
+            [value]="$safeNavigationMigration(tourFacade.selectedTour()?.fromGeocode?.label)"
             [disabled]="true"
           />
         </div>
@@ -19,7 +19,7 @@
           <input
             type="text"
             class="form-control"
-            [value]="tourFacade.selectedTour()?.toGeocode?.label"
+            [value]="$safeNavigationMigration(tourFacade.selectedTour()?.toGeocode?.label)"
             [disabled]="true"
           />
         </div>
@@ -29,7 +29,7 @@
         <input
           type="text"
           class="form-control"
-          [value]="tourFacade.selectedTour()?.transport_type"
+          [value]="$safeNavigationMigration(tourFacade.selectedTour()?.transport_type)"
           [disabled]="true"
         />
       </div>
@@ -39,7 +39,7 @@
           <input
             type="text"
             class="form-control"
-            [value]="tourFacade.selectedTour()?.distance"
+            [value]="$safeNavigationMigration(tourFacade.selectedTour()?.distance)"
             [disabled]="true"
           />
         </div>
@@ -48,7 +48,7 @@
           <input
             type="text"
             class="form-control"
-            [value]="tourFacade.selectedTour()?.estimated_time"
+            [value]="$safeNavigationMigration(tourFacade.selectedTour()?.estimated_time)"
             [disabled]="true"
           />
         </div>
@@ -57,7 +57,7 @@
         <label>Description</label>
         <textarea
           class="form-control"
-          [value]="tourFacade.selectedTour()?.description"
+          [value]="$safeNavigationMigration(tourFacade.selectedTour()?.description)"
           [disabled]="true"
           rows="4"
         ></textarea>

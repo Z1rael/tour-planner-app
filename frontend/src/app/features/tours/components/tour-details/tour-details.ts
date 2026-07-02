@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TourFacade } from '../../facade/tour.facade';
 import { Router } from '@angular/router';
 import { LogFacade } from '../../facade/log-facade';
@@ -8,6 +8,7 @@ import { LogFacade } from '../../facade/log-facade';
   standalone: true,
   imports: [],
   templateUrl: './tour-details.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './tour-details.css',
 })
 export class TourDetails {

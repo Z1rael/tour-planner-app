@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { TourFacade } from '../../facade/tour.facade';
 import { TourLog } from '../../models/tour/tour-log';
@@ -11,6 +11,7 @@ import { LogFacade } from '../../facade/log-facade';
   standalone: true,
   imports: [FormField],
   templateUrl: './log-form.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './log-form.css',
 })
 export class LogForm {

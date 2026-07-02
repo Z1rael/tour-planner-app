@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -9,6 +9,7 @@ import { RegisterRequest } from '../../models/register-request';
   standalone: true,
   imports: [FormsModule],
   templateUrl: './register.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './register.css',
 })
 export class Register {
@@ -30,8 +31,8 @@ export class Register {
     const request: RegisterRequest = {
       email: this.email,
       password: this.password,
-      passwordRepeat: this.confirmPassword
-    }
+      passwordRepeat: this.confirmPassword,
+    };
 
     // send request
     this.service.register(request).subscribe({

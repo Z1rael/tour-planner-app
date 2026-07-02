@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { LoginForm } from './models';
 import { email, form, FormField, required } from '@angular/forms/signals';
 import { UserService } from '../../services/user.service';
@@ -10,6 +10,7 @@ import { LoginRequest } from '../../models/login-request';
   standalone: true,
   imports: [FormField],
   templateUrl: './login.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './login.css',
 })
 export class Login {
@@ -39,7 +40,7 @@ export class Login {
     // create request object
     const request: LoginRequest = {
       email: this.loginModel().email,
-      password: this.loginModel().password
+      password: this.loginModel().password,
     };
 
     this.userService.login(request).subscribe({

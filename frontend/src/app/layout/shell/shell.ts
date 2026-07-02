@@ -1,4 +1,11 @@
-import { Component, HostListener, inject, PLATFORM_ID, signal } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  inject,
+  PLATFORM_ID,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Login } from '../../features/user/components/login/login';
 import { Register } from '../../features/user/components/register/register';
 import { TourList } from '../../features/tours/components/tour-list/tour-list';
@@ -16,6 +23,7 @@ import { TourFacade } from '../../features/tours/facade/tour.facade';
   standalone: true,
   imports: [LogList, Login, Register, TourList, Map, TourDetails, TourForm, LogForm],
   templateUrl: './shell.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './shell.css',
 })
 export class Shell {

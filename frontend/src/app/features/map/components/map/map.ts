@@ -1,4 +1,12 @@
-import { Component, OnDestroy, effect, inject, signal, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  effect,
+  inject,
+  signal,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { MapService } from '../../services/map.service';
 import { TourFacade } from '../../../tours/facade/tour.facade';
 import { MapFacade } from '../../facade/map-facade';
@@ -8,6 +16,7 @@ import { LatLng } from '../../services/models/lat-lng';
   selector: 'app-map',
   standalone: true,
   templateUrl: './map.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './map.css',
 })
 export class Map implements AfterViewInit, OnDestroy {

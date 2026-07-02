@@ -1,4 +1,11 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { TourFacade } from '../../facade/tour.facade';
 import { form, FormField, required } from '@angular/forms/signals';
@@ -16,12 +23,12 @@ const EMPTY_FORM: TourFormModel = {
   from: {
     label: '',
     lat: 0,
-    lng: 0
+    lng: 0,
   },
   to: {
     label: '',
     lat: 0,
-    lng: 0
+    lng: 0,
   },
   transport_type: TransportationType.WALK,
 };
@@ -31,6 +38,7 @@ const EMPTY_FORM: TourFormModel = {
   standalone: true,
   imports: [FormField],
   templateUrl: './tour-form.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './tour-form.css',
 })
 export class TourForm {
@@ -100,7 +108,7 @@ export class TourForm {
       }
 
       return this.geocodeService.geocodeAll(q);
-    })
+    }),
   );
   readonly fromSuggestions = toSignal(this.fromSuggestions$);
 
@@ -121,7 +129,7 @@ export class TourForm {
       }
 
       return this.geocodeService.geocodeAll(q);
-    })
+    }),
   );
   readonly toSuggestions = toSignal(this.toSuggestions$);
 
@@ -141,8 +149,8 @@ export class TourForm {
       description: this.tourModel().description,
       fromGeocode: this.tourModel().from,
       toGeocode: this.tourModel().to,
-      profile: this.tourModel().transport_type
-    }
+      profile: this.tourModel().transport_type,
+    };
 
     this.geocodeError.set(null);
 

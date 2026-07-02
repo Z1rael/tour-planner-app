@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { TourLog } from '../../models/tour/tour-log';
 import { DatePipe } from '@angular/common';
 import { LogFacade } from '../../facade/log-facade';
@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [DatePipe],
   templateUrl: './log-list-item.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './log-list-item.css',
 })
 export class LogListItem {

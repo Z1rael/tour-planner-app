@@ -48,6 +48,6 @@ public record TourResponse(
     }
 
     private static GeocodeDTO createGeocodeDTO(String label, Point point) {
-        return new GeocodeDTO(label, point.getX(), point.getY());
+        return new GeocodeDTO(label, point.getY(), point.getX());
     }
 }

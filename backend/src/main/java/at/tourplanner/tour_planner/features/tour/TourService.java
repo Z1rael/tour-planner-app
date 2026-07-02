@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 @Service
@@ -40,6 +41,7 @@ public class TourService {
                 List.of(request.fromGeocode().lng(), request.fromGeocode().lat()),   // ORS expects [lng, lat] I think
                 List.of(request.toGeocode().lng(), request.toGeocode().lat())
         ));
+
         OrsDirectionsResponse orsResponse = orsDirectionsClient.getDirections(request.profile(), orsRequest);
         OrsDirectionsFeature feature = orsResponse.features().getFirst();
 
@@ -76,6 +78,8 @@ public class TourService {
 
     @Transactional
     public Tour updateTour(Long tourId, UpdateTourRequest request, User user) {
+        AtomicBoolean updateRoute = new AtomicBoolean(false);
+
         // Inline — don't call getTourForUser, load directly in this transaction
         Tour tour = tourRepository.findByIdAndUserId(tourId, user.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("Tour not found: " + tourId));
@@ -92,21 +96,23 @@ public class TourService {
         transportTypeRepository.findByTransportationName(request.profile())
                 .ifPresent((tt) -> {
                     if (!tt.equals(tour.getTransportType())) {
+                        updateRoute.set(true);
                         tour.setTransportType(tt);
                     }
                 });
+        if (!request.fromGeocode().label().equals(tour.getFromAddress()) ||
+        !request.toGeocode().label().equals(tour.getToAddress())) {
+            updateRoute.set(true);
+        }
 
-        if (!request.fromGeocode().label().equals(tour.getFromAddress()) || !request.toGeocode().label().equals(tour.getToAddress())) {
-
-            String routingProfile = request.profile() != null ? request.profile() : tour.getTransportType() != null
-                                                                                    ? tour.getTransportType().getTransportationName() : "foot-walking";
-
+        if (updateRoute.get()) {
             // request the new route from ors
             OrsDirectionsRequest orsRequest = new OrsDirectionsRequest(List.of(
                     List.of(request.fromGeocode().lng(), request.fromGeocode().lat()),
                     List.of(request.toGeocode().lng(), request.toGeocode().lat())
             ));
-            OrsDirectionsResponse orsResponse = orsDirectionsClient.getDirections(routingProfile, orsRequest);
+
+            OrsDirectionsResponse orsResponse = orsDirectionsClient.getDirections(tour.getTransportType().getTransportationName(), orsRequest);
             OrsDirectionsFeature feature = orsResponse.features().getFirst();
 
             tour.setRoute(buildLineString(feature.geometry().coordinates()));

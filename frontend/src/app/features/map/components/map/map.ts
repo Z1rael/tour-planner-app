@@ -2,8 +2,6 @@ import { Component, OnDestroy, effect, inject, signal, AfterViewInit } from '@an
 import { MapService } from '../../services/map.service';
 import { TourFacade } from '../../../tours/facade/tour.facade';
 import { MapFacade } from '../../facade/map-facade';
-import { OrsGeocodeService } from '../../services/ors-geocode.service';
-import { firstValueFrom } from 'rxjs';
 import { LatLng } from '../../services/models/lat-lng';
 
 @Component({
@@ -15,8 +13,6 @@ import { LatLng } from '../../services/models/lat-lng';
 export class Map implements AfterViewInit, OnDestroy {
   private readonly tourFacade = inject(TourFacade);
   private readonly mapFacade = inject(MapFacade);
-  private readonly mapService = inject(MapService);
-  private readonly geocodeService = inject(OrsGeocodeService);
 
   readonly selectedTour = this.tourFacade.selectedTour;
   private readonly mapReady = signal(false);
@@ -74,26 +70,5 @@ export class Map implements AfterViewInit, OnDestroy {
     } catch (err) {
       console.error('Failed to parse route GeoJSON', err);
     }
-  }
-
-  async drawRoute(from: string, to: string, profile: string): Promise<void> {
-    const [fromCoords, toCoords] = await Promise.all([
-      firstValueFrom(this.geocodeService.geocode(from)),
-      firstValueFrom(this.geocodeService.geocode(to)),
-    ]);
-    console.log('Geocode results:', fromCoords, toCoords);
-
-    if (!fromCoords || !toCoords) {
-      console.warn('Could not geocode tour addresses for map display');
-      return;
-    }
-
-    const result = await this.mapService.getRoute(fromCoords, toCoords, profile);
-    if (!result) return;
-
-    this.mapFacade.clearRoute();
-    this.mapFacade.setRoute(result.coordinates);
-    this.mapFacade.setMarker('from', result.from.lat, result.from.lng);
-    this.mapFacade.setMarker('to', result.to.lat, result.to.lng);
   }
 }

@@ -4,7 +4,8 @@ import { TourFacade } from '../../../tours/facade/tour.facade';
 import { MapFacade } from '../../facade/map-facade';
 import { OrsGeocodeService } from '../../services/ors-geocode.service';
 import { firstValueFrom } from 'rxjs';
-import { LatLng } from '../../../../core/models/lat-lng';
+import { LatLng } from '../../services/models/lat-lng';
+
 @Component({
   selector: 'app-map',
   standalone: true,

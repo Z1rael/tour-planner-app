@@ -2,12 +2,9 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable, of, catchError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { GeocodeDTO } from './models/geocode-dto';
 
-export interface GeocodeDTO {
-  label: string;
-  lat: number;
-  lng: number;
-}
+
 
 @Injectable({ providedIn: 'root' })
 export class OrsGeocodeService {

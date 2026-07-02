@@ -1,10 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import {
-  TourLogService,
-  UpdateTourLogPayload,
-  CreateTourLogPayload,
-  TourLogResponse,
-} from '../services/tour-log.service';
+import { TourLogService } from '../services/tour-log.service';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import {
   catchError,
@@ -18,25 +13,12 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { TourLog } from '../../../core/models/tour-log';
-
-export interface CreateTourLogForm {
-  tour_id: number;
-  comment: string;
-  difficulty: number;
-  rating: number;
-  total_time_m: number;
-  total_distance_km: number;
-}
-
-export interface UpdateTourLogForm {
-  comment?: string;
-  difficulty?: number;
-  rating?: number;
-  total_time_m?: number;
-  total_distance_km?: number;
-}
-
+import { TourLog } from '../models/tour/tour-log';
+import { CreateTourLogForm } from '../models/log/create-tour-log-form';
+import { UpdateTourLogForm } from '../models/log/update-tour-log-form';
+import { CreateTourLogPayload } from '../models/log/create-tour-log-payload';
+import { UpdateTourLogPayload } from '../models/log/update-tour-log-payload';
+import { TourLogResponse } from '../models/log/tour-log-response';
 
 @Injectable({
   providedIn: 'root',

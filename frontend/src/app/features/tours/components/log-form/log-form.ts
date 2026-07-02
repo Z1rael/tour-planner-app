@@ -1,7 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { TourFacade } from '../../facade/tour.facade';
-import { TourLog } from '../../../../core/models/tour-log';
+import { TourLog } from '../../models/tour/tour-log';
 import { debounce, form, FormField, max, min, required } from '@angular/forms/signals';
 import { UserService } from '../../../user/services/user.service';
 import { LogFacade } from '../../facade/log-facade';

@@ -1,9 +1,7 @@
-import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { from, Observable } from 'rxjs';
-import {isPlatformBrowser} from '@angular/common';
-import {Tour} from '../../core/models/tour';
-import {mockTours} from '../data/tour-mock-data';
-import {mockUsers} from '../data/user-mock-data';
+import { isPlatformBrowser } from '@angular/common';
+import { mockUsers } from '../data/user-mock-data';
 
 export interface User {
   id: number;

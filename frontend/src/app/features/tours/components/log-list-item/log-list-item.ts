@@ -1,5 +1,5 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
-import { TourLog } from '../../../../core/models/tour-log';
+import { TourLog } from '../../models/tour/tour-log';
 import { DatePipe } from '@angular/common';
 import { LogFacade } from '../../facade/log-facade';
 import { Router } from '@angular/router';

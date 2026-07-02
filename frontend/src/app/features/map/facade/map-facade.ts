@@ -1,6 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { LatLng } from '../../../core/models/lat-lng';
+import { LatLng } from '../services/models/lat-lng';
 
 type LeafletModule = typeof import('leaflet');
 

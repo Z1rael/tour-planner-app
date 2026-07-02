@@ -1,7 +1,7 @@
 // map.service.ts
 import { Injectable } from '@angular/core';
-import { RouteResults } from '../../core/models/route-results';
-import { LatLng } from '../../core/models/lat-lng';
+import { LatLng } from '../../features/map/services/models/lat-lng';
+import { RouteResults } from '../../features/map/services/models/route-results';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {

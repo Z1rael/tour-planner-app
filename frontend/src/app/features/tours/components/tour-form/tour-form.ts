@@ -2,19 +2,13 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { TourFacade } from '../../facade/tour.facade';
 import { form, FormField, required } from '@angular/forms/signals';
-import { TransportationType } from '../../../../core/models/transportation-type';
-import { OrsGeocodeService, GeocodeDTO } from '../../../map/services/ors-geocode.service';
-import { debounceTime, distinctUntilChanged, EMPTY, firstValueFrom, switchMap } from 'rxjs';
+import { TransportationType } from '../../models/tour/transportation-type';
+import { OrsGeocodeService } from '../../../map/services/ors-geocode.service';
+import { debounceTime, distinctUntilChanged, EMPTY, switchMap } from 'rxjs';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { CreateTourPayload } from '../../services/tour.service';
-
-interface TourFormModel {
-  name: string;
-  transport_type: TransportationType;
-  from: GeocodeDTO;
-  to: GeocodeDTO;
-  description: string;
-}
+import { TourFormModel } from '../../models/tour/tour-form-model';
+import { CreateTourPayload } from '../../models/tour/create-tour-payload';
+import { GeocodeDTO } from '../../../map/services/models/geocode-dto';
 
 const EMPTY_FORM: TourFormModel = {
   name: '',

@@ -1,7 +1,7 @@
-import { Tour } from '../../core/models/tour';
-import { TourLog } from '../../core/models/tour-log';
-import { TourSummary } from '../../core/models/tour-summary';
-import { TransportationType } from '../../core/models/transportation-type';
+import { Tour } from '../../features/tours/models/tour/tour';
+import { TourLog } from '../../features/tours/models/tour/tour-log';
+import { TourSummary } from '../../features/tours/models/tour/tour-summary';
+import { TransportationType } from '../../features/tours/models/tour/transportation-type';
 
 // ──────────────────────────────────────────────
 // tours

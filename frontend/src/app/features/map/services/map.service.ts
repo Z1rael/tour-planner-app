@@ -1,27 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { RouteResults } from '../../../core/models/route-results';
-import { LatLng } from '../../../core/models/lat-lng';
+import { LatLng } from './models/lat-lng';
+import { OrsDirectionsResponse } from './models/ors-directions-response';
+import { RouteResults } from './models/route-results';
 
-interface OrsGeometry {
-  coordinates: [number, number][]; // [lng, lat]
-}
-
-interface OrsSummary {
-  distance: number; // metres
-  duration: number; // seconds
-}
-
-interface OrsFeature {
-  geometry: OrsGeometry;
-  properties: { summary: OrsSummary };
-}
-
-interface OrsDirectionsResponse {
-  features: OrsFeature[];
-}
-
+// TODO(felix): need to get this into proper configuration
 const ORS_API_KEY =
   'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjMwNGMyZWRiZmI0ZTRkZmI4NzcyNzM4YTQ3YTkwZTU2IiwiaCI6Im11cm11cjY0In0=';
 

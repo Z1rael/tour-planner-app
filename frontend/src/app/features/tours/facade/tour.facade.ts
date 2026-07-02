@@ -13,16 +13,14 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import {
-  CreateTourPayload,
-  TourResponse,
-  TourService,
-  TourSummaryResponse,
-  UpdateTourPayload,
-} from '../services/tour.service';
-import { Tour } from '../../../core/models/tour';
-import { TransportationType } from '../../../core/models/transportation-type';
-import { TourSummary } from '../../../core/models/tour-summary';
+import { Tour } from '../models/tour/tour';
+import { TransportationType } from '../models/tour/transportation-type';
+import { TourSummary } from '../models/tour/tour-summary';
+import { TourService } from '../services/tour.service';
+import { CreateTourPayload } from '../models/tour/create-tour-payload';
+import { UpdateTourPayload } from '../models/tour/update-tour-payload';
+import { TourSummaryResponse } from '../models/tour/tour-summary-response';
+import { TourResponse } from '../models/tour/tour-response';
 
 @Injectable({
   providedIn: 'root',

@@ -2,34 +2,9 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-
-export interface TourLogResponse {
-  tour_log_id: number;
-  tour_id: number;
-  comment: string;
-  difficulty: number;
-  rating: number;
-  total_time_s: number; // in s
-  total_distance_km: number; // in km
-  log_date: string;
-}
-
-export interface CreateTourLogPayload {
-  tour_id: number;
-  comment: string;
-  difficulty: number;
-  rating: number;
-  total_time_s: number;
-  total_distance_km: number;
-}
-
-export interface UpdateTourLogPayload {
-  comment?: string;
-  difficulty?: number;
-  rating?: number;
-  total_time_s?: number;
-  total_distance_km?: number;
-}
+import { TourLogResponse } from '../models/log/tour-log-response';
+import { CreateTourLogPayload } from '../models/log/create-tour-log-payload';
+import { UpdateTourLogPayload } from '../models/log/update-tour-log-payload';
 
 @Injectable({ providedIn: 'root' })
 export class TourLogService {

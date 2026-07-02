@@ -3,10 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { AuthStore } from '../../../core/services/auth.store.service';
-
-export interface AuthResponse {
-  token: string;
-}
+import { AuthResponse } from '../models/auth-response';
+import { LoginRequest } from '../models/login-request';
+import { RegisterRequest } from '../models/register-request';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -14,19 +13,15 @@ export class UserService {
   private readonly authStore = inject(AuthStore);
   private readonly base = `${environment.apiUrl}/auth`;
 
-  login(email: string, password: string): Observable<AuthResponse> {
+  login(request: LoginRequest): Observable<AuthResponse> {
     return this.http
-      .post<AuthResponse>(`${this.base}/login`, { email, password })
+      .post<AuthResponse>(`${this.base}/login`, request)
       .pipe(tap((res) => this.authStore.set(res.token)));
   }
 
-  register(email: string, password: string, passwordRepeat?: string): Observable<AuthResponse> {
+  register(request: RegisterRequest): Observable<AuthResponse> {
     return this.http
-      .post<AuthResponse>(`${this.base}/register`, {
-        email,
-        password,
-        password_repeat: passwordRepeat ?? password,
-      })
+      .post<AuthResponse>(`${this.base}/register`, request)
       .pipe(tap((res) => this.authStore.set(res.token)));
   }
 

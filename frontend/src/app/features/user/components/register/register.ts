@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { RegisterRequest } from '../../models/register-request';
 
 @Component({
   selector: 'app-register',
@@ -19,12 +20,21 @@ export class Register {
   public confirmPassword: string = '';
 
   submit() {
+    // make sure the passwords are equal
     if (this.password !== this.confirmPassword) {
       alert('Passwords do not match!');
       return;
     }
 
-    this.service.register(this.email, this.password, this.confirmPassword).subscribe({
+    // build request
+    const request: RegisterRequest = {
+      email: this.email,
+      password: this.password,
+      passwordRepeat: this.confirmPassword
+    }
+
+    // send request
+    this.service.register(request).subscribe({
       next: () => this.router.navigate(['/profile']),
       error: (err: Error) => alert(err.message),
     });

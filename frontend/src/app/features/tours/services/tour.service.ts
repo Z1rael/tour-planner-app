@@ -2,53 +2,11 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { Tour } from '../../../core/models/tour';
-import { TourSummary } from '../../../core/models/tour-summary';
-import { GeocodeDTO } from '../../map/services/ors-geocode.service';
+import { TourSummaryResponse } from '../models/tour/tour-summary-response';
+import { TourResponse } from '../models/tour/tour-response';
+import { CreateTourPayload } from '../models/tour/create-tour-payload';
+import { UpdateTourPayload } from '../models/tour/update-tour-payload';
 
-export interface TourSummaryResponse {
-  tour_id: number;
-  name: string;
-  from_address: string;
-  to_address: string;
-  transport_type_name: string;
-  distance_km: number;
-  estimated_time_s: number;
-  popularity: number;
-  child_friendliness: number;
-  creator_id: number;
-}
-
-export interface TourResponse {
-  tour_id: number;
-  name: string;
-  description: string;
-  from_geocode: GeocodeDTO;
-  to_geocode: GeocodeDTO;
-  transport_type_name: string;
-  distance_km: number;
-  estimated_time_s: number;
-  route_geo_json: string;
-  image_path: string | null;
-  popularity: number;
-  child_friendliness: number;
-}
-
-export interface CreateTourPayload {
-  name: string;
-  description?: string;
-  fromGeocode: GeocodeDTO;
-  toGeocode: GeocodeDTO;
-  profile: string;
-}
-
-export interface UpdateTourPayload {
-  name: string;
-  description?: string;
-  fromGeocode: GeocodeDTO;
-  toGeocode: GeocodeDTO;
-  profile: string;
-}
 
 @Injectable({ providedIn: 'root' })
 export class TourService {

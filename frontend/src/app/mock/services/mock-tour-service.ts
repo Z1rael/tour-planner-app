@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { mockTours } from '../data/tour-mock-data';
-import { Tour } from '../../core/models/tour';
+import { Tour } from '../../features/tours/models/tour/tour';
 import { from, firstValueFrom, Observable } from 'rxjs';
-import { TourSummary } from '../../core/models/tour-summary';
+import { TourSummary } from '../../features/tours/models/tour/tour-summary';
 import { MockUserService } from './mock-user-service';
 
 const MOCK_DELAY = 300;

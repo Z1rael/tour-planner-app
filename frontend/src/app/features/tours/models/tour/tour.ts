@@ -1,4 +1,4 @@
-import { GeocodeDTO } from '../../features/map/services/ors-geocode.service';
+import { GeocodeDTO } from '../../../map/services/models/geocode-dto';
 import { TransportationType } from './transportation-type';
 
 export interface Tour {

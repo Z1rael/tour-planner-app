@@ -108,18 +108,18 @@ class TourLogServiceTest {
     /* getLog */
     @Test
     void getLog_existingLog_returnsLog() {
-        when(tourLogRepository.findByIdAndUserId(100L, 1L)).thenReturn(Optional.of(existingLog));
+        when(tourLogRepository.findById(100L)).thenReturn(Optional.of(existingLog));
 
-        TourLog result = tourLogService.getLog(100L, user);
+        TourLog result = tourLogService.getLog(100L);
 
         assertThat(result).isEqualTo(existingLog);
     }
 
     @Test
     void getLog_notFound_throwsEntityNotFoundException() {
-        when(tourLogRepository.findByIdAndUserId(999L, 1L)).thenReturn(Optional.empty());
+        when(tourLogRepository.findById(999L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> tourLogService.getLog(999L, user))
+        assertThatThrownBy(() -> tourLogService.getLog(999L))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessageContaining("999");
     }
@@ -130,7 +130,7 @@ class TourLogServiceTest {
         UpdateTourLogRequest request = new UpdateTourLogRequest(
                 "Updated comment", 5, 2, 1800L, 5L
         );
-        when(tourLogRepository.findByIdAndUserId(100L, 1L)).thenReturn(Optional.of(existingLog));
+        when(tourLogRepository.findById(100L)).thenReturn(Optional.of(existingLog));
         when(tourLogRepository.save(existingLog)).thenReturn(existingLog);
 
         TourLog result = tourLogService.updateLog(100L, request, user);
@@ -148,7 +148,7 @@ class TourLogServiceTest {
         UpdateTourLogRequest request = new UpdateTourLogRequest(
                 "New comment", null, null, null, null
         );
-        when(tourLogRepository.findByIdAndUserId(100L, 1L)).thenReturn(Optional.of(existingLog));
+        when(tourLogRepository.findById(100L)).thenReturn(Optional.of(existingLog));
         when(tourLogRepository.save(existingLog)).thenReturn(existingLog);
 
         TourLog result = tourLogService.updateLog(100L, request, user);
@@ -162,7 +162,7 @@ class TourLogServiceTest {
     @Test
     void updateLog_logNotFound_throwsEntityNotFoundException() {
         UpdateTourLogRequest request = new UpdateTourLogRequest("x", 1, 1, 1L, 1L);
-        when(tourLogRepository.findByIdAndUserId(999L, 1L)).thenReturn(Optional.empty());
+        when(tourLogRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> tourLogService.updateLog(999L, request, user))
                 .isInstanceOf(EntityNotFoundException.class);
@@ -173,7 +173,7 @@ class TourLogServiceTest {
     /* deleteLog */
     @Test
     void deleteLog_existingLog_deletesSuccessfully() {
-        when(tourLogRepository.findByIdAndUserId(100L, 1L)).thenReturn(Optional.of(existingLog));
+        when(tourLogRepository.findById(100L)).thenReturn(Optional.of(existingLog));
 
         tourLogService.deleteLog(100L, user);
 
@@ -182,7 +182,7 @@ class TourLogServiceTest {
 
     @Test
     void deleteLog_notFound_throwsAndDoesNotDelete() {
-        when(tourLogRepository.findByIdAndUserId(999L, 1L)).thenReturn(Optional.empty());
+        when(tourLogRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> tourLogService.deleteLog(999L, user))
                 .isInstanceOf(EntityNotFoundException.class);
@@ -193,18 +193,18 @@ class TourLogServiceTest {
     /* getLogsForTour */
     @Test
     void getLogsForTour_returnsOnlyUserLogs() {
-        when(tourLogRepository.findByTourIdAndUserId(10L, 1L)).thenReturn(List.of(existingLog));
+        when(tourLogRepository.findByTourId(10L)).thenReturn(List.of(existingLog));
 
-        List<TourLog> result = tourLogService.getLogsForTour(10L, user);
+        List<TourLog> result = tourLogService.getLogsForTour(10L);
 
         assertThat(result).hasSize(1).contains(existingLog);
     }
 
     @Test
     void getLogsForTour_noLogs_returnsEmptyList() {
-        when(tourLogRepository.findByTourIdAndUserId(10L, 1L)).thenReturn(List.of());
+        when(tourLogRepository.findByTourId(10L)).thenReturn(List.of());
 
-        List<TourLog> result = tourLogService.getLogsForTour(10L, user);
+        List<TourLog> result = tourLogService.getLogsForTour(10L);
 
         assertThat(result).isEmpty();
     }

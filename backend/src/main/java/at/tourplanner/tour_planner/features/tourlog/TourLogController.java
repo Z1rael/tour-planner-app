@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -36,9 +37,19 @@ public class TourLogController {
             @RequestParam(required=false) Long tourId,
             @AuthenticationPrincipal User user
     ) {
-        List<TourLogResponse> logs = tourLogService.getLogsForTour(tourId, user).stream()
+        List<TourLogResponse> logs;
+
+        // return either all logs from the user or for a specified tour
+        if (tourId == null) {
+        logs =  tourLogService.getAllLogsForUser(user).stream()
                 .map(TourLogResponse::from)
                 .toList();
+        } else {
+        logs = tourLogService.getLogsForTour(tourId).stream()
+                .map(TourLogResponse::from)
+                .toList();
+        }
+
         return ResponseEntity.ok(logs);
     }
 
@@ -48,7 +59,7 @@ public class TourLogController {
             @PathVariable Long id,
             @AuthenticationPrincipal User user
     ) {
-        return ResponseEntity.ok(TourLogResponse.from(tourLogService.getLog(id, user)));
+        return ResponseEntity.ok(TourLogResponse.from(tourLogService.getLog(id)));
     }
 
     // PATCH /api/logs/{id}

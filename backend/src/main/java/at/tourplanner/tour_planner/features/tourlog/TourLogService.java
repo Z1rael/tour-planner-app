@@ -8,6 +8,7 @@ import at.tourplanner.tour_planner.features.user.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,34 +50,57 @@ public class TourLogService {
     }
 
     @Transactional(readOnly = true)
-    public List<TourLog> getLogsForTour(Long tourId, User user) {
-        return tourLogRepository.findByTourIdAndUserId(tourId, user.getUserId());
+    public List<TourLog> getLogsForTour(Long tourId) {
+        return tourLogRepository.findByTourId(tourId);
     }
 
     @Transactional(readOnly = true)
-    public TourLog getLog(Long logId, User user) {
-        return tourLogRepository.findByIdAndUserId(logId, user.getUserId())
+    public TourLog getLog(Long logId) {
+        return tourLogRepository.findById(logId)
                 .orElseThrow(() -> new EntityNotFoundException("Log not found: " + logId));
     }
 
     @Transactional
-    public TourLog updateLog(Long logId, UpdateTourLogRequest request, User user) {
-        TourLog tourLog = getLog(logId, user);
+    public TourLog updateLog(Long logId, UpdateTourLogRequest request, User user) throws AccessDeniedException {
+        TourLog tourLog = getLog(logId);
 
-        if (request.comment() != null)         tourLog.setComment(request.comment());
-        if (request.difficulty() != null)      tourLog.setDifficulty(request.difficulty());
-        if (request.rating() != null)          tourLog.setRating(request.rating());
-        if (request.totalTimeS() != null)      tourLog.setTotalTimeS(request.totalTimeS());
-        if (request.totalDistanceKm() != null) tourLog.setTotalDistanceKm(request.totalDistanceKm());
+        if(tourLog.getUser().getUserId().equals(user.getUserId())) {
+
+
+        if (request.comment() != null){
+            tourLog.setComment(request.comment());
+        }
+        if (request.difficulty() != null)  {
+            tourLog.setDifficulty(request.difficulty());
+        }
+        if (request.rating() != null)  {
+            tourLog.setRating(request.rating());
+        }
+        if (request.totalTimeS() != null)   {
+            tourLog.setTotalTimeS(request.totalTimeS());
+        }
+        if (request.totalDistanceKm() != null){
+            tourLog.setTotalDistanceKm(request.totalDistanceKm());
+        }
 
         return tourLogRepository.save(tourLog);
+        } else {
+            throw new AccessDeniedException("User not allowed to update tour log [" + logId + "]");
+        }
     }
 
     @Transactional
-    public void deleteLog(Long logId, User user) {
-        TourLog tourLog = getLog(logId, user);
+    public void deleteLog(Long logId, User user) throws AccessDeniedException {
+        TourLog tourLog = getLog(logId);
+
+        if(tourLog.getUser().getUserId().equals(user.getUserId())) {
         tourLogRepository.delete(tourLog);
         log.info("Deleted tour log [{}]", logId);
+        } else {
+            throw new AccessDeniedException("User is not allowed to delete tour log [" + logId + "]");
+        }
+
+
     }
 
     @Transactional(readOnly = true)

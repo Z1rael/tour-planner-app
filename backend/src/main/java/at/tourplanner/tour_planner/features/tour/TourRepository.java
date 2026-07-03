@@ -26,13 +26,14 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
         @Query("""
             SELECT t FROM Tour t
             LEFT JOIN t.transportType tt
-            WHERE t.user.userId = :userId
-              AND (
-                    LOWER(t.name)        LIKE LOWER(CONCAT('%', :q, '%'))
-                 OR LOWER(t.description) LIKE LOWER(CONCAT('%', :q, '%'))
-                 OR LOWER(t.fromAddress) LIKE LOWER(CONCAT('%', :q, '%'))
-                 OR LOWER(t.toAddress)   LIKE LOWER(CONCAT('%', :q, '%'))
-                 OR LOWER(tt.transportationName) LIKE LOWER(CONCAT('%', :q, '%'))
+            WHERE (
+                    LOWER(t.name)                    LIKE LOWER(CONCAT('%', :q, '%'))
+                 OR LOWER(t.description)             LIKE LOWER(CONCAT('%', :q, '%'))
+                 OR LOWER(t.fromAddress)             LIKE LOWER(CONCAT('%', :q, '%'))
+                 OR LOWER(t.toAddress)               LIKE LOWER(CONCAT('%', :q, '%'))
+                 OR LOWER(tt.transportationName)     LIKE LOWER(CONCAT('%', :q, '%'))
+                 OR CAST(t.distanceKm AS string)     LIKE CONCAT('%', :q, '%')
+                 OR CAST(t.estimatedTimeS AS string) LIKE CONCAT('%', :q, '%')
               )
             """)
     List<Tour> searchByUserId(@Param("userId") Long userId, @Param("q") String query);

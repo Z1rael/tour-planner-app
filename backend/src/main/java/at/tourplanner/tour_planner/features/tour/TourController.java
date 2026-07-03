@@ -35,6 +35,7 @@ public class TourController {
                         tourService.getChildFriendliness(tour)));
     }
 
+    // TODO(Felix): do we really want to limit the response to tours from that particular user?
     // GET /api/tours
     @GetMapping
     public ResponseEntity<List<TourSummaryResponse>> getTours(

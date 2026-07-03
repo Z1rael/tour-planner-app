@@ -53,6 +53,27 @@
           />
         </div>
       </div>
+      <div class="row mb-3">
+        <div class="col-auto">
+          <label>Popularity</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="$safeNavigationMigration(tourFacade.selectedTour()?.popularity)"
+            [disabled]="true"
+          />
+        </div>
+        <div class="col-auto">
+          <label>Child Friendliness</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="$safeNavigationMigration(tourFacade.selectedTour()?.child_friendliness)"
+            [disabled]="true"
+          />
+        </div>
+      </div>
+
       <div class="col-auto mb-3">
         <label>Description</label>
         <textarea

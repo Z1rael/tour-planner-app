@@ -23,6 +23,8 @@
           <app-tour-list />
         } @else if (currentView === 'tours') {
           <app-tour-details />
+        } @else if (currentView === 'search') {
+          <app-search-box></app-search-box>
         } @else if (currentView === 'add-tour-log') {
         } @else if (currentView === 'add-tour') {}
       </div>
@@ -36,6 +38,8 @@
           <app-log-form />
         } @else if (currentView === 'add-tour') {
           <app-tour-form />
+        } @else if (currentView === 'search') {
+          <app-tour-search></app-tour-search>
         }
       </div>
 
@@ -46,6 +50,8 @@
           <app-log-list />
         } @else if (currentView === 'add-tour') {
           <app-map />
+        } @else if (currentView === 'search') {
+          <app-log-search></app-log-search>
         }
       </div>
     </div>

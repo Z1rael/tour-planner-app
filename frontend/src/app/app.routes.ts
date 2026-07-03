@@ -9,5 +9,6 @@ export const routes: Routes = [
   { path: 'tours', component: Shell, data: { view: 'tours' } },
   { path: 'add-tour-log', component: Shell, data: { view: 'add-tour-log' } },
   { path: 'add-tour', component: Shell, data: { view: 'add-tour' } },
+  { path: 'search', component: Shell, data: { view: 'search' } },
   { path: '**', redirectTo: '' },
 ];

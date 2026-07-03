@@ -3,9 +3,6 @@
     <div class="col-auto mb-2 mx-4">
       <h2>Tours</h2>
     </div>
-    <div class="col-auto mx-4">
-      <button class="col-auto btn btn-primary mb-2" (click)="addTour()">Add</button>
-    </div>
   </div>
 
   <!-- tour cards -->
@@ -20,7 +17,7 @@
       }
     </div>
 
-    @for (tour of tourFacade.tours(); track tour.id) {
+    @for (tour of tourFacade.filteredTours(); track tour.id) {
       <div class="bubble-inner card mb-1" (click)="onSelect(tour.id)">
         <div class="card-header">{{ tour.name }}</div>
         <div class="card-body">

@@ -10,21 +10,23 @@ import {
   map,
   Observable,
   of,
-  startWith,
   switchMap,
   tap,
 } from 'rxjs';
-import { MockTourService } from '../../../mock/services/mock-tour-service';
-import { TourSummary } from '../../../core/models/tour-summary';
-import { Tour } from '../../../core/models/tour';
-import { MockLogService } from '../../../mock/services/mock-log-service';
-import { TourLog } from '../../../core/models/tour-log';
+import { Tour } from '../models/tour/tour';
+import { TransportationType } from '../models/tour/transportation-type';
+import { TourSummary } from '../models/tour/tour-summary';
+import { TourService } from '../services/tour.service';
+import { CreateTourPayload } from '../models/tour/create-tour-payload';
+import { UpdateTourPayload } from '../models/tour/update-tour-payload';
+import { TourSummaryResponse } from '../models/tour/tour-summary-response';
+import { TourResponse } from '../models/tour/tour-response';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TourFacade {
-  private readonly tourApi = inject(MockTourService);
+  private readonly tourApi = inject(TourService);
   private readonly refresh$ = new BehaviorSubject<void>(undefined);
 
   // State
@@ -44,6 +46,7 @@ export class TourFacade {
   readonly tourSummaries$: Observable<TourSummary[]> = this.refresh$.pipe(
     switchMap(() =>
       this.tourApi.getTours().pipe(
+        map((tours) => tours.map(this.mapSummary.bind(this))),
         catchError((err) => {
           this.error.set(err.message);
           return EMPTY;
@@ -66,6 +69,7 @@ export class TourFacade {
       this.error.set(null);
 
       return this.tourApi.getTourById(id).pipe(
+        map((t) => this.mapFull(t)),
         catchError((err) => {
           this.error.set(err.message);
           return EMPTY;
@@ -74,6 +78,7 @@ export class TourFacade {
       );
     }),
   );
+
   readonly selectedTour = toSignal(this.selectedTour$, { initialValue: null });
 
   // query stuff
@@ -90,6 +95,7 @@ export class TourFacade {
 
           if (0 === q.length) {
             return this.tourApi.getTours().pipe(
+              map((tours) => tours.map((t) => this.mapSummary(t))),
               catchError((err) => {
                 this.loading.set(false);
                 this.error.set(err.message);
@@ -102,6 +108,7 @@ export class TourFacade {
           }
 
           return this.tourApi.searchTour(q).pipe(
+            map((tours) => tours.map((t) => this.mapSummary(t))),
             catchError((err) => {
               this.loading.set(false);
               this.error.set(err.message);
@@ -136,7 +143,7 @@ export class TourFacade {
     this.query.set('');
   }
 
-  createTour(data: Omit<Tour, 'id' | 'distance' | 'estimated_time' | 'route_information'>): void {
+  createTour(data: CreateTourPayload): void {
     this.loading.set(true);
     this.error.set(null);
 
@@ -154,11 +161,12 @@ export class TourFacade {
       .subscribe(() => this.refresh());
   }
 
-  updateTour(id: number, data: Partial<Omit<Tour, 'id'>>): void {
+  updateTour(id: number, data: UpdateTourPayload): void {
+    console.log('Facade received', data);
     this.tourApi
       .updateTour(id, data)
       .pipe(
-        startWith(() => {
+        tap(() => {
           this.loading.set(true);
           this.error.set(null);
         }),
@@ -176,7 +184,7 @@ export class TourFacade {
     this.tourApi
       .deleteTour(id)
       .pipe(
-        startWith(() => {
+        tap(() => {
           this.loading.set(true);
           this.error.set(null);
         }),
@@ -188,5 +196,38 @@ export class TourFacade {
         finalize(() => this.loading.set(false)),
       )
       .subscribe(() => this.refresh());
+  }
+
+  // helpers
+  private mapSummary(t: TourSummaryResponse): TourSummary {
+    return {
+      id: t.tour_id,
+      name: t.name,
+      from: t.from_address,
+      to: t.to_address,
+      transportType: t.transport_type_name as TransportationType,
+      distanceKm: t.distance_km,
+      estimatedTimeS: t.estimated_time_s,
+      popularity: t.popularity,
+      childFriendliness: t.child_friendliness,
+      creatorId: 0,
+    };
+  }
+
+  private mapFull(t: TourResponse): Tour {
+    return {
+      id: t.tour_id,
+      name: t.name,
+      fromGeocode: t.from_geocode,
+      toGeocode: t.to_geocode,
+      transport_type: t.transport_type_name as TransportationType,
+      description: t.description,
+      distance: t.distance_km,
+      estimated_time: t.estimated_time_s / 60,
+      route_information: t.route_geo_json ?? '',
+      creator_id: 0,
+      popularity: t.popularity,
+      child_friendliness: t.child_friendliness,
+    };
   }
 }

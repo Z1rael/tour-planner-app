@@ -1,19 +1,19 @@
-import { Component, inject } from '@angular/core';
-import { MockUserService } from '../../../../mock/services/mock-user-service';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
-import {FormsModule} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { RegisterRequest } from '../../models/register-request';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [
-    FormsModule
-  ],
+  imports: [FormsModule],
   templateUrl: './register.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './register.css',
 })
 export class Register {
-  private service = inject(MockUserService); // TODO: swap for real UserService
+  private service = inject(UserService);
   private router = inject(Router);
 
   public email: string = '';
@@ -21,12 +21,21 @@ export class Register {
   public confirmPassword: string = '';
 
   submit() {
+    // make sure the passwords are equal
     if (this.password !== this.confirmPassword) {
       alert('Passwords do not match!');
       return;
     }
 
-    this.service.register(this.email, this.password).subscribe({
+    // build request
+    const request: RegisterRequest = {
+      email: this.email,
+      password: this.password,
+      passwordRepeat: this.confirmPassword,
+    };
+
+    // send request
+    this.service.register(request).subscribe({
       next: () => this.router.navigate(['/profile']),
       error: (err: Error) => alert(err.message),
     });

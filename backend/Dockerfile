@@ -10,7 +10,7 @@ WORKDIR /app
 COPY pom.xml /app
 RUN mvn dependency:go-offline
 
-COPY src .
+COPY src /app/src
 
 USER ubuntu
 

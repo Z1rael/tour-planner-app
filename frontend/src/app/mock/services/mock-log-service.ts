@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { mockTourLogs, mockTours } from '../data/tour-mock-data';
-import { Tour } from '../../core/models/tour';
+import { Tour } from '../../features/tours/models/tour/tour';
 import { firstValueFrom, from, Observable } from 'rxjs';
-import { TourLog } from '../../core/models/tour-log';
+import { TourLog } from '../../features/tours/models/tour/tour-log';
 import { MockUserService } from './mock-user-service';
 
 const MOCK_DELAY = 300;
@@ -117,8 +117,8 @@ export class MockLogService {
         tour.comment.toLowerCase().includes(q) ||
         tour.timestamp.toLowerCase().includes(q) ||
         tour.difficulty.toString().includes(q) ||
-        tour.total_distance.toString().includes(q) ||
-        tour.total_time.toString().includes(q) ||
+        tour.total_distance_km.toString().includes(q) ||
+        tour.total_time_m.toString().includes(q) ||
         tour.rating.toString().includes(q),
     );
 

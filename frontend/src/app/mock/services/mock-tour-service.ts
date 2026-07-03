@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { mockTours } from '../data/tour-mock-data';
-import { Tour } from '../../core/models/tour';
+import { Tour } from '../../features/tours/models/tour/tour';
 import { from, firstValueFrom, Observable } from 'rxjs';
-import { TourSummary } from '../../core/models/tour-summary';
+import { TourSummary } from '../../features/tours/models/tour/tour-summary';
 import { MockUserService } from './mock-user-service';
 
 const MOCK_DELAY = 300;
@@ -11,10 +11,14 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const toSummary = (t: Tour): TourSummary => ({
   id: t.id,
   name: t.name,
-  from: t.from,
-  to: t.to,
-  transport_type: t.transport_type,
-  creator_id: t.creator_id,
+  from: t.fromGeocode.label,
+  to: t.toGeocode.label,
+  transportType: t.transport_type,
+  distanceKm: t.distance,
+  estimatedTimeS: t.estimated_time,
+  popularity: t.popularity,
+  childFriendliness: t.child_friendliness,
+  creatorId: t.creator_id,
 });
 
 @Injectable({
@@ -125,8 +129,8 @@ export class MockTourService {
       .filter(
         (t) =>
           t.name.toLowerCase().includes(q) ||
-          t.from.toLowerCase().includes(q) ||
-          t.to.toLowerCase().includes(q) ||
+          t.fromGeocode.label.toLowerCase().includes(q) ||
+          t.toGeocode.label.toLowerCase().includes(q) ||
           t.transport_type.toLowerCase().includes(q),
       )
       .map(toSummary);

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy, effect } from '@angular/core';
 import { Router } from '@angular/router';
 import { LogListItem } from '../log-list-item/log-list-item';
 import { LogFacade } from '../../facade/log-facade';
@@ -8,6 +8,7 @@ import { LogFacade } from '../../facade/log-facade';
   standalone: true,
   imports: [LogListItem],
   templateUrl: './log-list.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './log-list.css',
 })
 export class LogList {

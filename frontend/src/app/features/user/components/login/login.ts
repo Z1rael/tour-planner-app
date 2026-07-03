@@ -1,18 +1,20 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { LoginForm } from './models';
 import { email, form, FormField, required } from '@angular/forms/signals';
-import { MockUserService } from '../../../../mock/services/mock-user-service';
+import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
+import { LoginRequest } from '../../models/login-request';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [FormField],
   templateUrl: './login.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './login.css',
 })
 export class Login {
-  private userService = inject(MockUserService);  // TODO: swap for real UserService
+  private userService = inject(UserService);
   private router = inject(Router);
 
   readonly loginModel = signal<LoginForm>({
@@ -30,11 +32,18 @@ export class Login {
   onSubmit(event: Event) {
     event.preventDefault();
 
-    if (this.loginForm.email().invalid() || this.loginForm.password().invalid()) return;
+    // validate user input
+    if (this.loginForm.email().invalid() || this.loginForm.password().invalid()) {
+      return;
+    }
 
-    const { email, password } = this.loginModel();
+    // create request object
+    const request: LoginRequest = {
+      email: this.loginModel().email,
+      password: this.loginModel().password,
+    };
 
-    this.userService.login(email, password).subscribe({
+    this.userService.login(request).subscribe({
       next: () => this.router.navigate(['/profile']),
       error: (err: Error) => alert(err.message),
     });

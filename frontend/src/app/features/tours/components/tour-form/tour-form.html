@@ -1,49 +1,103 @@
 <section class="col-md-12 mx-auto px-3 bubble">
-  <h2 class="mb-4">{{ isEditMode() ? 'Edit Tour' : 'Add new Tour' }}</h2>
+  <h2 class="mb-4">
+    {{ isEditMode() ? 'Edit Tour' : 'Add new Tour' }}
+  </h2>
+
   <div class="bubble-inner">
     <form (submit)="onSubmit()">
       <div class="row mb-2">
         <div class="col-auto mb-2">
-          <label for="name">Name</label>
+          <label for="tour-name">Name</label>
           <input type="text" class="form-control" id="tour-name" [formField]="tourForm.name" />
         </div>
+
         <div class="col-auto mb-2">
-          <label for="transportationType">Transportation Type</label>
+          <label for="tour-transportation-type">Transportation Type</label>
           <select
-            type="text"
             class="form-select"
             id="tour-transportation-type"
             [formField]="tourForm.transport_type"
           >
             @for (type of transportOptions; track type.value) {
-              <option [value]="type.value">{{ type.label }}</option>
+              <option [value]="type.value">
+                {{ type.label }}
+              </option>
             }
           </select>
         </div>
       </div>
+
       <div class="row mb-2">
-        <div class="col-auto mb-2">
-          <label for="from">From</label>
-          <input type="text" class="form-control" id="tour-from" [formField]="tourForm.from" />
+        <div class="col-auto mb-2 position-relative">
+          <label for="tour-from">From</label>
+          <input
+            #fromQuery
+            type="text"
+            class="form-control"
+            id="tour-from"
+            [formField]="tourForm.from.label"
+            (input)="onFromInput(fromQuery.value)"
+          />
+
+          @if (!fromCoords()) {
+            <ul class="list-group position-absolute z-3">
+              @for (s of fromSuggestions(); track $index) {
+                <li
+                  class="list-group-item list-group-item-action"
+                  (click)="selectFrom(s)"
+                  style="cursor: pointer"
+                >
+                  {{ s.label }}
+                </li>
+              }
+            </ul>
+          }
         </div>
-        <div class="col-auto mb-2">
-          <label for="to">To</label>
-          <input type="text" class="form-control" id="tour-to" [formField]="tourForm.to" />
+
+        <div class="col-auto mb-2 position-relative">
+          <label for="tour-to">To</label>
+          <input
+            #toQuery
+            type="text"
+            class="form-control"
+            id="tour-to"
+            [formField]="tourForm.to.label"
+            (input)="onToInput(toQuery.value)"
+          />
+
+          @if (!toCoords()) {
+            <ul class="list-group position-absolute z-3">
+              @for (s of toSuggestions(); track $index) {
+                <li
+                  class="list-group-item list-group-item-action"
+                  (click)="selectTo(s)"
+                  style="cursor: pointer"
+                >
+                  {{ s.label }}
+                </li>
+              }
+            </ul>
+          }
         </div>
       </div>
+
       <div class="col-auto mb-4">
-        <label for="description">Description</label>
+        <label for="tour-description">Description</label>
         <textarea
           class="form-control"
           id="tour-description"
           [formField]="tourForm.description"
-          placeholder="Describe the tour details ..."
-          rows="10"
+          placeholder="Describe the tour details..."
+          rows="6"
         ></textarea>
       </div>
+
       <div class="row mb-2 justify-content-evenly">
-        <button class="btn btn-secondary col-auto" (click)="onCancel()">Cancel</button>
-        <button class="btn btn-primary col-auto" (click)="onSubmit()">
+        <button type="button" class="btn btn-secondary col-auto" (click)="onCancel()">
+          Cancel
+        </button>
+
+        <button class="btn btn-primary col-auto">
           {{ isEditMode() ? 'Save Changes' : 'Create Tour' }}
         </button>
       </div>

@@ -1,0 +1,26 @@
+<section class="col-sm-10 mx-auto px-3 bubble-auth">
+  <div class="bubble-inner">
+    <!-- search bar -->
+    <div class="my-auto mb-3 row justify-content-evenly">
+      <div class="col-lg-8 mb-2">
+        <input
+          #query
+          type="text"
+          class="form-control"
+          placeholder="Search tours..."
+          [value]="queryPlaceholder"
+          (input)="setQuery(query.value)"
+        />
+      </div>
+      <div class="col-auto">
+        <button
+          class="btn btn-primary mb-2"
+          style="background-color: var(--app-danger)"
+          (click)="clearQuery()"
+        >
+          Clear
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

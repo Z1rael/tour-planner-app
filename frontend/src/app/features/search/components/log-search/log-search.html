@@ -1,0 +1,25 @@
+<section class="col-sm-10 mx-auto px-3 bubble">
+  <div class="row justify-content-between mb-3 px-3">
+    <div class="col-auto">
+      <h2>Logs</h2>
+    </div>
+  </div>
+
+  <div class="tour-list">
+    <div class="text-center mt-3">
+      @if (logFacade.loading()) {
+        <p class="state-message">Loading tours...</p>
+      } @else if (logFacade.error()) {
+        <p class="state-message state-message--error">{{ logFacade.error() }}</p>
+      } @else if (logFacade.logCount() === 0) {
+        <p class="state-message">No tours found.</p>
+      }
+    </div>
+
+    @for (item of logFacade.filteredLogs(); track item.id) {
+      <div (click)="selectLog(item.id)">
+        <app-log-list-item [log]="item"></app-log-list-item>
+      </div>
+    }
+  </div>
+</section>

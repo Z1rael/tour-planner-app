@@ -17,21 +17,20 @@ public interface TourLogRepository extends JpaRepository<TourLog, Long> {
 
     // find tour logs of a specific user
     @Query("SELECT tl FROM TourLog tl WHERE tl.user.userId = :userId")
-    List<TourLog> findByUserId(@Param("tourId") Long userId);
+    List<TourLog> findByUserId(@Param("userId") Long userId);
 
-    // find by id & user id
-    @Query("SELECT tl FROM TourLog tl WHERE tl.tourLogId = :id AND tl.user.userId = :userId")
-    Optional<TourLog> findByIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);
+    // find by id
+    @Query("SELECT tl FROM TourLog tl WHERE tl.tourLogId = :id")
+    Optional<TourLog> findById(@Param("id") Long id);
  
     // find by tour & user id
-    @Query("SELECT tl FROM TourLog tl WHERE tl.tour.tourId = :tourId AND tl.user.userId = :userId")
-    List<TourLog> findByTourIdAndUserId(@Param("tourId") Long tourId, @Param("userId") Long userId);
+    @Query("SELECT tl FROM TourLog tl WHERE tl.tour.tourId = :tourId")
+    List<TourLog> findByTourIdAndUserId(@Param("tourId") Long tourId);
  
     // full search
     @Query("""
             SELECT tl FROM TourLog tl
-            WHERE tl.user.userId = :userId
-              AND (
+            WHERE (
                     LOWER(tl.comment) LIKE LOWER(CONCAT('%', :q, '%'))
                  OR CAST(tl.difficulty AS string)      LIKE CONCAT('%', :q, '%')
                  OR CAST(tl.rating AS string)          LIKE CONCAT('%', :q, '%')

@@ -1,0 +1,19 @@
+<div class="modal">
+  <h2>Import Tours</h2>
+
+  <input
+    type="file"
+    accept="application/json"
+    id="file-selector-input"
+    (change)="onFileSelected($event)"
+  />
+
+  @if (importing()) {
+    <p>Importing...</p>
+  }
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <button (click)="cancel()">Cancel</button>
+</div>

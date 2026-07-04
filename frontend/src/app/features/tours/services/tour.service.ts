@@ -6,6 +6,7 @@ import { TourSummaryResponse } from '../models/tour/tour-summary-response';
 import { TourResponse } from '../models/tour/tour-response';
 import { CreateTourPayload } from '../models/tour/create-tour-payload';
 import { UpdateTourPayload } from '../models/tour/update-tour-payload';
+import { TourExportEntry } from '../models/tour/tour-export-entry';
 
 
 @Injectable({ providedIn: 'root' })
@@ -39,18 +40,11 @@ export class TourService {
     return this.http.get<TourSummaryResponse[]>(`${this.base}/search`, { params });
   }
 
-  exportTours(): Observable<Blob> {
-    return this.http.get(`${this.base}/export`, { responseType: 'blob' });
+  exportTours(): Observable<TourExportEntry[]> {
+    return this.http.get<TourExportEntry[]>(`${this.base}/export`);
   }
 
-  importTours(file: File): Observable<TourSummaryResponse[]> {
-    return new Observable((observer) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const entries = JSON.parse(reader.result as string);
-        this.http.post<TourSummaryResponse[]>(`${this.base}/import`, entries).subscribe(observer);
-      };
-      reader.readAsText(file);
-    });
+  importTours(entries: TourExportEntry[]): Observable<TourSummaryResponse[]> {
+    return this.http.post<TourSummaryResponse[]>(`${this.base}/import`, entries);
   }
 }

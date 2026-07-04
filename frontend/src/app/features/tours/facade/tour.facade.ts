@@ -6,12 +6,10 @@ import {
   debounceTime,
   distinctUntilChanged,
   EMPTY,
-  filter,
   finalize,
   map,
   Observable,
   of,
-  startWith,
   switchMap,
   tap,
 } from 'rxjs';
@@ -23,14 +21,13 @@ import { CreateTourPayload } from '../models/tour/create-tour-payload';
 import { UpdateTourPayload } from '../models/tour/update-tour-payload';
 import { TourSummaryResponse } from '../models/tour/tour-summary-response';
 import { TourResponse } from '../models/tour/tour-response';
-import { Router } from '@angular/router';
+import { TourExportEntry } from '../models/tour/tour-export-entry';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TourFacade {
   private readonly tourApi = inject(TourService);
-  private readonly router = inject(Router);
   private readonly refresh$ = new BehaviorSubject<void>(undefined);
 
   // State
@@ -219,6 +216,14 @@ export class TourFacade {
         finalize(() => this.loading.set(false)),
       )
       .subscribe(() => this.refresh());
+  }
+
+  importTours(entries: TourExportEntry[]) {
+    return this.tourApi.importTours(entries).pipe(
+      tap(() => {
+        this.refresh();
+      })
+    )
   }
 
   // helpers

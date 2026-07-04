@@ -16,16 +16,16 @@ export class UserService {
   login(request: LoginRequest): Observable<AuthResponse> {
     return this.http
       .post<AuthResponse>(`${this.base}/login`, request)
-      .pipe(tap((res) => this.authStore.set(res.token)));
+      .pipe(tap((res) => this.authStore.setToken(res.token)));
   }
 
   register(request: RegisterRequest): Observable<AuthResponse> {
     return this.http
       .post<AuthResponse>(`${this.base}/register`, request)
-      .pipe(tap((res) => this.authStore.set(res.token)));
+      .pipe(tap((res) => this.authStore.setToken(res.token)));
   }
 
   logout(): void {
-    this.authStore.clear();
+    this.authStore.logout('manual');
   }
 }

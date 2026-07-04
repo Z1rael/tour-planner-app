@@ -47,7 +47,17 @@
         <label class="form-check-label" for="rememberMe">Remember Me</label>
       </div>
 
-      <button type="submit" class="btn btn-primary">Login</button>
+      @if (sessionMessage()) {
+        <div class="alert alert-warning my-3">{{ sessionMessage() }}</div>
+      }
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="loginForm().invalid() || loginForm().submitting()"
+      >
+        Login
+      </button>
     </form>
   </div>
 </div>

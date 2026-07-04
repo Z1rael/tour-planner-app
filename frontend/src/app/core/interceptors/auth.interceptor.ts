@@ -20,7 +20,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   // Don't attach token to auth endpoints
-  if (req.url.includes('/auth/') || req.url.includes('/geocode')) {
+  if (req.url.includes('/auth/')) {
     return next(req);
   }
 

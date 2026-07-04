@@ -34,7 +34,6 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigrationSource()))
                 .authorizeHttpRequests(auth -> auth.
                         requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/geocode/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

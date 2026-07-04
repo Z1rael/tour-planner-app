@@ -2,6 +2,7 @@ package at.tourplanner.tour_planner.api.dto.tour;
 
 import at.tourplanner.tour_planner.api.dto.geocode.GeocodeDTO;
 import at.tourplanner.tour_planner.features.tour.Tour;
+import at.tourplanner.tour_planner.features.user.User;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.io.geojson.GeoJsonWriter;
 
@@ -17,19 +18,20 @@ public record TourResponse(
         String routeGeoJson,
         String imagePath,
         int popularity,           // number of logs
-        double childFriendliness  // 0.0 – 1.0, higher = more child-friendly
+        double childFriendliness,  // 0.0 – 1.0, higher = more child-friendly
+        boolean isOwner
 ) {
-    public static TourResponse from(Tour tour, int popularity, double childFriendliness) {
+    public static TourResponse from(Tour tour, int popularity, double childFriendliness, User user) {
         Point startPoint = tour.getRoute().getStartPoint();
         Point endPoint = tour.getRoute().getEndPoint();
 
         String geoJson = null;
         try {
-                if (tour.getRoute() != null) {
+            if (tour.getRoute() != null) {
                 geoJson = new GeoJsonWriter().write(tour.getRoute());
-                }
+            }
         } catch (Exception e) {
-                geoJson = null;
+            geoJson = null;
         }
         return new TourResponse(
                 tour.getTourId(),
@@ -43,7 +45,8 @@ public record TourResponse(
                 geoJson,
                 tour.getImagePath(),
                 popularity,
-                childFriendliness
+                childFriendliness,
+                tour.getUser().getUserId().equals(user.getUserId())
         );
     }
 

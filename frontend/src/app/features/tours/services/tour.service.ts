@@ -13,8 +13,8 @@ export class TourService {
   private readonly http = inject(HttpClient);
   private readonly base = `${environment.apiUrl}/tours`;
 
-  getTours(): Observable<TourSummaryResponse[]> {
-    return this.http.get<TourSummaryResponse[]>(this.base);
+  getTours(userFiltered: boolean): Observable<TourSummaryResponse[]> {
+    return this.http.get<TourSummaryResponse[]>(this.base + '?userFiltered=' + userFiltered);
   }
 
   getTourById(id: number): Observable<TourResponse> {

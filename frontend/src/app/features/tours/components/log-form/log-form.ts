@@ -1,7 +1,7 @@
 import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { TourFacade } from '../../facade/tour.facade';
-import { TourLog } from '../../models/tour/tour-log';
+import { TourLog } from '../../models/log/tour-log';
 import { debounce, form, FormField, max, min, required, FormRoot, submit } from '@angular/forms/signals';
 import { LogFacade } from '../../facade/log-facade';
 import { resolve } from 'path';
@@ -67,13 +67,13 @@ export class LogForm {
 
     this.logFacade.clearLogSelection();
 
-    this.router.navigate(['tours']);
+    this.router.navigate(['tour-details']);
   }
 
   onCancel(): void {
     this.logFacade.clearLogSelection();
 
-    this.router.navigate(['tours']);
+    this.router.navigate(['tour-details']);
   }
 
   private initialFormValue(): Omit<TourLog, 'id' | 'timestamp'> {
@@ -87,6 +87,7 @@ export class LogForm {
         total_time_m: selected.total_time_m,
         rating: selected.rating,
         creator_id: selected.creator_id,
+        isOwner: selected.isOwner
       };
     }
 
@@ -98,6 +99,7 @@ export class LogForm {
       total_time_m: 0,
       rating: 0,
       creator_id: 1,
+      isOwner: true
     };
   }
 

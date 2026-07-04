@@ -17,11 +17,12 @@ import { isPlatformBrowser } from '@angular/common';
 import { SearchBox } from '../../features/search/components/search-box/search-box';
 import { TourSearch } from '../../features/search/components/tour-search/tour-search';
 import { LogSearch } from '../../features/search/components/log-search/log-search';
+import { TourListProfile } from '../../features/tours/components/tour-list-profile/tour-list-profile';
 
 @Component({
   selector: 'app-shell',
   standalone: true,
-  imports: [LogList, Login, Register, TourList, Map, TourDetails, TourForm, LogForm, SearchBox, TourSearch, LogSearch],
+  imports: [LogList, Login, Register, TourList, TourListProfile, Map, TourDetails, TourForm, LogForm, SearchBox, TourSearch, LogSearch],
   templateUrl: './shell.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './shell.css',

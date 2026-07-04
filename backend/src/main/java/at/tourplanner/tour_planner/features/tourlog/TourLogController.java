@@ -28,26 +28,32 @@ public class TourLogController {
             @AuthenticationPrincipal User user
     ) {
         TourLog log = tourLogService.createLog(request, user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(TourLogResponse.from(log));
+        return ResponseEntity.status(HttpStatus.CREATED).body(TourLogResponse.from(log, user));
     }
 
     // GET /api/logs?tourId=...
     @GetMapping
     public ResponseEntity<List<TourLogResponse>> getLogs(
-            @RequestParam(required=false) Long tourId,
+            @RequestParam(required = false) Long tourId,
             @AuthenticationPrincipal User user
     ) {
         List<TourLogResponse> logs;
 
         // return either all logs from the user or for a specified tour
         if (tourId == null) {
-        logs =  tourLogService.getAllLogsForUser(user).stream()
-                .map(TourLogResponse::from)
-                .toList();
+            logs = tourLogService.getAllLogsForUser(user).stream()
+                    .map(tl -> TourLogResponse.from(
+                            tl,
+                            user
+                    ))
+                    .toList();
         } else {
-        logs = tourLogService.getLogsForTour(tourId).stream()
-                .map(TourLogResponse::from)
-                .toList();
+            logs = tourLogService.getLogsForTour(tourId).stream()
+                    .map(tl -> TourLogResponse.from(
+                            tl,
+                            user
+                    ))
+                    .toList();
         }
 
         return ResponseEntity.ok(logs);
@@ -59,7 +65,7 @@ public class TourLogController {
             @PathVariable Long id,
             @AuthenticationPrincipal User user
     ) {
-        return ResponseEntity.ok(TourLogResponse.from(tourLogService.getLog(id)));
+        return ResponseEntity.ok(TourLogResponse.from(tourLogService.getLog(id), user));
     }
 
     // PATCH /api/logs/{id}
@@ -70,7 +76,7 @@ public class TourLogController {
             @AuthenticationPrincipal User user
     ) {
         TourLog log = tourLogService.updateLog(id, request, user);
-        return ResponseEntity.ok(TourLogResponse.from(log));
+        return ResponseEntity.ok(TourLogResponse.from(log, user));
     }
 
     // DELETE /api/logs/{id}
@@ -90,7 +96,10 @@ public class TourLogController {
             @AuthenticationPrincipal User user
     ) {
         List<TourLogResponse> results = tourLogService.searchLogs(q, user).stream()
-                .map(TourLogResponse::from)
+                .map(tl -> TourLogResponse.from(
+                        tl,
+                        user
+                ))
                 .toList();
         return ResponseEntity.ok(results);
     }

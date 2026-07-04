@@ -15,7 +15,7 @@
         <p class="state-message">Loading tours...</p>
       } @else if (tourFacade.error()) {
         <p class="state-message state-message--error">{{ tourFacade.error() }}</p>
-      } @else if (tourFacade.tourCount() === 0) {
+      } @else if (tourFacade.toursCount() === 0) {
         <p class="state-message">No tours found.</p>
       }
     </div>

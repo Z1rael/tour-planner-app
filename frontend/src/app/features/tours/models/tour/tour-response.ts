@@ -13,4 +13,5 @@ export interface TourResponse {
     image_path: string | null;
     popularity: number;
     child_friendliness: number;
+    isOwner: boolean;
 }

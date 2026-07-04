@@ -7,4 +7,5 @@ export interface TourLogResponse {
     total_time_s: number; // in s
     total_distance_km: number; // in km
     log_date: string;
+    isOwner: boolean;
 }

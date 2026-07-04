@@ -3,6 +3,9 @@
     <div class="col-auto mb-2 mx-4">
       <h2>Tours</h2>
     </div>
+    <div class="col-auto mx-4">
+      <button class="col-auto btn btn-primary mb-2" (click)="addTour()">Add</button>
+    </div>
   </div>
 
   <!-- tour cards -->
@@ -12,12 +15,12 @@
         <p class="state-message">Loading tours...</p>
       } @else if (tourFacade.error()) {
         <p class="state-message state-message--error">{{ tourFacade.error() }}</p>
-      } @else if (tourFacade.filteredToursCount() === 0) {
-        <p class="state-message">No tours found. Try a different query.</p>
+      } @else if (tourFacade.userToursCount() === 0) {
+        <p class="state-message">No tours found.</p>
       }
     </div>
 
-    @for (tour of tourFacade.filteredTours(); track tour.id) {
+    @for (tour of tourFacade.userTours(); track tour.id) {
       <div class="bubble-inner card mb-1" (click)="onSelect(tour.id)">
         <div class="card-header">{{ tour.name }}</div>
         <div class="card-body">

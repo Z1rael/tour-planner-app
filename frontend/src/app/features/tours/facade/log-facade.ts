@@ -14,7 +14,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { TourLog } from '../models/tour/tour-log';
+import { TourLog } from '../models/log/tour-log';
 import { CreateTourLogForm } from '../models/log/create-tour-log-form';
 import { UpdateTourLogForm } from '../models/log/update-tour-log-form';
 import { CreateTourLogPayload } from '../models/log/create-tour-log-payload';
@@ -249,6 +249,7 @@ export class LogFacade {
       total_time_m: t.total_time_s / 60,
       timestamp: t.log_date,
       creator_id: 0,
+      isOwner: t.isOwner
     };
   }
 }

@@ -44,8 +44,10 @@
   </a>
   @if (expanded()) {
     <div class="row justify-content-evenly mb-2">
-      <a role="button" class="col-auto btn btn-danger" (click)="deleteLog()">Delete</a>
-      <a role="button" class="col-auto btn btn-primary" (click)="editLog()">Edit</a>
+      @if (log().isOwner) {
+        <a role="button" class="col-auto btn btn-danger" (click)="deleteLog()">Delete</a>
+        <a role="button" class="col-auto btn btn-primary" (click)="editLog()">Edit</a>
+      }
     </div>
   }
 </div>

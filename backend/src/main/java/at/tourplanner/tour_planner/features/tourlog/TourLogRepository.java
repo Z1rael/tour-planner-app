@@ -11,6 +11,8 @@ import java.util.Optional;
 @Repository
 public interface TourLogRepository extends JpaRepository<TourLog, Long> {
 
+
+
     // find tour logs of a specific tour
     @Query("SELECT tl FROM TourLog tl WHERE tl.tour.tourId = :tourId")
     List<TourLog> findByTourId(@Param("tourId") Long tourId);

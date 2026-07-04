@@ -8,4 +8,5 @@ export interface TourLog {
   total_time_m: number;
   rating: number; // 1-5
   creator_id: number;
+  isOwner: boolean;
 }

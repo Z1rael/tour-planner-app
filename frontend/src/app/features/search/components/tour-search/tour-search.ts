@@ -19,6 +19,6 @@ export class TourSearch {
     this.tourFacade.select(id);
     this.logFacade.setTourId(id);
 
-    this.router.navigate(['tours']);
+    this.router.navigate(['tour-details']);
   }
 }

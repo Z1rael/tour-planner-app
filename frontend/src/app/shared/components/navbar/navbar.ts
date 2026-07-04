@@ -1,5 +1,6 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthStore } from '../../../core/services/auth.store.service';
 
 @Component({
   selector: 'app-navbar',
@@ -8,4 +9,6 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './navbar.css',
 })
-export class Navbar {}
+export class Navbar {
+  protected readonly auth = inject(AuthStore);
+}

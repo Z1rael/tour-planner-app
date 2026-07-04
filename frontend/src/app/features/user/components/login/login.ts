@@ -2,7 +2,7 @@ import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/cor
 import { LoginForm } from './models';
 import { email, form, FormField, required } from '@angular/forms/signals';
 import { UserService } from '../../services/user.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoginRequest } from '../../models/login-request';
 
 @Component({
@@ -16,6 +16,9 @@ import { LoginRequest } from '../../models/login-request';
 export class Login {
   private userService = inject(UserService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  sessionMessage = signal<string | null>(null);
 
   readonly loginModel = signal<LoginForm>({
     email: '',
@@ -28,6 +31,14 @@ export class Login {
     email(schemaPath.email, { message: 'Enter a valid email address' });
     required(schemaPath.password, { message: 'Password is required' });
   });
+
+
+  constructor() {
+    const reason = this.route.snapshot.queryParamMap.get('reason');
+    if (reason === 'expired') {
+      this.sessionMessage.set('Your session has expired Please log in again.')
+    }
+  }
 
   onSubmit(event: Event) {
     event.preventDefault();
@@ -44,7 +55,7 @@ export class Login {
     };
 
     this.userService.login(request).subscribe({
-      next: () => this.router.navigate(['/profile']),
+      complete: () => this.router.navigate(['/profile']),
       error: (err: Error) => alert(err.message),
     });
   }

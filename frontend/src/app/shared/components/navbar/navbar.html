@@ -27,12 +27,6 @@
 
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto gap-lg-2">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/register" routerLinkActive="active">Register</a>
-        </li>
         @if (auth.token()) {
           <li class="nav-item">
             <a class="nav-link" routerLink="/profile" routerLinkActive="active">Profile</a>
@@ -42,6 +36,16 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" routerLink="/search" routerLinkActive="active">Search</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" (click)="auth.logout('manual')">Logout</a>
+          </li>
+        } @else {
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/register" routerLinkActive="active">Register</a>
           </li>
         }
       </ul>

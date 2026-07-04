@@ -32,20 +32,32 @@ public class TourController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(TourResponse.from(tour,
                         tourService.getPopularity(tour),
-                        tourService.getChildFriendliness(tour)));
+                        tourService.getChildFriendliness(tour),
+                        user));
     }
 
     // TODO(Felix): do we really want to limit the response to tours from that particular user?
-    // GET /api/tours
+    // GET /api/tours?userFiltered
     @GetMapping
     public ResponseEntity<List<TourSummaryResponse>> getTours(
+            @RequestParam(required = true) boolean userFiltered,
             @AuthenticationPrincipal User user
     ) {
-        List<TourSummaryResponse> tours = tourService.getToursForUser(user).stream()
-                .map(t -> TourSummaryResponse.from(t,
-                        tourService.getPopularity(t),
-                        tourService.getChildFriendliness(t)))
-                .toList();
+        List<TourSummaryResponse> tours;
+        if (userFiltered) {
+            tours = tourService.getToursForUser(user).stream()
+                    .map(t -> TourSummaryResponse.from(t,
+                            tourService.getPopularity(t),
+                            tourService.getChildFriendliness(t)))
+                    .toList();
+        } else {
+            tours = tourService.getAllTours().stream()
+                    .map(t -> TourSummaryResponse.from(t,
+                            tourService.getPopularity(t),
+                            tourService.getChildFriendliness(t)))
+                    .toList();
+
+        }
         return ResponseEntity.ok(tours);
     }
 
@@ -55,10 +67,11 @@ public class TourController {
             @PathVariable Long id,
             @AuthenticationPrincipal User user
     ) {
-        Tour tour = tourService.getTourForUser(id, user);
+        Tour tour = tourService.getTourForUser(id);
         return ResponseEntity.ok(TourResponse.from(tour,
                 tourService.getPopularity(tour),
-                tourService.getChildFriendliness(tour)));
+                tourService.getChildFriendliness(tour),
+                user));
     }
 
     // PATCH /api/tours/{id}
@@ -71,7 +84,8 @@ public class TourController {
         Tour tour = tourService.updateTour(id, request, user);
         return ResponseEntity.ok(TourResponse.from(tour,
                 tourService.getPopularity(tour),
-                tourService.getChildFriendliness(tour)));
+                tourService.getChildFriendliness(tour),
+                user));
     }
 
     // DELETE /api/tours/{id}

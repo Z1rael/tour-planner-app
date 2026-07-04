@@ -34,7 +34,10 @@ public class SearchService {
                 .toList();
 
         List<TourLogResponse> logDtos = logs.stream()
-                .map(TourLogResponse::from)
+                .map(tl -> TourLogResponse.from(
+                        tl,
+                        user
+                ))
                 .toList();
 
         return new SearchResponse(tourDtos, logDtos);

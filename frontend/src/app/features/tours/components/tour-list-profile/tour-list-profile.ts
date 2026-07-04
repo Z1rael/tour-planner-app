@@ -4,14 +4,14 @@ import { Router } from '@angular/router';
 import { LogFacade } from '../../facade/log-facade';
 
 @Component({
-  selector: 'app-tour-list',
+  selector: 'app-tour-list-profile',
   standalone: true,
   imports: [],
-  templateUrl: './tour-list.html',
+  templateUrl: './tour-list-profile.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './tour-list.css',
+  styleUrl: './tour-list-profile.css',
 })
-export class TourList {
+export class TourListProfile {
   private router = inject(Router);
   private readonly logFacade = inject(LogFacade);
   protected readonly tourFacade = inject(TourFacade);

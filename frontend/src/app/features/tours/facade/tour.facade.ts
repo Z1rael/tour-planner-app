@@ -6,10 +6,12 @@ import {
   debounceTime,
   distinctUntilChanged,
   EMPTY,
+  filter,
   finalize,
   map,
   Observable,
   of,
+  startWith,
   switchMap,
   tap,
 } from 'rxjs';
@@ -21,12 +23,14 @@ import { CreateTourPayload } from '../models/tour/create-tour-payload';
 import { UpdateTourPayload } from '../models/tour/update-tour-payload';
 import { TourSummaryResponse } from '../models/tour/tour-summary-response';
 import { TourResponse } from '../models/tour/tour-response';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TourFacade {
   private readonly tourApi = inject(TourService);
+  private readonly router = inject(Router);
   private readonly refresh$ = new BehaviorSubject<void>(undefined);
 
   // State
@@ -45,7 +49,7 @@ export class TourFacade {
   // Load Tour Summaries list
   readonly tourSummaries$: Observable<TourSummary[]> = this.refresh$.pipe(
     switchMap(() =>
-      this.tourApi.getTours().pipe(
+      this.tourApi.getTours(false).pipe(
         map((tours) => tours.map(this.mapSummary.bind(this))),
         catchError((err) => {
           this.error.set(err.message);
@@ -56,6 +60,25 @@ export class TourFacade {
     ),
   );
   readonly tours = toSignal(this.tourSummaries$, { initialValue: [] });
+  readonly toursCount = computed(() => this.tours().length)
+
+
+  readonly userTourSummaries$: Observable<TourSummary[]> = this.refresh$.pipe(
+    switchMap(() =>
+      this.tourApi.getTours(true).pipe(
+        map((tours) => tours.map(this.mapSummary.bind(this))),
+        catchError((err) => {
+          this.error.set(err.message);
+          return EMPTY;
+        }),
+        finalize(() => this.loading.set(false)),
+      ),
+    ),
+  );
+  readonly userTours = toSignal(this.userTourSummaries$, { initialValue: [] });
+  readonly userToursCount = computed(() => this.userTours().length)
+
+
 
   // whole selected Tour tour circle or smth like that
   readonly selectedTourId$ = toObservable(this.selectedTourId);
@@ -94,7 +117,7 @@ export class TourFacade {
           this.error.set(null);
 
           if (0 === q.length) {
-            return this.tourApi.getTours().pipe(
+            return this.tourApi.getTours(false).pipe(
               map((tours) => tours.map((t) => this.mapSummary(t))),
               catchError((err) => {
                 this.loading.set(false);
@@ -123,7 +146,7 @@ export class TourFacade {
     ),
   );
   readonly filteredTours = toSignal(this.filteredTours$);
-  readonly tourCount = computed(() => this.filteredTours()?.length);
+  readonly filteredToursCount = computed(() => this.filteredTours()?.length);
 
   // methods
 
@@ -228,6 +251,7 @@ export class TourFacade {
       creator_id: 0,
       popularity: t.popularity,
       child_friendliness: t.child_friendliness,
+      isOwner: t.isOwner
     };
   }
 }

@@ -12,7 +12,6 @@ import { error } from 'console';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authStore = inject(AuthStore);
   const token = authStore.token();
-  console.log(token)
 
   if (token && authStore.isTokenExpired()) {
     authStore.logout('expired');

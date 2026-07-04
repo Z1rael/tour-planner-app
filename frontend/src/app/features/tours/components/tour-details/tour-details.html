@@ -87,12 +87,14 @@
         <div class="col-auto">
           <button class="btn btn-primary mb-2" (click)="return()">Return</button>
         </div>
-        <div class="col-auto">
-          <button class="btn btn-primary mb-2" (click)="editTour()">Edit</button>
-        </div>
-        <div class="col-auto">
-          <button class="btn btn-danger mb-2" (click)="deleteTour()">Delete</button>
-        </div>
+        @if (tourFacade.selectedTour()?.isOwner) {
+          <div class="col-auto">
+            <button class="btn btn-primary mb-2" (click)="editTour()">Edit</button>
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-danger mb-2" (click)="deleteTour()">Delete</button>
+          </div>
+        }
       </div>
     </div>
   </div>

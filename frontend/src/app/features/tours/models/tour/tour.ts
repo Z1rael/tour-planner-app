@@ -14,4 +14,5 @@ export interface Tour {
   creator_id: number;
   popularity: number;
   child_friendliness: number;
+  isOwner: boolean;
 }

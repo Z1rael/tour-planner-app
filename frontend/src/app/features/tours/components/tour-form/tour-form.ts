@@ -175,7 +175,7 @@ export class TourForm {
 
   onCancel(): void {
     this.tourFacade.selectedTour()
-      ? this.router.navigate(['tours'])
+      ? this.router.navigate(['tour-details'])
       : this.router.navigate(['profile']);
   }
 }

@@ -67,12 +67,17 @@ public class TourService {
     }
 
     @Transactional(readOnly = true)
+    public List<Tour> getAllTours() {
+        return tourRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
     public List<Tour> getToursForUser(User user) {
         return tourRepository.findByUserId(user.getUserId());
     }
 
-    public Tour getTourForUser(Long tourId, User user) {
-        return tourRepository.findByIdAndUserId(tourId, user.getUserId())
+    public Tour getTourForUser(Long tourId) {
+        return tourRepository.findById(tourId)
                 .orElseThrow(() -> new EntityNotFoundException("Tour not found: " + tourId));
     }
 
@@ -82,7 +87,7 @@ public class TourService {
 
         // Inline — don't call getTourForUser, load directly in this transaction
         Tour tour = tourRepository.findByIdAndUserId(tourId, user.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException("Tour not found: " + tourId));
+                .orElseThrow(() -> new EntityNotFoundException("Tour not found, or user not owner: " + tourId));
 
         if (!request.name().equals(tour.getName())) {
             tour.setName(request.name());
@@ -101,7 +106,7 @@ public class TourService {
                     }
                 });
         if (!request.fromGeocode().label().equals(tour.getFromAddress()) ||
-        !request.toGeocode().label().equals(tour.getToAddress())) {
+                !request.toGeocode().label().equals(tour.getToAddress())) {
             updateRoute.set(true);
         }
 
@@ -135,7 +140,8 @@ public class TourService {
 
     @Transactional
     public void deleteTour(Long tourId, User user) {
-        Tour tour = getTourForUser(tourId, user);
+        Tour tour = tourRepository.findByIdAndUserId(tourId, user.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("Tour not found, or not user not owner: " + tourId));
         tourRepository.delete(tour);
         log.info("Deleted tour [{}]", tourId);
     }
@@ -189,7 +195,10 @@ public class TourService {
                         tour.getTransportType() != null ? tour.getTransportType().getTransportationName() : null,
                         tour.getDistanceKm() != null ? tour.getDistanceKm() : 0,
                         tour.getEstimatedTimeS() != null ? tour.getEstimatedTimeS() : 0,
-                        tour.getLogs().stream().map(TourLogResponse::from).toList()
+                        tour.getLogs().stream().map(tl -> TourLogResponse.from(
+                                tl,
+                                user
+                        )).toList()
                 ))
                 .toList();
     }

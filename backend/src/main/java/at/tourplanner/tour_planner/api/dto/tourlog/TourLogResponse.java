@@ -1,6 +1,7 @@
 package at.tourplanner.tour_planner.api.dto.tourlog;
 
 import at.tourplanner.tour_planner.features.tourlog.TourLog;
+import at.tourplanner.tour_planner.features.user.User;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -13,9 +14,10 @@ public record TourLogResponse(
         Integer rating,
         Long totalTimeS,
         Long totalDistanceKm,
-        LocalDateTime logDate
+        LocalDateTime logDate,
+        boolean isOwner
 ) {
-    public static TourLogResponse from(TourLog log) {
+    public static TourLogResponse from(TourLog log, User user) {
         return new TourLogResponse(
                 log.getTourLogId(),
                 log.getTour().getTourId(),
@@ -24,7 +26,8 @@ public record TourLogResponse(
                 log.getRating(),
                 log.getTotalTimeS(),
                 log.getTotalDistanceKm(),
-                log.getLogDate()
+                log.getLogDate(),
+                log.getUser().getUserId().equals(user.getUserId())
         );
     }
 }

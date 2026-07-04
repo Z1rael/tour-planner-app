@@ -1,5 +1,5 @@
 import { Tour } from '../../features/tours/models/tour/tour';
-import { TourLog } from '../../features/tours/models/tour/tour-log';
+import { TourLog } from '../../features/tours/models/log/tour-log';
 import { TourSummary } from '../../features/tours/models/tour/tour-summary';
 import { TransportationType } from '../../features/tours/models/tour/transportation-type';
 
@@ -21,6 +21,7 @@ export const mockTours: Tour[] = [
     creator_id: 1,
     popularity: 0,
     child_friendliness: 0,
+    isOwner: true
   },
   {
     id: 2,
@@ -36,6 +37,7 @@ export const mockTours: Tour[] = [
     creator_id: 2,
     popularity: 0,
     child_friendliness: 0,
+    isOwner: true
   },
   {
     id: 3,
@@ -51,6 +53,7 @@ export const mockTours: Tour[] = [
     creator_id: 1,
     popularity: 0,
     child_friendliness: 0,
+    isOwner: true
   },
   {
     id: 4,
@@ -66,6 +69,7 @@ export const mockTours: Tour[] = [
     creator_id: 3,
     popularity: 0,
     child_friendliness: 0,
+    isOwner: true
   },
   {
     id: 5,
@@ -81,6 +85,7 @@ export const mockTours: Tour[] = [
     creator_id: 2,
     popularity: 0,
     child_friendliness: 0,
+    isOwner: true
   },
   {
     id: 6,
@@ -96,6 +101,7 @@ export const mockTours: Tour[] = [
     creator_id: 4,
     popularity: 0,
     child_friendliness: 0,
+    isOwner: true
   },
   {
     id: 7,
@@ -111,6 +117,7 @@ export const mockTours: Tour[] = [
     creator_id: 3,
     popularity: 0,
     child_friendliness: 0,
+    isOwner: true
   },
   {
     id: 8,
@@ -126,6 +133,7 @@ export const mockTours: Tour[] = [
     creator_id: 1,
     popularity: 0,
     child_friendliness: 0,
+    isOwner: true
   },
 ];
 
@@ -160,6 +168,7 @@ export const mockTourLogs: TourLog[] = [
     total_time_m: 238,
     rating: 5,
     creator_id: 1,
+    isOwner: true
   },
   {
     id: 2,
@@ -171,6 +180,7 @@ export const mockTourLogs: TourLog[] = [
     total_time_m: 255,
     rating: 4,
     creator_id: 1,
+    isOwner: true
   },
   {
     id: 3,
@@ -183,6 +193,7 @@ export const mockTourLogs: TourLog[] = [
     total_time_m: 80,
     rating: 4,
     creator_id: 2,
+    isOwner: true
   },
   {
     id: 4,
@@ -195,6 +206,7 @@ export const mockTourLogs: TourLog[] = [
     total_time_m: 320,
     rating: 5,
     creator_id: 2,
+    isOwner: true
   },
   {
     id: 5,
@@ -207,6 +219,7 @@ export const mockTourLogs: TourLog[] = [
     total_time_m: 355,
     rating: 4,
     creator_id: 1,
+    isOwner: true
   },
   {
     id: 6,
@@ -219,6 +232,7 @@ export const mockTourLogs: TourLog[] = [
     total_time_m: 165,
     rating: 5,
     creator_id: 2,
+    isOwner: true
   },
   {
     id: 7,
@@ -231,6 +245,7 @@ export const mockTourLogs: TourLog[] = [
     total_time_m: 24,
     rating: 3,
     creator_id: 2,
+    isOwner: true
   },
   {
     id: 8,
@@ -243,6 +258,7 @@ export const mockTourLogs: TourLog[] = [
     total_time_m: 60,
     rating: 5,
     creator_id: 2,
+    isOwner: true
   },
   {
     id: 9,
@@ -255,6 +271,7 @@ export const mockTourLogs: TourLog[] = [
     total_time_m: 118,
     rating: 4,
     creator_id: 1,
+    isOwner: true
   },
   {
     id: 10,
@@ -267,6 +284,7 @@ export const mockTourLogs: TourLog[] = [
     total_time_m: 275,
     rating: 5,
     creator_id: 1,
+    isOwner: true
   },
   {
     id: 11,
@@ -279,6 +297,7 @@ export const mockTourLogs: TourLog[] = [
     total_time_m: 290,
     rating: 4,
     creator_id: 2,
+    isOwner: true
   },
   {
     id: 12,
@@ -291,5 +310,6 @@ export const mockTourLogs: TourLog[] = [
     total_time_m: 142,
     rating: 5,
     creator_id: 1,
+    isOwner: true
   },
 ];

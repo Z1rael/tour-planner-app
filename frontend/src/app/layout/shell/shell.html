@@ -1,18 +1,22 @@
 <div class="container-fluid">
-  @if (currentView === 'login' || currentView === 'register') {
+  @if (currentView === 'login' || currentView === 'register' || currentView === 'tours') {
     <div class="row g-2 justify-content-center">
       <div class="col-12 col-lg-4">
         @if (currentView === 'login') {
           <app-login />
-        } @else {
+        } @else if (currentView === 'register') {
           <app-register />
+        } @else {
+          <app-tour-list />
         }
       </div>
       <div class="col-12 col-lg-4 reorder">
         @if (currentView === 'login') {
           <h3>Welcome to the Tour Planner! Please log in or register to get started.</h3>
-        } @else {
+        } @else if (currentView === 'register') {
           <h3>Welcome to the Registration Page! Please fill out the form to create an account.</h3>
+        } @else {
+          <h3>Feels free to browse all of our tours!</h3>
         }
       </div>
     </div>
@@ -20,8 +24,8 @@
     <div class="row g-2 justify-content-center">
       <div class="col-12 col-lg-4">
         @if (currentView === 'profile') {
-          <app-tour-list />
-        } @else if (currentView === 'tours') {
+          <app-tour-list-profile />
+        } @else if (currentView === 'tour-details') {
           <app-tour-details />
         } @else if (currentView === 'search') {
           <app-search-box></app-search-box>
@@ -32,7 +36,7 @@
       <div class="col-12 col-lg-4">
         @if (currentView === 'profile') {
           <app-log-list />
-        } @else if (currentView === 'tours') {
+        } @else if (currentView === 'tour-details') {
           <app-map />
         } @else if (currentView === 'add-tour-log') {
           <app-log-form />
@@ -46,7 +50,7 @@
       <div class="col-12 col-lg-4">
         @if (currentView === 'profile') {
           <h3>Welcome to your profile! Here you can view and manage your tours and logs.</h3>
-        } @else if (currentView === 'tours') {
+        } @else if (currentView === 'tour-details') {
           <app-log-list />
         } @else if (currentView === 'add-tour') {
           <app-map />

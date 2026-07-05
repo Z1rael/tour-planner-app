@@ -1,0 +1,17 @@
+server {
+    listen 8080;
+    root /usr/share/nginx/html;
+    index index.html;
+
+    # Proxy API calls to backend
+    location /api/ {
+        proxy_pass http://${BACKEND_HOST}:${BACKEND_PORT}/api/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    # Angular router — all unknown paths serve index.html
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}

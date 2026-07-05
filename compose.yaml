@@ -27,7 +27,6 @@ services:
     environment:
       - SPRING_CONFIG_ADDITIONAL_LOCATION=file:/app/config/application.properties
 
-
   ui:
     build:
       context: ./frontend
@@ -37,7 +36,7 @@ services:
     env_file:
       - .env
     ports:
-      - "8080:8080"
+      - "4200:8080"
     depends_on:
       - app
 

@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy, computed } from '@angular/core';
 import { TourFacade } from '../../facade/tour.facade';
 import { Router } from '@angular/router';
 import { LogFacade } from '../../facade/log-facade';
@@ -17,6 +17,10 @@ export class TourDetails {
   protected readonly tourFacade = inject(TourFacade);
 
   readonly tour = this.tourFacade.selectedTour;
+  readonly isOwner = computed(() => {
+    console.log(`User is owner: ${this.tour()?.creator_id}`)
+    return this.tour()?.isOwner;
+  });
 
   return(): void {
     this.tourFacade.clearSelection();

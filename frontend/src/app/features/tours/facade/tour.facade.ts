@@ -256,7 +256,7 @@ export class TourFacade {
       creator_id: 0,
       popularity: t.popularity,
       child_friendliness: t.child_friendliness,
-      isOwner: t.isOwner
+      isOwner: t.is_owner
     };
   }
 }

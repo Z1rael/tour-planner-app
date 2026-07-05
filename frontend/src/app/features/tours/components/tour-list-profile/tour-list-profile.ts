@@ -3,10 +3,9 @@ import { TourFacade } from '../../facade/tour.facade';
 import { Router } from '@angular/router';
 import { LogFacade } from '../../facade/log-facade';
 import { TourExportService } from '../../services/tour-export-service';
-import { Dialog } from '@angular/cdk/dialog';
-import { TourSummary } from '../../models/tour/tour-summary';
 import { TourSummaryResponse } from '../../models/tour/tour-summary-response';
 import { TourImport } from '../tour-import/tour-import';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-tour-list-profile',
@@ -18,19 +17,24 @@ import { TourImport } from '../tour-import/tour-import';
 })
 export class TourListProfile {
   private router = inject(Router);
+  private modalService = inject(NgbModal);
   private readonly logFacade = inject(LogFacade);
   protected readonly tourFacade = inject(TourFacade);
   private readonly exportTourService = inject(TourExportService);
-  private dialog = inject(Dialog);
+
 
   openImportModal() {
-    const dialogRef = this.dialog.open<TourSummaryResponse[]>(TourImport);
+    const modalRef = this.modalService.open(TourImport);
 
-    dialogRef.closed.subscribe((imported) => {
+    modalRef.closed.subscribe((imported: TourSummaryResponse[]) => {
       if (imported?.length) {
-        console.log('Looks Cool :D');
+        this.tourFacade.refresh();
       }
     });
+
+    modalRef.dismissed.subscribe(() => {
+      // nothing to do
+    })
   }
 
   protected setQuery(str: string): void {

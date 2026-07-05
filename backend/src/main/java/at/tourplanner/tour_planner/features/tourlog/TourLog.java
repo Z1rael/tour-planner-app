@@ -2,6 +2,7 @@ package at.tourplanner.tour_planner.features.tourlog;
 
 import java.time.LocalDateTime;
 
+import at.tourplanner.tour_planner.api.dto.tourlog.TourLogResponse;
 import at.tourplanner.tour_planner.features.tour.Tour;
 import at.tourplanner.tour_planner.features.user.User;
 import jakarta.persistence.Column;

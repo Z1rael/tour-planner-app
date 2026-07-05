@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { TourFacade } from '../../facade/tour.facade';
 import { TourExportEntry } from '../../models/tour/tour-export-entry';
-import { DialogRef } from '@angular/cdk/dialog';
 import { TourSummaryResponse } from '../../models/tour/tour-summary-response';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-tour-import',
@@ -13,7 +13,7 @@ import { TourSummaryResponse } from '../../models/tour/tour-summary-response';
 })
 export class TourImport {
   private readonly tourFacade = inject(TourFacade);
-  private dialogRef = inject(DialogRef<TourSummaryResponse[]>);
+  activeModal = inject(NgbActiveModal);
 
   error = signal<string | null>(null);
   importing = signal(false);
@@ -30,20 +30,20 @@ export class TourImport {
 
     try {
       const text = await file.text();
-      const parsed = JSON.parse(text);
-      const entries = this.validate(parsed);
+      const entries = this.validate(JSON.parse(text));
 
       this.tourFacade.importTours(entries).subscribe({
         next: (imported => {
           this.importing.set(false);
           console.log('Imported entries from file');
+          this.activeModal.close(imported);
         }),
         error: (err) => {
           this.importing.set(false);
           this.error.set('Import failed: ' + (err.error?.message ?? err.message));
         },
       });
-    } catch (err) {
+    } catch {
       this.importing.set(false);
       this.error.set('Invalid file format')
     } finally {
@@ -52,14 +52,12 @@ export class TourImport {
   }
 
   cancel() {
-    this.dialogRef.close();
+    this.activeModal.dismiss();
   }
 
   private validate(data: unknown): TourExportEntry[] {
-    if (!Array.isArray(data)) throw new Error('Expected an array of tours');
-    const [first] = data;
-    if (first && (typeof first.name !== 'string' || typeof first.distanceKm !== 'number')) {
-      throw new Error('File does not match expected tour export format');
+    if (!Array.isArray(data)) {
+      throw new Error('Expected ab array of tours')
     }
     return data as TourExportEntry[];
   }

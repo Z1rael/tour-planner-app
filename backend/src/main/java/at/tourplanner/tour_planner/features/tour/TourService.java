@@ -15,10 +15,8 @@ import at.tourplanner.tour_planner.ors.directions.model.OrsDirectionsResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.LineString;
-import org.locationtech.jts.geom.PrecisionModel;
+import org.locationtech.jts.geom.*;
+import org.locationtech.jts.io.geojson.GeoJsonReader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -187,43 +185,25 @@ public class TourService {
     @Transactional(readOnly = true)
     public List<TourExportEntry> exportTours(User user) {
         return tourRepository.findByUserId(user.getUserId()).stream()
-                .map(tour -> new TourExportEntry(
-                        tour.getName(),
-                        tour.getDescription(),
-                        tour.getFromAddress(),
-                        tour.getToAddress(),
-                        tour.getTransportType() != null ? tour.getTransportType().getTransportationName() : null,
-                        tour.getDistanceKm() != null ? tour.getDistanceKm() : 0,
-                        tour.getEstimatedTimeS() != null ? tour.getEstimatedTimeS() : 0,
-                        tour.getLogs().stream().map(tl -> TourLogResponse.from(
-                                tl,
-                                user
-                        )).toList()
-                ))
+                .map(t -> TourExportEntry.from(t, user))
                 .toList();
     }
 
     @Transactional
     public List<Tour> importTours(List<TourExportEntry> entries, User user) {
-        return entries.stream().map(entry -> {
-            Tour tour = new Tour();
-            tour.setUser(user);
-            tour.setName(entry.name());
-            tour.setDescription(entry.description());
-            tour.setFromAddress(entry.fromAddress());
-            tour.setToAddress(entry.toAddress());
-            tour.setDistanceKm(entry.distanceKm());
-            tour.setEstimatedTimeS(entry.estimatedTimeS());
-            transportTypeRepository.findByTransportationName(entry.transportTypeName())
-                    .ifPresent(tour::setTransportType);
-            // note: route geometry & logs are not re-imported to avoid re-geocoding costs
-            tourRepository.save(tour);
-            log.info("Imported tour [{}] for user [{}]", tour.getName(), user.getUserId());
-            return tour;
-        }).toList();
+        return entries.stream()
+                .map(entry -> {
+                    Tour tour = toTour(entry, user);
+                    List<TourLog> logs = entry.logs().stream()
+                            .map(log -> toTourLog(log, tour, user))
+                            .toList();
+                    tour.setLogs(logs);
+                    return tourRepository.saveAndFlush(tour);
+                })
+                .toList();
     }
 
-    // hlpers 
+    // helpers
     private LineString buildLineString(List<List<Double>> coordinates) {
         GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 4326);
         Coordinate[] coords = coordinates.stream()
@@ -234,5 +214,48 @@ public class TourService {
 
     private static double clamp(double value) {
         return Math.max(0.0, Math.min(1.0, value));
+    }
+
+    private Tour toTour(TourExportEntry entry, User user) {
+        LineString route = null;
+        try {
+            if (entry.route() != null) {
+                GeoJsonReader reader = new GeoJsonReader();
+                Geometry geometry = reader.read(entry.route());
+                geometry.setSRID(4326);
+                route = (LineString) geometry;
+            }
+        } catch (Exception e) {
+            route = null;
+        }
+
+        // fill tour entity with sent data
+        Tour tour = new Tour();
+        tour.setName(entry.name());
+        tour.setDescription(entry.description());
+        tour.setFromAddress(entry.fromAddress());
+        tour.setToAddress(entry.toAddress());
+        transportTypeRepository.findByTransportationName(entry.transportTypeName())
+                .ifPresent(tour::setTransportType);
+        tour.setDistanceKm(entry.distanceKm());
+        tour.setEstimatedTimeS(entry.estimatedTimeS());
+        tour.setRoute(route);
+        tour.setUser(user);
+
+        return tour;
+    }
+
+    private TourLog toTourLog(TourLogResponse log, Tour tour, User user) {
+        TourLog tourLog = new TourLog();
+        tourLog.setTour(tour);
+        tourLog.setUser(user);
+        tourLog.setComment(log.comment());
+        tourLog.setDifficulty(log.difficulty());
+        tourLog.setRating(log.rating());
+        tourLog.setTotalTimeS(log.totalTimeS());
+        tourLog.setTotalDistanceKm(log.totalDistanceKm());
+        tourLog.setLogDate(log.logDate());
+
+        return tourLog;
     }
 }

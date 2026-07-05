@@ -87,7 +87,7 @@
         <div class="col-auto">
           <button class="btn btn-primary mb-2" (click)="return()">Return</button>
         </div>
-        @if (tourFacade.selectedTour()?.isOwner) {
+        @if (isOwner()) {
           <div class="col-auto">
             <button class="btn btn-primary mb-2" (click)="editTour()">Edit</button>
           </div>

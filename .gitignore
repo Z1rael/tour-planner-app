@@ -73,6 +73,5 @@ Thumbs.db
 
 data/*
 secret/*
-/home/felixdilly/Documents/university/ss26/SWEN/tour-planner-app/backend/src/main/resources/*
+*.properties
 .env
-backend/target/

@@ -1,0 +1,25 @@
+<div class="modal-header">
+  <h4 class="modal-title">Import Tours</h4>
+  <button type="button" class="btn-close" (click)="cancel()"></button>
+</div>
+
+<div class="modal-body">
+  <input
+    type="file"
+    class="form-control"
+    accept="application/json"
+    id="file-selector-input"
+    (change)="onFileSelected($event)"
+  />
+
+  @if (importing()) {
+    <p>Importing...</p>
+  }
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+</div>
+
+<div class="modal-footer">
+  <p>Please select a valid export file!</p>
+</div>

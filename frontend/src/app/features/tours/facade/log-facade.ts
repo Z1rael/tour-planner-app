@@ -249,7 +249,7 @@ export class LogFacade {
       total_time_m: t.total_time_s / 60,
       timestamp: t.log_date,
       creator_id: 0,
-      isOwner: t.isOwner
+      isOwner: t.is_owner
     };
   }
 }

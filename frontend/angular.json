@@ -50,8 +50,13 @@
                 "input": "public"
               }
             ],
-            "styles": ["leaflet/dist/leaflet.css", "src/styles.css"],
-            "scripts": ["leaflet/dist/leaflet-src.js"],
+            "styles": [
+              "leaflet/dist/leaflet.css",
+              "src/styles.css"
+            ],
+            "scripts": [
+              "leaflet/dist/leaflet-src.js"
+            ],
             "outputMode": "static",
             "prerender": false,
             "security": {

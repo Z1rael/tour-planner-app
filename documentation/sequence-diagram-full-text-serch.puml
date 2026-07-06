@@ -1,0 +1,37 @@
+@startuml
+title Sequence Diagram – Full-Text Search
+
+actor User
+participant "SearchBox\n(Angular)" as UI
+participant "authInterceptor" as Interceptor
+participant "SearchController" as Ctrl
+participant "SearchService" as Svc
+participant "TourService" as TourSvc
+participant "TourLogService" as LogSvc
+participant "TourRepository" as TourRepo
+participant "TourLogRepository" as LogRepo
+database "PostgreSQL" as DB
+
+User -> UI : types search query
+UI -> Interceptor : GET /api/search?q=...
+Interceptor -> Interceptor : attach JWT Bearer token
+Interceptor -> Ctrl : GET /api/search?q=...
+Ctrl -> Svc : search(q, user)
+Svc -> TourSvc : searchTours(q, user)
+TourSvc -> TourRepo : searchByUserId(userId, q)
+TourRepo -> DB : SELECT ... WHERE LOWER(...) LIKE ...
+DB --> TourRepo : matching tours
+TourRepo --> TourSvc : List<Tour>
+TourSvc --> Svc : List<Tour>
+Svc -> LogSvc : searchLogs(q, user)
+LogSvc -> LogRepo : searchByUserId(userId, q)
+LogRepo -> DB : SELECT ... WHERE LOWER(...) LIKE ...
+DB --> LogRepo : matching logs
+LogRepo --> LogSvc : List<TourLog>
+LogSvc --> Svc : List<TourLog>
+Svc -> Svc : map Tour/TourLog to Summary/Response DTOs
+Svc --> Ctrl : SearchResponse(tours, logs)
+Ctrl --> Interceptor : 200 OK + SearchResponse JSON
+Interceptor --> UI : SearchResponse
+UI --> User : renders matching tours & logs
+@enduml

@@ -1,0 +1,88 @@
+@startuml
+title Tour Planner – Class Diagram (Layered Architecture)
+
+package "Presentation Layer" {
+  class TourController
+  class TourLogController
+  class SearchController
+  class AuthController
+  class GeocodeController
+}
+
+package "Business Layer" {
+  class TourService {
+    +createTour()
+    +updateTour()
+    +deleteTour()
+    +searchTours()
+    +getPopularity(tour): int
+    +getChildFriendliness(tour): double
+    +exportTours()
+    +importTours()
+  }
+  class TourLogService {
+    +createLog()
+    +updateLog()
+    +deleteLog()
+    +searchLogs()
+  }
+  class SearchService {
+    +search(q, user): SearchResponse
+  }
+  class AuthService {
+    +register()
+    +login()
+  }
+  class GeocodeService
+  class JwtService
+  class JwtAuthenticationFilter
+}
+
+package "Data Access Layer" {
+  interface TourRepository
+  interface TourLogRepository
+  interface UserRepository
+  interface TransportTypeRepository
+}
+
+package "Domain / Entities" {
+  class Tour
+  class TourLog
+  class User
+  class TransportType
+}
+
+package "External Integration (ORS)" {
+  interface OrsDirectionsClient
+  interface OrsGeocodeClient
+}
+
+TourController --> TourService
+TourLogController --> TourLogService
+SearchController --> SearchService
+AuthController --> AuthService
+GeocodeController --> GeocodeService
+
+TourService --> TourRepository
+TourService --> TransportTypeRepository
+TourService --> OrsDirectionsClient
+TourLogService --> TourLogRepository
+TourLogService --> TourRepository
+SearchService --> TourService
+SearchService --> TourLogService
+AuthService --> UserRepository
+AuthService --> JwtService
+GeocodeService --> OrsGeocodeClient
+JwtAuthenticationFilter --> JwtService
+
+TourRepository --> Tour
+TourLogRepository --> TourLog
+UserRepository --> User
+TransportTypeRepository --> TransportType
+
+Tour "1" *-- "many" TourLog
+User "1" --> "many" Tour
+TransportType "1" --> "many" Tour
+Tour --> User : owned by
+TourLog --> User : owned by
+@enduml
